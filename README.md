@@ -1,4 +1,4 @@
-# Analytics & Real Estate Solutions 🏠
+# Analytics for Real Estate Solutions 🏠
 
 _______________________________________________
 
