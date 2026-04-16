@@ -2,6 +2,7 @@
 
 _______________________________________________
 
+https://omaranayalucio.github.io/Analytics-Real-State-Solutions/
 
 This project delivers a comprehensive data science solution tailored for the real estate industry. The primary goal is to transform raw data into strategic assets, ranging from operational visualization to advanced predictive analytics.
 
