@@ -93,4 +93,90 @@
 
         .card:hover { 
             transform: translateY(-10px); 
-            box-shadow: 0 12px 20px rgba(0,0
+            box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover { background: var(--secondary); }
+
+        .skills-tag {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 4px;
+            font-weight: 600;
+        }
+
+        footer { text-align: center; padding: 60px 20px; color: #888; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="https://github.com/OmarAnayaLucio.png" alt="J. Omar Anaya Lucio" class="profile-img">
+    <h1>J. Omar Anaya Lucio</h1>
+    <div class="subtitle">Senior Data Analyst & Systems Engineer</div>
+</header>
+
+<div class="container">
+    <section class="intro">
+        <p>Líder profesional en datos con más de 11 años de experiencia[cite: 1, 5]. Especialista en la transformación de información compleja en activos estratégicos mediante Python, SQL y visualización avanzada para optimizar el crecimiento empresarial[cite: 5, 6].</p>
+        <div class="contact" style="margin-top: 15px;">
+            <small>📍 México | 📧 omar.anayalucio@gmail.com | 📱 56 6941 4664 [cite: 4, 3]</small>
+        </div>
+    </section>
+
+    <h2 class="section-title">Soluciones Analíticas</h2>
+    <div class="grid">
+        <div class="card">
+            <h3>📍 Mapa Real Estate CDMX</h3>
+            <p>Visualización geoespacial avanzada de precios por colonia en la Ciudad de México. Análisis de mercado interactivo desarrollado con técnicas de extracción de datos.</p>
+            <div class="skills-tag">Python</div> 
+            <div class="skills-tag">Folium</div> 
+            <div class="skills-tag">Data Mining</div>
+            <br>
+            <a href="MAPAPrecioColoniasCDMX.html" class="btn">Ver Mapa Interactivo</a>
+        </div>
+
+        <div class="card">
+            <h3>📊 Dashboard de Operaciones</h3>
+            <p>Panel de control con métricas clave y KPIs, diseñado para la toma de decisiones basada en datos y el monitoreo de tendencias en tiempo real.</p>
+            <div class="skills-tag">SQL</div> 
+            <div class="skills-tag">Looker Studio</div> 
+            <div class="skills-tag">BigQuery</div>
+            <br>
+            <a href="index.html" class="btn">Explorar Dashboard</a> 
+        </div>
+    </div>
+
+    <h2 class="section-title">Habilidades y Certificaciones</h2>
+    <div style="text-align: center; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+        <div class="skills-tag">Python (Pandas, Scikit-learn) [cite: 31]</div>
+        <div class="skills-tag">SQL Avanzado (Certified) [cite: 31, 36]</div>
+        <div class="skills-tag">Machine Learning & Modelado Predictivo [cite: 31]</div>
+        <div class="skills-tag">Power BI & Looker Studio [cite: 32]</div>
+        <div class="skills-tag">Procesos ETL & Análisis Estadístico [cite: 31]</div>
+        <div class="skills-tag">Data Scientist Certified (2025) [cite: 35]</div>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 J. Omar Anaya Lucio [cite: 1] | <a href="https://www.linkedin.com/in/omar-anaya-lucio" style="color: var(--secondary); text-decoration: none;">LinkedIn</a> | <a href="https://datascienceportfol.io/omaranayalucio" style="color: var(--secondary); text-decoration: none;">Portfolio</a> [cite: 4, 33]</p>
+</footer>
+
+</body>
+</html>
