@@ -11,7 +11,13 @@ This project delivers a comprehensive data science solution tailored for the rea
 The development is structured into three critical phases:
 
 1.  **Operational Dashboard:** Interactive visualization to monitor high-level KPIs and business health.
+
+https://omaranayalucio.github.io/Analytics-Real-State-Solutions/dashboard.html
+
 2.  **CDMX neighborhood average pricing MAP:** A deep dive into the CDMX neighborhoods and pricing behaviors to identify top real state opportunities.
+
+https://omaranayalucio.github.io/Analytics-Real-State-Solutions/MAPAPrecioColoniasCDMX.html
+
 3.  **Predictive Modeling (ML):** Implementation of Machine Learning algorithms to forecast future property prices and market trends.
 
 ## 🛠️ Tech Stack
