@@ -6,11 +6,13 @@
     <title>Omar Anaya Lucio | Portfolio</title>
     <style>
         :root {
-            --primary: #002d5b; /* Azul American Express/GNP */
+            /* Mantenemos los azules para acentos, pero el fondo será oscuro */
+            --primary: #002d5b; 
             --secondary: #0056b3;
             --accent: #e6f0ff;
             --text: #333;
             --light: #f8f9fa;
+            --dark-bg: #121212; /* Negro profundo para el header */
         }
 
         body {
@@ -22,9 +24,10 @@
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            /* Cambio de azul a negro con un ligero degradado para profundidad */
+            background: linear-gradient(135deg, #000000 0%, var(--dark-bg) 100%);
             color: white;
-            padding: 60px 20px;
+            padding: 80px 20px;
             text-align: center;
         }
 
@@ -32,7 +35,7 @@
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            border: 4px solid white;
+            border: 3px solid rgba(255, 255, 255, 0.2); /* Borde más sutil para fondo negro */
             margin-bottom: 20px;
             object-fit: cover;
         }
@@ -47,115 +50,47 @@
             background: white;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-top: -50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); /* Sombra más definida */
+            margin-top: -60px; /* Ajuste para que resalte sobre el negro */
             text-align: center;
         }
 
-        h1 { margin: 10px 0; font-size: 2.5em; }
-        .subtitle { font-size: 1.2em; color: var(--secondary); font-weight: bold; margin-bottom: 20px; }
+        h1 { margin: 10px 0; font-size: 2.5em; letter-spacing: 1px; }
+        
+        /* Ajuste del color del subtítulo para que sea legible sobre negro */
+        .subtitle { 
+            font-size: 1.2em; 
+            color: #4da3ff; /* Un azul más claro para contraste sobre negro */
+            font-weight: bold; 
+            margin-bottom: 20px; 
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
 
         .section-title {
             text-align: center;
-            margin: 40px 0 20px;
+            margin: 50px 0 30px;
             color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 2px;
+            font-weight: 800;
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 25px;
         }
 
         .card {
             background: white;
-            padding: 25px;
+            padding: 30px;
             border-radius: 10px;
-            border-left: 5px solid var(--primary);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
+            border-top: 5px solid var(--primary); /* Cambiado de lado a arriba para estilo moderno */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
         }
 
-        .card:hover { transform: translateY(-5px); }
-
-        .btn {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-
-        .btn:hover { background: var(--secondary); }
-
-        .skills-tag {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--primary);
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.9em;
-            margin: 5px;
-            font-weight: 500;
-        }
-
-        footer { text-align: center; padding: 40px; color: #777; font-size: 0.9em; }
-    </style>
-</head>
-<body>
-
-<header>
-    <img src="https://github.com/OmarAnayaLucio.png" alt="Omar Anaya" class="profile-img">
-    <h1>J. Omar Anaya Lucio</h1>
-    <div class="subtitle">Senior Data Analyst & Systems Engineer</div>
-</header>
-
-<div class="container">
-    <section class="intro">
-        <p>Líder profesional en datos con más de 11 años de experiencia transformando información en activos estratégicos. Especialista en Python, SQL y visualización avanzada para impulsar el crecimiento empresarial y la eficiencia operativa.</p>
-        <div class="contact">
-            <small>📍 México | 📧 omar.anayalucio@gmail.com | 📱 56 6941 4664</small>
-        </div>
-    </section>
-
-    <h2 class="section-title">Soluciones Analíticas</h2>
-    <div class="grid">
-        <div class="card">
-            <h3>📍 Mapa Real Estate CDMX</h3>
-            <p>Visualización geoespacial avanzada de precios por colonia en la Ciudad de México. Herramienta interactiva para análisis de mercado.</p>
-            <div class="skills-tag">Python</div> <div class="skills-tag">Folium</div> <div class="skills-tag">Data Mining</div>
-            <br>
-            <a href="MAPAPrecioColoniasCDMX.html" class="btn">Abrir Mapa Interactivo</a>
-        </div>
-
-        <div class="card">
-            <h3>📊 Executive Dashboard</h3>
-            <p>Panel de control operativo con KPIs críticos, optimizado para la toma de decisiones en tiempo real y análisis de tendencias.</p>
-            <div class="skills-tag">SQL</div> <div class="skills-tag">Looker Studio</div> <div class="skills-tag">BigQuery</div>
-            <br>
-            <a href="index.html" class="btn">Explorar Dashboard</a> 
-        </div>
-    </div>
-
-    <h2 class="section-title">Habilidades Clave</h2>
-    <div style="text-align: center; background: white; padding: 30px; border-radius: 10px;">
-        <div class="skills-tag">Python (Pandas, Scikit-learn)</div>
-        <div class="skills-tag">SQL Avanzado</div>
-        <div class="skills-tag">Machine Learning</div>
-        <div class="skills-tag">Power BI & Looker Studio</div>
-        <div class="skills-tag">ETL Processes</div>
-        <div class="skills-tag">Predictive Modeling</div>
-    </div>
-</div>
-
-<footer>
-    <p>© 2026 J. Omar Anaya Lucio | <a href="https://www.linkedin.com/in/omar-anaya-lucio" style="color: var(--secondary);">LinkedIn</a> | <a href="https://datascienceportfol.io/omaranayalucio" style="color: var(--secondary);">Portfolio</a></p>
-</footer>
-
-</body>
-</html>
+        .card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 12px 20px rgba(0,0
