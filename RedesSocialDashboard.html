@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Altaltium · Data Intelligence Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+  :root {
+    --brand-black: #000000;
+    --brand-teal: #52BEC0;
+    --brand-white: #EBEBEE;
+    --brand-gray-light: #DFDFE1;
+    --brand-gray-dark: #3B3B3B;
+    --brand-cyan: #00FFFF;
+    
+    --bg: #f8f9fa;
+    --surface: #ffffff;
+    --border: #DFDFE1;
+    --text-main: #3B3B3B;
+    --text-muted: #666666;
+    
+    --font-head: 'Montserrat', sans-serif; /* Similar a Gotham */
+    --font-serif: 'Playfair Display', serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-main);
+    font-family: var(--font-head);
+    font-size: 14px;
+    min-height: 100vh;
+    padding-bottom: 50px;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--brand-black);
+    color: var(--brand-white);
+    padding: 30px 40px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid var(--brand-teal);
+  }
+
+  .logo-area h1 {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+  }
+  
+  .logo-area span {
+    color: var(--brand-teal);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  #uploadBtn {
+    background: var(--brand-teal);
+    color: var(--brand-black);
+    padding: 12px 24px;
+    border-radius: 0; /* Estilo arquitectónico, cuadrado */
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 12px;
+  }
+  #uploadBtn:hover { background: var(--brand-cyan); box-shadow: 0 0 15px var(--brand-cyan); }
+
+  /* ── KPI CARDS ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    padding: 25px;
+    border: 1px solid var(--border);
+    box-shadow: 10px 10px 0px var(--brand-gray-light);
+    transition: 0.3s;
+  }
+  
+  .kpi-card:hover { transform: translate(-5px, -5px); box-shadow: 15px 15px 0px var(--brand-teal); }
+
+  .kpi-label {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .kpi-value {
+    font-family: var(--font-head);
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--brand-black);
+  }
+
+  /* ── CHARTS ── */
+  .charts-main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+  }
+
+  .chart-box {
+    background: var(--surface);
+    padding: 30px;
+    border: 1px solid var(--border);
+  }
+
+  .chart-title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    border-left: 5px solid var(--brand-teal);
+    padding-left: 15px;
+  }
+
+  /* ── TABLE ── */
+  .data-table-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 30px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-head);
+  }
+
+  th {
+    background: var(--brand-black);
+    color: var(--brand-white);
+    text-align: left;
+    padding: 15px;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+
+  td {
+    padding: 15px;
+    border-bottom: 1px solid var(--brand-gray-light);
+    font-size: 13px;
+  }
+
+  tr:hover td { background: var(--brand-white); }
+
+  .pill {
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--brand-gray-light);
+  }
+  .pill-teal { background: var(--brand-teal); color: white; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <h1>Altaltium <span style="font-style: italic; font-weight: 300;">Analytics</span></h1>
+    <span>MARKETING & BUSINESS INTELLIGENCE</span>
+  </div>
+  <button id="uploadBtn" onclick="document.getElementById('fileInput').click()">Cargar Datos (.csv)</button>
+  <input type="file" id="fileInput" style="display:none" accept=".csv">
+</header>
+
+<div class="container">
+  
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Alcance Total</div>
+      <div class="kpi-value" id="val-reach">0</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Visualizaciones</div>
+      <div class="kpi-value" id="val-views">0</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Interacciones</div>
+      <div class="kpi-value" id="val-eng">0</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Video Views (3s)</div>
+      <div class="kpi-value" id="val-3s">0</div>
+    </div>
+  </div>
+
+  <div class="charts-main-grid">
+    <div class="chart-box">
+      <h2 class="chart-title">Rendimiento por Publicación</h2>
+      <canvas id="mainChart" height="120"></canvas>
+    </div>
+    <div class="chart-box">
+      <h2 class="chart-title">Mix de Redes</h2>
+      <canvas id="pieChart"></canvas>
+    </div>
+  </div>
+
+  <div class="data-table-container">
+    <h2 class="chart-title">Desglose de Leads y Estadísticas</h2>
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Tipo</th>
+          <th>Alcance</th>
+          <th>Interacciones</th>
+          <th>Vistas 3s</th>
+        </tr>
+      </thead>
+      <tbody>
+        </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+let myChart;
+let myPie;
+
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  Papa.parse(file, {
+    header: true,
+    dynamicTyping: true,
+    complete: function(results) {
+      processData(results.data);
+    }
+  });
+});
+
+function processData(data) {
+  // Limpieza básica (filtrar filas vacías)
+  const cleanData = data.filter(row => row['Título'] || row['Alcance'] > 0);
+  
+  let totalReach = 0, totalViews = 0, totalEng = 0, total3s = 0;
+  let labels = [], reachData = [], engData = [];
+
+  const tbody = document.querySelector('#dataTable tbody');
+  tbody.innerHTML = '';
+
+  cleanData.slice(0, 10).forEach(row => {
+    totalReach += row['Alcance'] || 0;
+    totalViews += row['Visualizaciones'] || 0;
+    totalEng += row['Reacciones, comentarios y veces que se compartió'] || 0;
+    total3s += row['Reproducciones de video de 3 segundos'] || 0;
+
+    labels.push(row['Título'] ? row['Título'].substring(0, 15) + '...' : 'Sin título');
+    reachData.push(row['Alcance'] || 0);
+    engData.push(row['Reacciones, comentarios y veces que se compartió'] || 0);
+
+    // Llenar tabla
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${row['Título'] || '---'}</td>
+      <td><span class="pill">${row['Tipo de publicación'] || 'Post'}</span></td>
+      <td><strong>${(row['Alcance'] || 0).toLocaleString()}</strong></td>
+      <td>${(row['Reacciones, comentarios y veces que se compartió'] || 0).toLocaleString()}</td>
+      <td>${(row['Reproducciones de video de 3 segundos'] || 0).toLocaleString()}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('val-reach').innerText = totalReach.toLocaleString();
+  document.getElementById('val-views').innerText = totalViews.toLocaleString();
+  document.getElementById('val-eng').innerText = totalEng.toLocaleString();
+  document.getElementById('val-3s').innerText = total3s.toLocaleString();
+
+  updateCharts(labels, reachData, engData);
+}
+
+function updateCharts(labels, reach, eng) {
+  if(myChart) myChart.destroy();
+  if(myPie) myPie.destroy();
+
+  const ctx = document.getElementById('mainChart').getContext('2d');
+  myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Alcance', data: reach, backgroundColor: '#52BEC0' },
+        { label: 'Interacciones', data: eng, backgroundColor: '#3B3B3B' }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+
+  const ctx2 = document.getElementById('pieChart').getContext('2d');
+  myPie = new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+      labels: ['Facebook', 'Instagram', 'TikTok'],
+      datasets: [{
+        data: [40, 35, 25], // Valores de ejemplo para el diseño
+        backgroundColor: ['#000000', '#52BEC0', '#DFDFE1']
+      }]
+    }
+  });
+}
+</script>
+
+</body>
+</html>
