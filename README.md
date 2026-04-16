@@ -1,4 +1,7 @@
-# Analytics & Real Estate Solutions 🏠📊
+# Analytics & Real Estate Solutions 🏠
+
+_______________________________________________
+
 
 This project delivers a comprehensive data science solution tailored for the real estate industry. The primary goal is to transform raw data into strategic assets, ranging from operational visualization to advanced predictive analytics.
 
@@ -31,7 +34,7 @@ The development is structured into three critical phases:
 * **360° Visibility:** Centralizing fragmented data into a single source of truth for executive decision-making.
 
 ---
-Developed by [Your Name] – *Data Scientist / Analytics Manager*
+Developed by Omar Anaya – *Data Scientist / Analytics Manager*
 
 __________________________________________________
 __________________________________________________
@@ -69,4 +72,4 @@ El desarrollo se divide en tres fases críticas:
 * **Visibilidad 360°:** Centralización de la información para una gestión basada en datos.
 
 ---
-Desarrollado por [Tu Nombre] - *Data Scientist / Analytics Manager*
+Desarrollado por Omar Anaya - *Data Scientist / Analytics Manager*
