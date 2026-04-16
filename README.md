@@ -11,7 +11,7 @@ This project delivers a comprehensive data science solution tailored for the rea
 The development is structured into three critical phases:
 
 1.  **Operational Dashboard:** Interactive visualization to monitor high-level KPIs and business health.
-2.  **Leads Descriptive Analysis:** A deep dive into the sales funnel and prospect behavior using Executive Dashboards (Google Looker Studio) to identify conversion drivers.
+2.  **CDMX neighborhood average pricing MAP:** A deep dive into the CDMX neighborhoods and pricing behaviors to identify top real state opportunities.
 3.  **Predictive Modeling (ML):** Implementation of Machine Learning algorithms to forecast future property prices and market trends.
 
 ## 🛠️ Tech Stack
