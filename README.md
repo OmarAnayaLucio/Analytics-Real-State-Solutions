@@ -18,8 +18,9 @@ https://omaranayalucio.github.io/Analytics-Real-State-Solutions/dashboard.html
 
 https://omaranayalucio.github.io/Analytics-Real-State-Solutions/DashboardRedesSociales.html
 
-Source for Facebook: https://docs.google.com/spreadsheets/d/e/2PACX-1vSfGLVor1Yn0VXdP30E_vaq7NHKV-5jroqnXx4GGX0gxsZGRM9fpCsotoNuZoJNDgbOKJdc19mYGDRN/pub?gid=0&single=true&output=csv
-Source for Instagram: https://docs.google.com/spreadsheets/d/e/2PACX-1vSfGLVor1Yn0VXdP30E_vaq7NHKV-5jroqnXx4GGX0gxsZGRM9fpCsotoNuZoJNDgbOKJdc19mYGDRN/pub?gid=1054016789&single=true&output=csv
+(Source for Facebook: https://docs.google.com/spreadsheets/d/e/2PACX-1vSfGLVor1Yn0VXdP30E_vaq7NHKV-5jroqnXx4GGX0gxsZGRM9fpCsotoNuZoJNDgbOKJdc19mYGDRN/pub?gid=0&single=true&output=csv)
+
+(Source for Instagram: https://docs.google.com/spreadsheets/d/e/2PACX-1vSfGLVor1Yn0VXdP30E_vaq7NHKV-5jroqnXx4GGX0gxsZGRM9fpCsotoNuZoJNDgbOKJdc19mYGDRN/pub?gid=1054016789&single=true&output=csv)
 
 3.  **CDMX neighborhood average pricing MAP:** A deep dive into the CDMX neighborhoods and pricing behaviors to identify top real state opportunities.
 
