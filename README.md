@@ -16,7 +16,7 @@ https://omaranayalucio.github.io/Analytics-Real-State-Solutions/dashboard.html
 
 2. **Social Media Dashboard:** Interactive visualization to monitor high-level KPIs and interactions in social media.
 
-https://omaranayalucio.github.io/Analytics-Real-State-Solutions/DashboardRedesSociales.html.html
+https://omaranayalucio.github.io/Analytics-Real-State-Solutions/DashboardRedesSociales.html
 
 3.  **CDMX neighborhood average pricing MAP:** A deep dive into the CDMX neighborhoods and pricing behaviors to identify top real state opportunities.
 
