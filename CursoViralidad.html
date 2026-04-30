@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Código de Viralidad · TikTok & Instagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0b09;
+  --bg2:#141310;
+  --bg3:#1c1a16;
+  --bg4:#242220;
+  --line:#2e2c28;
+  --line2:#3a3834;
+  --text:#f0ebe0;
+  --muted:#7a776e;
+  --muted2:#9a9790;
+  --accent:#e8390e;
+  --gold:#c9a84c;
+  --blue:#4a90d9;
+  --green:#3a9e72;
+  --purple:#8a5cf6;
+  --font-head:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --r:10px;--r2:16px;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.6;min-height:100vh}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(12,11,9,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--line);padding:0 2rem}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-family:var(--font-head);font-size:14px;font-weight:800;color:var(--text);letter-spacing:0.02em}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:2px}
+.nav-link{font-size:12px;font-weight:500;color:var(--muted);padding:6px 12px;border-radius:20px;cursor:pointer;border:none;background:none;transition:all 0.15s;text-decoration:none}
+.nav-link:hover,.nav-link.active{color:var(--text);background:var(--bg3)}
+
+/* HERO */
+.hero{max-width:1100px;margin:0 auto;padding:5rem 2rem 4rem;position:relative;overflow:hidden}
+.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem;display:flex;align-items:center;gap:8px}
+.hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--accent)}
+.hero-title{font-family:var(--font-head);font-size:clamp(48px,7vw,88px);font-weight:800;line-height:0.95;letter-spacing:-0.03em;margin-bottom:2rem}
+.hero-title .line2{color:var(--accent)}
+.hero-desc{font-size:16px;color:var(--muted2);line-height:1.7;max-width:560px;margin-bottom:2.5rem}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:3rem}
+.tag{font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;border:0.5px solid var(--line2);color:var(--muted2)}
+.tag.hot{border-color:var(--accent);color:var(--accent);background:rgba(232,57,14,0.08)}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:0.5px solid var(--line);border-radius:var(--r2);overflow:hidden;max-width:500px}
+.stat{background:var(--bg2);padding:1.25rem 1.5rem}
+.stat-num{font-family:var(--font-head);font-size:36px;font-weight:800;color:var(--text);line-height:1}
+.stat-num span{color:var(--accent)}
+.stat-label{font-size:12px;color:var(--muted);margin-top:4px}
+.hero-bg-num{position:absolute;right:-40px;top:50%;transform:translateY(-50%);font-family:var(--font-head);font-size:320px;font-weight:800;color:rgba(255,255,255,0.02);line-height:1;pointer-events:none;user-select:none}
+
+/* SECTIONS */
+section{max-width:1100px;margin:0 auto;padding:4rem 2rem;border-top:0.5px solid var(--line)}
+.sec-label{font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem;display:flex;align-items:center;gap:8px}
+.sec-label::before{content:'';display:block;width:16px;height:1px;background:var(--muted)}
+.sec-title{font-family:var(--font-head);font-size:clamp(28px,4vw,42px);font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1rem}
+.sec-sub{font-size:15px;color:var(--muted2);max-width:600px;margin-bottom:2.5rem;line-height:1.7}
+
+/* ELEMENTS GRID */
+.elements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--line);border:0.5px solid var(--line);border-radius:var(--r2);overflow:hidden;margin-bottom:2rem}
+.el-card{background:var(--bg2);padding:1.1rem 1.25rem;cursor:pointer;transition:background 0.15s;position:relative}
+.el-card:hover{background:var(--bg3)}
+.el-card.active{background:var(--bg3)}
+.el-card.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.el-num{font-family:var(--font-head);font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.el-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.25;margin-bottom:6px}
+.el-badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;background:var(--bg4);color:var(--muted2)}
+
+.detail-panel{background:var(--bg2);border:0.5px solid var(--line2);border-radius:var(--r2);padding:1.75rem 2rem;margin-bottom:2rem}
+.detail-header{display:flex;align-items:baseline;gap:12px;margin-bottom:1rem}
+.detail-num{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--accent)}
+.detail-title{font-family:var(--font-head);font-size:22px;font-weight:700;color:var(--text)}
+.detail-body{font-size:14px;color:var(--muted2);line-height:1.75;margin-bottom:1.25rem}
+.detail-example{background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:0.9rem 1.25rem;font-size:13.5px;color:var(--text);font-style:italic}
+.detail-example strong{color:var(--accent);font-style:normal;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:4px}
+
+/* ALGO */
+.algo-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:0.5px solid var(--line);border-radius:var(--r2);overflow:hidden;margin-bottom:2rem}
+.algo-card{background:var(--bg2);padding:1.75rem 2rem}
+.algo-platform{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:0.5px solid var(--line)}
+.algo-platform.tt{color:var(--accent)}
+.algo-platform.ig{color:var(--purple)}
+.signal-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.signal-name{font-size:12.5px;color:var(--muted2);width:140px;flex-shrink:0}
+.signal-bar-wrap{flex:1;background:var(--bg4);border-radius:4px;height:5px;overflow:hidden}
+.signal-bar{height:5px;border-radius:4px;transition:width 1s cubic-bezier(0.4,0,0.2,1)}
+.signal-pct{font-size:12px;font-weight:500;color:var(--text);width:30px;text-align:right}
+.signal-bar.tt{background:var(--accent)}
+.signal-bar.ig{background:var(--purple)}
+
+.formula-box{background:var(--bg3);border:0.5px solid var(--line2);border-radius:var(--r2);padding:2rem;margin-bottom:2rem;text-align:center}
+.formula-label{font-size:12px;color:var(--muted);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.1em}
+.formula-eq{font-family:var(--font-head);font-size:clamp(13px,2vw,16px);font-weight:700;color:var(--text);line-height:2}
+.formula-eq .accent{color:var(--accent)}
+.formula-note{font-size:13px;color:var(--muted2);margin-top:0.75rem}
+
+/* ANATOMY / TIMELINE */
+.timeline{display:grid;gap:1px;background:var(--line);border:0.5px solid var(--line);border-radius:var(--r2);overflow:hidden;margin-bottom:2rem}
+.tl-row{display:grid;grid-template-columns:80px 1fr;background:var(--bg2);transition:background 0.15s}
+.tl-row:hover{background:var(--bg3)}
+.tl-time{padding:1.25rem 1rem;border-right:0.5px solid var(--line);display:flex;align-items:center;justify-content:center}
+.tl-time-txt{font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--accent);text-align:center;line-height:1.2}
+.tl-body{padding:1.25rem 1.5rem}
+.tl-role{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.tl-desc{font-size:14px;color:var(--muted2);line-height:1.65}
+
+.errors-grid{display:grid;gap:8px;margin-bottom:2rem}
+.error-card{background:var(--bg2);border:0.5px solid var(--line);border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:1rem 1.25rem}
+.error-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.error-desc{font-size:13px;color:var(--muted2);line-height:1.6}
+
+/* HOOKS */
+.hook-builder{background:var(--bg2);border:0.5px solid var(--line2);border-radius:var(--r2);padding:1.75rem 2rem;margin-bottom:2rem}
+.hook-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.hook-field label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);display:block;margin-bottom:8px}
+select{width:100%;background:var(--bg3);border:0.5px solid var(--line2);color:var(--text);padding:10px 12px;border-radius:var(--r);font-family:var(--font-body);font-size:13.5px;cursor:pointer;appearance:none;outline:none}
+select:focus{border-color:var(--accent)}
+.hook-output-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:10px}
+.hook-output{background:var(--bg);border:0.5px solid var(--line2);border-radius:var(--r);padding:1.25rem 1.5rem;font-size:15px;color:var(--text);line-height:1.7;min-height:64px;font-style:italic}
+.hook-output .num{color:var(--accent);font-style:normal;font-weight:700}
+
+.hook-rules{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:0.5px solid var(--line);border-radius:var(--r2);overflow:hidden}
+.hook-rule{background:var(--bg2);padding:1.25rem 1.5rem}
+.hook-rule-num{font-family:var(--font-head);font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.hook-rule-title{font-size:13.5px;font-weight:500;color:var(--text);margin-bottom:4px}
+.hook-rule-desc{font-size:13px;color:var(--muted2);line-height:1.6}
+
+/* COURSE */
+.module-block{border:0.5px solid var(--line);border-radius:var(--r2);overflow:hidden;margin-bottom:8px}
+.module-header{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.5rem;background:var(--bg2);cursor:pointer;transition:background 0.15s}
+.module-header:hover{background:var(--bg3)}
+.module-num{font-family:var(--font-head);font-size:11px;font-weight:700;color:var(--accent);margin-bottom:2px}
+.module-title{font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--text)}
+.module-toggle{font-size:20px;color:var(--muted);font-weight:300;transition:transform 0.2s;flex-shrink:0;width:24px;text-align:center}
+.module-toggle.open{transform:rotate(45deg);color:var(--accent)}
+.module-body{display:none;border-top:0.5px solid var(--line);background:var(--bg)}
+.module-body.open{display:block}
+.lesson{display:flex;gap:12px;padding:0.85rem 1.5rem;border-bottom:0.5px solid var(--line);align-items:flex-start}
+.lesson:last-child{border-bottom:none}
+.lesson-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);flex-shrink:0;margin-top:7px}
+.lesson-text{font-size:13.5px;color:var(--muted2);line-height:1.5}
+.lesson-text strong{color:var(--text);font-weight:500}
+
+/* CHECKLIST */
+.checklist-grid{margin-bottom:2rem}
+.check-row{display:flex;gap:12px;align-items:flex-start;padding:0.9rem 0;border-bottom:0.5px solid var(--line)}
+.check-row:last-child{border-bottom:none}
+.check-box{width:20px;height:20px;border:0.5px solid var(--line2);border-radius:5px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all 0.15s;margin-top:1px;color:var(--bg)}
+.check-box:hover{border-color:var(--accent)}
+.check-box.checked{background:var(--accent);border-color:var(--accent)}
+.check-text{font-size:14px;color:var(--muted2);line-height:1.6}
+.check-text strong{color:var(--text);font-weight:500}
+.check-score{background:var(--bg2);border:0.5px solid var(--line2);border-radius:var(--r2);padding:1.5rem 2rem;text-align:center}
+.score-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem}
+.score-num{font-family:var(--font-head);font-size:48px;font-weight:800;color:var(--text);line-height:1}
+.score-num span{color:var(--accent)}
+.score-bar-wrap{background:var(--bg4);border-radius:4px;height:4px;margin:1rem 0 0.5rem;overflow:hidden}
+.score-bar{height:4px;background:var(--accent);border-radius:4px;transition:width 0.4s ease}
+.score-note{font-size:13px;color:var(--muted2)}
+
+/* FOOTER */
+footer{border-top:0.5px solid var(--line);padding:2.5rem 2rem;text-align:center}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.footer-logo{font-family:var(--font-head);font-size:13px;font-weight:800;color:var(--muted)}
+.footer-logo span{color:var(--accent)}
+.footer-note{font-size:12px;color:var(--muted)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero>*{animation:fadeUp 0.5s ease both}
+.hero-eyebrow{animation-delay:0.05s}
+.hero-title{animation-delay:0.1s}
+.hero-desc{animation-delay:0.15s}
+.hero-tags{animation-delay:0.2s}
+.hero-stats{animation-delay:0.25s}
+
+@media(max-width:700px){
+  .algo-grid,.hook-row,.hook-rules{grid-template-columns:1fr}
+  .hero-stats{grid-template-columns:1fr 1fr 1fr;font-size:12px}
+  .stat-num{font-size:26px}
+  .tl-row{grid-template-columns:60px 1fr}
+  nav .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Código de <span>Viralidad</span></div>
+    <div class="nav-links">
+      <a class="nav-link" href="#elementos">28 Elementos</a>
+      <a class="nav-link" href="#algoritmo">Algoritmo</a>
+      <a class="nav-link" href="#anatomia">Anatomía</a>
+      <a class="nav-link" href="#hooks">Hooks</a>
+      <a class="nav-link" href="#curso">Temario</a>
+      <a class="nav-link" href="#checklist">Checklist</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-bg-num">28</div>
+  <div class="hero-eyebrow">Curso completo · 6 módulos · Real Estate Foreclosure</div>
+  <div class="hero-title">
+    Código de<br><span class="line2">Viralidad</span>
+  </div>
+  <div class="hero-desc">Una disección rigurosa de los 28 elementos que hacen posible que un video se propague masivamente en TikTok e Instagram, y cómo replicarlos con intención estratégica.</div>
+  <div class="hero-tags">
+    <span class="tag hot">TikTok · Instagram Reels</span>
+    <span class="tag">28 Elementos</span>
+    <span class="tag">6 Módulos</span>
+    <span class="tag">Real Estate</span>
+    <span class="tag">Foreclosure</span>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">28</div><div class="stat-label">Elementos de viralidad</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Módulos del curso</div></div>
+    <div class="stat"><div class="stat-num"><span>3</span></div><div class="stat-label">Videos virales / 8 meses</div></div>
+  </div>
+</div>
+
+<!-- ELEMENTOS -->
+<section id="elementos">
+  <div class="sec-label">01 · Fundamentos</div>
+  <div class="sec-title">Los 28 Elementos<br>de Viralidad</div>
+  <div class="sec-sub">Haz clic en cada elemento para ver su definición, mecánica psicológica y aplicación directa al nicho de foreclosure.</div>
+  <div class="elements-grid" id="el-grid"></div>
+  <div class="detail-panel" id="el-detail">
+    <div class="detail-body" style="font-style:italic">Selecciona un elemento para ver su análisis completo.</div>
+  </div>
+</section>
+
+<!-- ALGORITMO -->
+<section id="algoritmo">
+  <div class="sec-label">02 · Plataformas</div>
+  <div class="sec-title">Cómo Leen<br>el Algoritmo</div>
+  <div class="sec-sub">Cada plataforma tiene una jerarquía de señales distinta. Entender qué señal pesa más en cada una determina cómo estructurar el contenido y el CTA.</div>
+
+  <div class="algo-grid">
+    <div class="algo-card">
+      <div class="algo-platform tt">TikTok · For You Page</div>
+      <div id="tt-signals"></div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-platform ig">Instagram · Reels Explore</div>
+      <div id="ig-signals"></div>
+    </div>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">Fórmula de distribución algorítmica</div>
+    <div class="formula-eq"><span class="accent">Alcance</span> = (Retención × Saves) + (Shares × Comentarios) − Tasa de Skip</div>
+    <div class="formula-note">El algoritmo lee comportamiento, no intención. Cada señal es un voto del espectador.</div>
+  </div>
+
+  <div class="algo-grid">
+    <div class="algo-card">
+      <div class="algo-platform tt">TikTok · Diferencias clave</div>
+      <div style="font-size:13.5px;color:var(--muted2);line-height:1.8">
+        <div style="margin-bottom:8px">· Privilegia cuentas nuevas en igual medida que establecidas</div>
+        <div style="margin-bottom:8px">· El audio trending amplifica alcance inicial</div>
+        <div style="margin-bottom:8px">· Los primeros 500 views son el test decisivo del algoritmo</div>
+        <div style="margin-bottom:8px">· Los rewatches son señal premium por encima de los likes</div>
+        <div>· Las cuentas sin historial pueden viralizar en el primer mes</div>
+      </div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-platform ig">Instagram Reels · Diferencias clave</div>
+      <div style="font-size:13.5px;color:var(--muted2);line-height:1.8">
+        <div style="margin-bottom:8px">· Prioriza cuentas con historial de engagement real</div>
+        <div style="margin-bottom:8px">· Los sends directos (DMs) son la señal más valiosa</div>
+        <div style="margin-bottom:8px">· La foto de portada afecta CTR en Explore</div>
+        <div style="margin-bottom:8px">· Cross-posting desde TikTok con watermark penaliza alcance</div>
+        <div>· Los hashtags de nicho pesan más que los genéricos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANATOMIA -->
+<section id="anatomia">
+  <div class="sec-label">03 · Estructura</div>
+  <div class="sec-title">Anatomía del<br>Video Viral</div>
+  <div class="sec-sub">Todo video que logra distribución masiva sigue una estructura temporal funcional. Cada segmento tiene un rol algorítmico y psicológico específico.</div>
+
+  <div class="timeline" id="tl"></div>
+
+  <div class="formula-box" style="margin-bottom:2rem">
+    <div class="formula-label">Principio de la resolución diferida</div>
+    <div class="formula-eq">La pregunta se abre en el <span class="accent">segundo 0.</span><br>La respuesta llega en el <span class="accent">segundo 55.</span><br>El loop nuevo aparece en el <span class="accent">segundo 58.</span></div>
+    <div class="formula-note">Resolver el loop demasiado pronto es la causa de muerte #1 de videos con buen hook.</div>
+  </div>
+
+  <div class="sec-label" style="margin-top:3rem">Los 5 errores estructurales más comunes</div>
+  <div class="errors-grid" id="errors-grid"></div>
+</section>
+
+<!-- HOOKS -->
+<section id="hooks">
+  <div class="sec-label">04 · Construcción</div>
+  <div class="sec-title">Constructor<br>de Hooks</div>
+  <div class="sec-sub">Combina un trigger psicológico con un formato de video para generar el hook óptimo. Los hooks están calibrados para el nicho de foreclosure.</div>
+
+  <div class="hook-builder">
+    <div class="hook-row">
+      <div class="hook-field">
+        <label>Trigger psicológico</label>
+        <select id="h-trigger" onchange="buildHook()">
+          <option value="pattern">Interrupción de patrón</option>
+          <option value="loop">Loop abierto</option>
+          <option value="social">Moneda social</option>
+          <option value="arousal">Arousal emocional</option>
+          <option value="utility">Utilidad práctica</option>
+          <option value="forbidden">Conocimiento prohibido</option>
+        </select>
+      </div>
+      <div class="hook-field">
+        <label>Formato del video</label>
+        <select id="h-format" onchange="buildHook()">
+          <option value="myth">Myth Buster</option>
+          <option value="story">Story Drop (caso real)</option>
+          <option value="explainer">System Explainer</option>
+          <option value="controversy">Controversia ética</option>
+        </select>
+      </div>
+    </div>
+    <div class="hook-output-label">Hook generado</div>
+    <div class="hook-output" id="hook-out"></div>
+  </div>
+
+  <div class="sec-label" style="margin-top:2.5rem">Reglas de construcción de hooks</div>
+  <div class="hook-rules" id="hook-rules"></div>
+</section>
+
+<!-- CURSO -->
+<section id="curso">
+  <div class="sec-label">05 · Temario</div>
+  <div class="sec-title">El Curso<br>Completo</div>
+  <div class="sec-sub">6 módulos que avanzan desde los fundamentos psicológicos de la viralidad hasta la ejecución táctica de una estrategia de 8 meses para generar 3 videos virales.</div>
+  <div id="curso-modules"></div>
+</section>
+
+<!-- CHECKLIST -->
+<section id="checklist">
+  <div class="sec-label">06 · Ejecución</div>
+  <div class="sec-title">Checklist<br>Pre-Publicación</div>
+  <div class="sec-sub">18 puntos de control que todo video debe pasar antes de publicarse. Marca cada punto. Si falla alguno, el video no está listo.</div>
+  <div class="checklist-grid" id="cl"></div>
+  <div class="check-score">
+    <div class="score-label">Puntuación de preparación</div>
+    <div class="score-num" id="score-num">0 <span>/ 18</span></div>
+    <div class="score-bar-wrap"><div class="score-bar" id="score-bar" style="width:0%"></div></div>
+    <div class="score-note" id="score-note">Completa todos los puntos antes de publicar.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Código de <span>Viralidad</span></div>
+    <div class="footer-note">Real Estate · Foreclosure Strategy · TikTok & Instagram</div>
+  </div>
+</footer>
+
+<script>
+const ELEMENTS = [
+  {num:"01",cat:"Neurológico",name:"Interrupción de patrón",desc:"El cerebro predice constantemente qué viene después. Cuando algo viola esa predicción, se libera dopamina y la atención se ancla involuntariamente. Es el mecanismo detrás de todo 'scroll-stop' genuino.",ex:"'Este banco vendió una casa de $400,000 por $78,000 — y lo hizo a propósito.'"},
+  {num:"02",cat:"Psicológico",name:"Loop cognitivo abierto",desc:"El efecto Zeigarnik: el cerebro retiene con más fuerza la información incompleta que la completa. Una pregunta sin respuesta genera tensión cognitiva que no puede ignorarse. El espectador se queda para resolver esa tensión.",ex:"'Lo que encontramos adentro de esa casa embargada cambió nuestra estrategia para siempre.' (La pregunta implícita: ¿qué encontraron?)"},
+  {num:"03",cat:"Psicológico",name:"Arousal emocional alto",desc:"Solo las emociones de alta activación generan conducta distributiva: ira, asombro, ansiedad, excitación. Las emociones tibias como satisfacción o calma no producen el impulso de compartir. La valencia (positivo/negativo) importa menos que la intensidad.",ex:"'El banco embargó la casa de esta familia en 48 horas. Aquí está lo que nadie te dice de ese proceso.'"},
+  {num:"04",cat:"Sociológico",name:"Moneda social",desc:"Las personas comparten contenido que eleva su percepción social ante otros. Compartir información exclusiva, contraintuitiva o poco conocida posiciona al emisor como alguien informado, conectado y valioso en su red.",ex:"Contenido que genera el pensamiento: 'Si mando esto, parezco más sofisticado que el 95% de la gente.'"},
+  {num:"05",cat:"Sociológico",name:"Señalización de identidad",desc:"El contenido que refleja quién es o quién quiere ser el espectador se comparte como declaración de identidad, no como simple información. No se distribuye el video, se distribuye la imagen de uno mismo que ese video proyecta.",ex:"Quien comparte un video de inversión en foreclosures se posiciona como 'inversor sofisticado', no como 'oportunista'."},
+  {num:"06",cat:"Conductual",name:"Utilidad práctica",desc:"Si el espectador cree que necesitará esta información en el futuro, guarda el video. Si cree que alguien que conoce la necesita ahora, la envía. Ambas conductas son señales algorítmicas premium que los likes no pueden reemplazar.",ex:"'Guarda esto antes de ir a tu primera subasta — es el proceso exacto que nadie explica.'"},
+  {num:"07",cat:"Neurológico",name:"Novedad genuina",desc:"El hipocampo prioriza automáticamente la codificación de información nueva sobre la conocida. El contenido que enseña algo que el espectador nunca supo activa este mecanismo de retención y crea la asociación de valor con el creador.",ex:"Revelar que los bancos tienen incentivos contables para vender rápido y barato — un hecho real que el 95% desconoce."},
+  {num:"08",cat:"Sociológico",name:"Tribalismo e in-group",desc:"Los humanos se organizan en grupos de identidad compartida. El contenido que habla directamente al grupo ('si eres como yo, esto es para ti') genera tanto engagement interno como defensivo por parte de quienes no pertenecen al grupo.",ex:"'Si eres el tipo de persona que busca deals donde nadie más mira, esto es exactamente para ti.'"},
+  {num:"09",cat:"Conductual",name:"Controversia adyacente",desc:"El contenido que provoca desacuerdo real pero sin cruzar líneas que alejen audiencias masivas genera volumen de comentarios alto. Los comentarios retroalimentan el algoritmo sin el costo de dividir o alejar al público.",ex:"'¿Es ético comprar la casa de una familia que fue embargada? Mi respuesta honesta después de 47 deals.' (Sin respuesta única, genera debate genuino)"},
+  {num:"10",cat:"Credibilidad",name:"Prueba concreta",desc:"Un solo elemento verificable — número preciso, documento, imágenes del inmueble, captura de pantalla — hace que afirmaciones extraordinarias sean creíbles. Sin prueba, el escepticismo inherente del espectador bloquea la distribución.",ex:"Mostrar el documento de escritura con el precio de compra real vs. el valor de tasación oficial."},
+  {num:"11",cat:"Psicológico",name:"Relatabilidad",desc:"El espectador comparte lo que reconoce como propio. El contenido que captura una experiencia, duda o frustración universal pero que nadie había articulado todavía activa el impulso de distribución como forma de validación.",ex:"'La razón por la que nunca compré en subasta antes — y el error que eso me costó durante 3 años.'"},
+  {num:"12",cat:"Conductual",name:"Especificidad numérica",desc:"Los números concretos detienen el scroll porque el cerebro los procesa en una región diferente al texto. Un dato preciso genera más credibilidad percibida que una afirmación general, incluso cuando ambos son verdaderos.",ex:"'$91,000' funciona. 'Precio muy bajo' no. '$91,243' genera incluso más credibilidad porque parece no editado."},
+  {num:"13",cat:"Conductual",name:"Urgencia y escasez",desc:"La percepción de que una oportunidad es limitada en tiempo o disponibilidad acelera la decisión de guardar o compartir antes de que 'desaparezca'. No requiere falsedad — basta con hacer visible lo que genuinamente es escaso.",ex:"'Las subastas de foreclosure con precio de reserva bajo $100K ocurren solo 4 veces al año en este condado.'"},
+  {num:"14",cat:"Psicológico",name:"Conocimiento prohibido",desc:"La información que parece reservada para iniciados — o que actores dominantes del mercado supuestamente 'no quieren que sepas' — genera curiosidad compulsiva. La percepción de acceso exclusivo es más poderosa que el acceso mismo.",ex:"'Lo que tu agente inmobiliario no te dice sobre las foreclosures — porque le conviene financieramente que no lo sepas.'"},
+  {num:"15",cat:"Conductual",name:"Reciprocidad",desc:"Cuando alguien da valor real sin pedir nada a cambio, el receptor siente la obligación psicológica de devolver algo: un follow, un comentario, una recomendación. El generosity marketing funciona porque activa un mecanismo social primario.",ex:"Dar gratuitamente el proceso completo de cómo acceder a listas de foreclosures antes de que lleguen al mercado abierto."},
+  {num:"16",cat:"Algorítmico",name:"Tasa de retención",desc:"El porcentaje de espectadores que completa el video es la señal de calidad más ponderada en TikTok. Un video con 80% de tasa de retención recibe distribución masiva sobre uno con 40%, incluso si el segundo tiene más likes.",ex:"Estructura que retrasa el payoff central hasta el segundo 50-55 de un video de 60 segundos, maximizando el tiempo antes de la respuesta."},
+  {num:"17",cat:"Algorítmico",name:"Tasa de rewatch",desc:"Cuando alguien ve el video más de una vez, el algoritmo lo interpreta como contenido de densidad excepcional. Los videos que dejan una duda implícita o que contienen tanta información que requieren revisión generan rewatches involuntarios.",ex:"Videos con información densa presentada a ritmo rápido — el espectador necesita verlo dos veces para capturar todo el contenido."},
+  {num:"18",cat:"Algorítmico",name:"Saves (guardados)",desc:"En TikTok e Instagram, los guardados son la señal de intención más fuerte disponible. Indican que el espectador encontró el contenido valioso para uso futuro. Algorítmicamente pesan 3 a 5 veces más que los likes.",ex:"'Guarda esto como tu guía de subasta' — CTA directo que maximiza saves sobre cualquier otro tipo de llamada a la acción."},
+  {num:"19",cat:"Algorítmico",name:"Shares y envíos",desc:"El share directo es el detonante del crecimiento exponencial. Cuando la tasa de shares supera el umbral interno de la plataforma, comienza la distribución en cascada hacia audiencias que no siguen la cuenta.",ex:"Contenido que genera el impulso espontáneo: 'Tengo que mandarle esto a alguien específico que conozco ahora mismo.'"},
+  {num:"20",cat:"Formal",name:"Densidad de información",desc:"Videos con información densa presentada en ritmo rápido generan más rewatches y saves que los mismos datos presentados lentamente. La densidad percibida equivale a valor percibido — el espectador siente que está obteniendo mucho en poco tiempo.",ex:"Explicar el proceso completo de una subasta foreclosure en 58 segundos usando texto on-screen de apoyo al discurso verbal."},
+  {num:"21",cat:"Formal",name:"Ritmo y pacing",desc:"La cadencia de cortes, la variación de ángulos y la velocidad de entrega verbal afectan directamente la tasa de retención. El aburrimiento mata el video antes que el contenido malo. El ritmo debe ser más rápido de lo que parece necesario.",ex:"Cortes cada 2-3 segundos en la sección informativa; ralentización deliberada en el momento de mayor impacto emocional o revelación de datos."},
+  {num:"22",cat:"Formal",name:"Hook visual (Frame 0)",desc:"El primer frame visible antes de que comience el audio determina si el usuario hace tap o sigue scrolleando. El gancho visual debe funcionar completamente en silencio — si requiere audio para entenderse, no es un hook visual efectivo.",ex:"Mostrar el exterior de la propiedad con el precio de compra en texto grande antes de que comience cualquier narración."},
+  {num:"23",cat:"Formal",name:"Diseño de audio",desc:"El 60% del consumo en TikTok ocurre con audio activo. El trending audio amplifica el alcance inicial porque el algoritmo lee el uso de audio viral como señal de relevancia cultural. Sin embargo, el tono del audio debe ser coherente con la credibilidad del nicho.",ex:"Audio trending de fondo adaptado al tono serio del contenido, o silencio deliberado con texto cuando la gravedad del tema lo requiere."},
+  {num:"24",cat:"Conductual",name:"CTA de acción específica",desc:"Las llamadas a la acción genéricas tienen tasa de conversión cercana a cero. Los CTAs que describen una acción concreta con un beneficio inmediato y específico convierten. La especificidad elimina la fricción decisional del espectador.",ex:"'Comenta SUBASTA y te mando el proceso completo paso a paso.' — específico, con beneficio claro y mecánica de comentario que alimenta el algoritmo."},
+  {num:"25",cat:"Distributivo",name:"Cebo de stitch y dueto",desc:"El contenido diseñado para provocar respuestas de otros creadores genera una cadena de distribución donde cada respuesta funciona como amplificador. Un creador mid-size que stitchea puede desencadenar una distribución exponencial.",ex:"Hacer una afirmación polémica pero defendible que otros creadores de finanzas personales querrán debatir, validar o refutar."},
+  {num:"26",cat:"Distributivo",name:"Sincronización temporal",desc:"Publicar contenido cuando ocurre un evento de alta búsqueda relacionado amplifica el alcance orgánico por alineación con tendencias activas. El algoritmo de búsqueda y el de distribución convergen en el mismo momento.",ex:"Video sobre foreclosures publicado el día que salen cifras nacionales de morosidad hipotecaria o de embargos récord."},
+  {num:"27",cat:"Distributivo",name:"Serie con cliffhanger",desc:"Dividir un caso real en episodios donde cada uno termina con un elemento sin resolver convierte espectadores casuales en seguidores activos. La anticipación genera follows que el contenido único no puede producir.",ex:"'Parte 1: Encontramos la propiedad. — Parte 2: El banco dijo que no. — Parte 3: Lo que hicimos después...'"},
+  {num:"28",cat:"Algorítmico",name:"Seed audience quality",desc:"Los primeros 300-500 espectadores definen si el algoritmo amplifica el video al siguiente nivel. Publicar cuando los seguidores más activos están en línea mejora la calidad de esa audiencia semilla y el comportamiento que el algoritmo observa.",ex:"Analizar qué franja horaria concentra el 20% más activo de la audiencia y publicar consistentemente en esa ventana."}
+];
+
+const TT_SIGNALS=[
+  {name:"Retención completa",pct:32},
+  {name:"Rewatch rate",pct:25},
+  {name:"Saves",pct:18},
+  {name:"Shares",pct:15},
+  {name:"Comentarios",pct:7},
+  {name:"Likes",pct:3}
+];
+const IG_SIGNALS=[
+  {name:"Sends (DMs)",pct:30},
+  {name:"Saves",pct:25},
+  {name:"Retención completa",pct:22},
+  {name:"Shares externos",pct:12},
+  {name:"Comentarios",pct:7},
+  {name:"Likes",pct:4}
+];
+
+const TIMELINE=[
+  {time:"0–2s",role:"HOOK",desc:"Interrupción de patrón + dato imposible o pregunta sin responder. Sin logos, sin presentaciones. El frame 0 debe funcionar en silencio."},
+  {time:"2–8s",role:"ESCALADA",desc:"Entrega suficiente información para justificar quedarse, pero no suficiente para resolver. Aumenta la tensión del loop cognitivo abierto."},
+  {time:"8–25s",role:"DESARROLLO",desc:"Contexto y credibilidad. Introduce el elemento de prueba concreto: número, imagen, documento. Mantén un ritmo de cortes alto."},
+  {time:"25–50s",role:"CUERPO",desc:"La información de valor real. Densa, rápida, visualmente apoyada con texto on-screen. Este segmento es donde se ganan los saves."},
+  {time:"50–57s",role:"PAYOFF",desc:"Resolución parcial del loop. La respuesta que prometiste en el segundo 0 — pero presentada de forma que abre una nueva pregunta."},
+  {time:"57–60s",role:"CTA",desc:"Una sola acción específica con beneficio inmediato claro. 'Guarda esto' o 'Comenta X para Y'. Nunca dos CTAs en el mismo video."}
+];
+
+const ERRORS=[
+  {title:"Error 1 · Presentarse antes del hook",desc:"Empezar con 'Hola, soy X y hoy les voy a hablar de...' destruye la tasa de retención en los primeros 2 segundos. El ego intro es invisible para el algoritmo y el espectador."},
+  {title:"Error 2 · Resolver el loop demasiado rápido",desc:"Dar la respuesta completa antes del segundo 30 elimina la tensión cognitiva. Sin tensión, no hay razón para quedarse, guardar ni compartir. El payoff prematuro mata el video."},
+  {title:"Error 3 · CTA genérico",desc:"'Sígueme para más contenido' tiene una tasa de conversión cercana a cero. El CTA debe ser específico, utilitario y con beneficio inmediato: 'Guarda esto antes de ir a tu primera subasta.'"},
+  {title:"Error 4 · Producción excesiva",desc:"Los videos hiper-producidos parecen anuncios pagados. El cerebro los filtra automáticamente como publicidad. La autenticidad visual genera más confianza y retención que la producción cinematográfica."},
+  {title:"Error 5 · Ausencia de prueba concreta",desc:"Las afirmaciones sin evidencia verificable — números, documentos, imágenes del inmueble — generan escepticismo que bloquea la distribución. Un solo elemento de prueba multiplica la credibilidad percibida."}
+];
+
+const HOOKS={
+  "pattern-myth":"No necesitas $200,000 para comprar una foreclosure. El número real es $12,000 — y los bancos lo saben perfectamente.",
+  "pattern-story":"Compramos esta casa de $380,000 por $91,000. El dueño anterior dejó algo adentro que no esperábamos encontrar.",
+  "pattern-explainer":"El proceso de subasta foreclosure tiene 6 pasos. El 94% de compradores falla exactamente en el paso 3 — y nadie se los dice antes.",
+  "pattern-controversy":"¿Es ético comprar la casa de una familia que fue embargada? Mi respuesta honesta después de 47 deals cerrados.",
+  "loop-myth":"Hay una razón específica por la que los bancos nunca anuncian las foreclosures al precio real — y tiene todo que ver con cómo registran las pérdidas internamente.",
+  "loop-story":"Fuimos a la subasta con $95,000. Lo que pasó en los últimos 30 segundos del remate cambió nuestra estrategia de inversión para siempre.",
+  "loop-explainer":"Existe una lista de foreclosures disponible semanas antes de que lleguen al mercado público. Así es exactamente como accedes a ella.",
+  "loop-controversy":"Este contrato que firmamos en una foreclosure tenía una cláusula que casi nos cuesta $40,000. Nadie — ni el abogado — nos advirtió.",
+  "social-myth":"La información que los inversionistas experimentados conocen sobre foreclosures — y que ningún agente inmobiliario va a explicarte nunca.",
+  "social-story":"Compramos esta propiedad en subasta y encontramos algo que el banco claramente no revisó. Esta es la historia completa del deal.",
+  "social-explainer":"Este es el proceso exacto que usan los inversionistas institucionales para identificar foreclosures semanas antes que el mercado general.",
+  "social-controversy":"La verdad incómoda sobre comprar foreclosures que nadie en este nicho quiere decir en voz alta — y por qué importa.",
+  "arousal-myth":"Los bancos lo han estado haciendo por décadas: vender propiedades a precio de descuento a compradores con información que el mercado no tiene.",
+  "arousal-story":"Esta familia perdió su casa en 48 horas. Nosotros la compramos 3 semanas después. Aquí está lo que aprendí sobre mí mismo en ese deal.",
+  "arousal-explainer":"El sistema de subastas foreclosure está diseñado para que la mayoría pierda. Esto es exactamente cómo no ser parte de esa mayoría.",
+  "arousal-controversy":"¿Se puede construir riqueza comprando foreclosures sin explotar a las familias que las perdieron? Respuesta directa, sin filtros.",
+  "utility-myth":"Guarda este video. Si alguna vez vas a comprar en subasta, estos son los 4 errores que te costarán la propiedad — todos evitables.",
+  "utility-story":"Paso a paso: así fue cómo encontramos, hicimos due diligence y cerramos esta foreclosure completa en 23 días.",
+  "utility-explainer":"El cheat sheet de subasta foreclosure que ojalá hubiera tenido en mi primer remate. Guárdalo antes de continuar.",
+  "utility-controversy":"Antes de decidir si las foreclosures son éticas, necesitas entender este mecanismo financiero. Cambia todo el análisis moral.",
+  "forbidden-myth":"Lo que los bancos no quieren que sepas sobre cómo fijan el precio de reserva en las subastas foreclosure — y cómo usarlo a tu favor.",
+  "forbidden-story":"Accedimos a una lista de foreclosures 6 semanas antes de que fueran al mercado público. Así funciona ese acceso y cómo conseguirlo.",
+  "forbidden-explainer":"Hay una base de datos gubernamental de foreclosures completamente pública — pero que nadie te enseña a usar. Aquí está exactamente cómo.",
+  "forbidden-controversy":"El conflicto de interés que existe entre tu agente inmobiliario y las foreclosures — y la razón precisa por la que nunca te lo van a mencionar."
+};
+
+const HOOK_RULES=[
+  {num:"01",title:"Máximo 12 palabras",desc:"El hook verbal debe caber en una oración corta. La densidad de impacto decrece exponencialmente con cada palabra adicional. Brevedad no es limitación — es fuerza."},
+  {num:"02",title:"Número concreto o dato imposible",desc:"Los números detienen el scroll. '¿Compramos esta casa a $91K?' funciona. 'Compramos una casa barata' no activa ningún mecanismo neurológico de atención."},
+  {num:"03",title:"Hook visual ≠ hook verbal",desc:"Lo que se VE en el primer frame debe crear curiosidad sin audio. Si el video funciona en silencio, el hook visual es sólido. Si necesita el audio para entenderse, hay un problema."},
+  {num:"04",title:"Viola una expectativa",desc:"Empieza con la conclusión inesperada, no con el problema. El cerebro responde al contraste y la contradicción, no a la confirmación de lo que ya cree."}
+];
+
+const MODULES=[
+  {num:"Módulo 01",title:"Fundamentos de la Viralidad",lessons:[
+    {t:"Qué es viralidad",d:"Definición técnica vs. percepción popular: por qué la mayoría entiende el concepto mal."},
+    {t:"La cadena conductual",d:"Del scroll-stop al share: los 7 pasos que sigue el espectador antes de distribuir contenido."},
+    {t:"Emociones de alto arousal",d:"Por qué la ira y el asombro distribuyen y la satisfacción y la calma no. El rol de la activación emocional."},
+    {t:"El error de los likes",d:"Por qué optimizar para likes en lugar de saves y shares destruye el alcance algorítmico."}
+  ]},
+  {num:"Módulo 02",title:"Los 28 Elementos de Viralidad",lessons:[
+    {t:"Elementos neurológicos",d:"Dopamina, atención y codificación de memoria: los mecanismos biológicos detrás del scroll-stop."},
+    {t:"Elementos psicológicos",d:"Tensión cognitiva, identidad y reciprocidad: los estados mentales que generan distribución."},
+    {t:"Elementos sociológicos",d:"Estatus, tribu y contagio social: por qué la gente comparte lo que dice sobre ellos, no sobre el creador."},
+    {t:"Elementos conductuales",d:"Urgencia, utilidad y CTA: los triggers de acción inmediata que mueven del consumo al comportamiento."},
+    {t:"Elementos formales",d:"Ritmo, densidad, audio y frame 0: las variables de producción que el algoritmo sí puede leer."},
+    {t:"Elementos algorítmicos",d:"Las señales que cada plataforma premia y su peso relativo: retención, saves, shares, rewatches."},
+    {t:"Elementos distributivos",d:"Stitch bait, series y sincronización temporal: cómo diseñar contenido que se amplifica solo."}
+  ]},
+  {num:"Módulo 03",title:"El Algoritmo por Plataforma",lessons:[
+    {t:"TikTok: el test de 500 views",d:"Cómo funciona el For You Page, qué mide en los primeros minutos y qué señales disparan la distribución masiva."},
+    {t:"Instagram Reels: Explore",d:"Cómo el algoritmo de Instagram difiere de TikTok y por qué el mismo video performa diferente en cada uno."},
+    {t:"Diferencias críticas",d:"La jerarquía de señales en cada plataforma y cómo adaptar contenido sin hacer cross-post directo."},
+    {t:"Señales ponderadas",d:"Qué cuenta más en cada plataforma, qué puedes controlar y qué está fuera de tu alcance."},
+    {t:"El error del watermark",d:"Por qué publicar el mismo video de TikTok en Reels penaliza el alcance y cómo evitarlo."}
+  ]},
+  {num:"Módulo 04",title:"Anatomía y Producción del Video Viral",lessons:[
+    {t:"La estructura temporal",d:"Los 6 segmentos funcionales de un video viral y el rol algorítmico y psicológico de cada uno."},
+    {t:"Ingeniería del hook",d:"Frame 0, audio y texto simultáneo: cómo construir un hook que funcione en las 3 dimensiones a la vez."},
+    {t:"Resolución diferida",d:"Cuándo y cómo dar el payoff para maximizar retención, sin traicionar la promesa del hook."},
+    {t:"Elementos de prueba",d:"Qué muestra credibilidad y qué la destruye: números, documentos, imágenes y la jerarquía de evidencia."},
+    {t:"Los 5 errores estructurales",d:"Las causas de muerte más comunes de videos con buen contenido pero estructura deficiente."},
+    {t:"Scripting para foreclosures",d:"Adaptar el framework universal al nicho específico de real estate y foreclosure."}
+  ]},
+  {num:"Módulo 05",title:"Testing y Optimización",lessons:[
+    {t:"Framework de prueba de hooks",d:"30 días, 30 variaciones: cómo testear hooks sistemáticamente antes de producir el video completo."},
+    {t:"Métricas del dashboard",d:"Qué mirar, qué ignorar y cómo interpretar los datos de retención y engagement de cada plataforma."},
+    {t:"A/B testing de CTAs",d:"Guardar vs. comentar vs. seguir: cuál convierte más en cada formato y audiencia."},
+    {t:"Cuándo escalar con paid",d:"El momento correcto para amplificar con paid media, el presupuesto mínimo y cómo medir el ROI."},
+    {t:"Capitalizar un pico viral",d:"Cómo leer un momento de viralidad y qué publicar en las 72 horas siguientes para capturar la ola."}
+  ]},
+  {num:"Módulo 06",title:"Estrategia 8 Meses · 3 Videos Virales",lessons:[
+    {t:"Los 3 arquetipos de video",d:"Myth Buster, Story Drop y System Explainer: por qué cada uno ataca un mecanismo distributivo diferente."},
+    {t:"Calendario de contenido",d:"Frecuencia óptima, timing de publicación y variedad de formato para construir autoridad de cuenta."},
+    {t:"Autoridad antes de viralidad",d:"Por qué los primeros 60 días de posting consistente son la condición previa de cualquier video viral."},
+    {t:"Del view al lead",d:"El embudo post-viralidad: cómo convertir espectadores en contactos calificados de foreclosure."},
+    {t:"ROI real del contenido viral",d:"Medir el impacto en transacciones inmobiliarias reales, no solo en métricas de plataforma."}
+  ]}
+];
+
+const CHECKLIST=[
+  {t:"El hook viola una predicción o crea un loop abierto en los primeros 2 segundos"},
+  {t:"No hay presentación personal ni logo antes del hook"},
+  {t:"Existe al menos un elemento de prueba concreto: número, documento o imagen real"},
+  {t:"El payoff principal llega después del segundo 45"},
+  {t:"El CTA es específico y tiene un beneficio inmediato y claro"},
+  {t:"El primer frame funciona como gancho visual sin audio"},
+  {t:"El video tiene subtítulos o texto on-screen en los momentos clave"},
+  {t:"La tasa de retención estimada es mayor al 60% (pruébalo con alguien antes de subir)"},
+  {t:"El contenido genera al menos una emoción de alto arousal: asombro, urgencia o sorpresa"},
+  {t:"El tema tiene potencial de debate o generar comentarios sin volverse tóxico"},
+  {t:"El video fue programado en la franja horaria de mayor actividad de la audiencia"},
+  {t:"El video no tiene watermark de TikTok si va a subirse a Reels"},
+  {t:"La miniatura/cover frame muestra el elemento de mayor impacto visual"},
+  {t:"El caption incluye una pregunta o statement que invite activamente a comentar"},
+  {t:"El video tiene entre 45 y 90 segundos (rango óptimo para retención completa)"},
+  {t:"Hay un teaser implícito al final que haga querer ver la continuación"},
+  {t:"El video aporta suficiente valor para ser guardado, independientemente del follow"},
+  {t:"Los primeros 3 comentarios de respuesta están preparados para sembrar conversación"}
+];
+
+let activeEl=null;
+let checks=new Array(CHECKLIST.length).fill(false);
+let openMod=null;
+
+function renderElements(){
+  const g=document.getElementById('el-grid');
+  ELEMENTS.forEach((el,i)=>{
+    const d=document.createElement('div');
+    d.className='el-card';
+    d.id='ec-'+i;
+    d.innerHTML=⁠ <div class="el-num">${el.num}</div><div class="el-name">${el.name}</div><div class="el-badge">${el.cat}</div> ⁠;
+    d.onclick=()=>selectEl(i);
+    g.appendChild(d);
+  });
+}
+
+function selectEl(i){
+  if(activeEl!==null) document.getElementById('ec-'+activeEl)?.classList.remove('active');
+  activeEl=i;
+  document.getElementById('ec-'+i).classList.add('active');
+  const el=ELEMENTS[i];
+  document.getElementById('el-detail').innerHTML=`
+    <div class="detail-header"><span class="detail-num">${el.num}</span><span class="detail-title">${el.name}</span><span class="el-badge" style="margin-left:4px">${el.cat}</span></div>
+    <div class="detail-body">${el.desc}</div>
+    <div class="detail-example"><strong>Aplicación directa al nicho</strong>${el.ex}</div>
+  `;
+  document.getElementById('el-detail').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function renderSignals(){
+  function sig(data,id,cls){
+    const c=document.getElementById(id);
+    data.forEach(s=>{
+      c.innerHTML+=⁠ <div class="signal-row"><span class="signal-name">${s.name}</span><div class="signal-bar-wrap"><div class="signal-bar ${cls}" style="width:0%" data-w="${s.pct}"></div></div><span class="signal-pct">${s.pct}%</span></div> ⁠;
+    });
+  }
+  sig(TT_SIGNALS,'tt-signals','tt');
+  sig(IG_SIGNALS,'ig-signals','ig');
+  setTimeout(()=>{document.querySelectorAll('.signal-bar').forEach(b=>{b.style.width=b.dataset.w+'%'})},400);
+}
+
+function renderTimeline(){
+  const tl=document.getElementById('tl');
+  TIMELINE.forEach(t=>{
+    tl.innerHTML+=⁠ <div class="tl-row"><div class="tl-time"><div class="tl-time-txt">${t.time}</div></div><div class="tl-body"><div class="tl-role">${t.role}</div><div class="tl-desc">${t.desc}</div></div></div> ⁠;
+  });
+}
+
+function renderErrors(){
+  const g=document.getElementById('errors-grid');
+  ERRORS.forEach(e=>{
+    g.innerHTML+=⁠ <div class="error-card"><div class="error-title">${e.title}</div><div class="error-desc">${e.desc}</div></div> ⁠;
+  });
+}
+
+function buildHook(){
+  const t=document.getElementById('h-trigger').value;
+  const f=document.getElementById('h-format').value;
+  const hook=HOOKS[t+'-'+f]||'Combinación en desarrollo. Prueba otra combinación de trigger y formato.';
+  document.getElementById('hook-out').innerHTML=hook.replace(/\$[\d,]+/g,m=>⁠ <span class="num">${m}</span> ⁠);
+}
+
+function renderHookRules(){
+  const g=document.getElementById('hook-rules');
+  HOOK_RULES.forEach(r=>{
+    g.innerHTML+=⁠ <div class="hook-rule"><div class="hook-rule-num">Regla ${r.num}</div><div class="hook-rule-title">${r.title}</div><div class="hook-rule-desc">${r.desc}</div></div> ⁠;
+  });
+}
+
+function renderCurso(){
+  const c=document.getElementById('curso-modules');
+  MODULES.forEach((m,i)=>{
+    const block=document.createElement('div');
+    block.className='module-block';
+    block.innerHTML=`
+      <div class="module-header" onclick="toggleMod(${i})">
+        <div><div class="module-num">${m.num}</div><div class="module-title">${m.title}</div></div>
+        <div class="module-toggle" id="mt-${i}">+</div>
+      </div>
+      <div class="module-body" id="mb-${i}">
+        ${m.lessons.map(l=>⁠ <div class="lesson"><div class="lesson-dot"></div><div class="lesson-text"><strong>${l.t}.</strong> ${l.d}</div></div> ⁠).join('')}
+      </div>`;
+    c.appendChild(block);
+  });
+}
+
+function toggleMod(i){
+  const body=document.getElementById('mb-'+i);
+  const toggle=document.getElementById('mt-'+i);
+  const isOpen=body.classList.contains('open');
+  document.querySelectorAll('.module-body').forEach(b=>b.classList.remove('open'));
+  document.querySelectorAll('[id^="mt-"]').forEach(t=>{t.classList.remove('open');t.textContent='+'});
+  if(!isOpen){body.classList.add('open');toggle.classList.add('open');toggle.textContent='+';}
+}
+
+function renderChecklist(){
+  const cl=document.getElementById('cl');
+  CHECKLIST.forEach((item,i)=>{
+    const row=document.createElement('div');
+    row.className='check-row';
+    row.innerHTML=⁠ <div class="check-box" id="cb-${i}" onclick="toggleCheck(${i})"></div><div class="check-text"><strong>${String(i+1).padStart(2,'0')}.</strong> ${item.t}</div> ⁠;
+    cl.appendChild(row);
+  });
+}
+
+function toggleCheck(i){
+  checks[i]=!checks[i];
+  const box=document.getElementById('cb-'+i);
+  box.classList.toggle('checked',checks[i]);
+  box.textContent=checks[i]?'✓':'';
+  const total=checks.filter(Boolean).length;
+  document.getElementById('score-num').innerHTML=⁠ ${total} <span>/ ${CHECKLIST.length}</span> ⁠;
+  document.getElementById('score-bar').style.width=⁠ ${(total/CHECKLIST.length)*100}% ⁠;
+  const notes=['Completa todos los puntos antes de publicar.','Buen comienzo — sigue marcando.','Vas bien — más de la mitad.','Casi listo — revisa los puntos faltantes.','Listo para publicar. Ejecuta.'];
+  const idx=total===0?0:total<5?1:total<10?2:total<17?3:4;
+  document.getElementById('score-note').textContent=notes[idx];
+}
+
+renderElements();
+renderSignals();
+renderTimeline();
+renderErrors();
+buildHook();
+renderHookRules();
+renderCurso();
+renderChecklist();
+</script>
+</body>
+</html>
