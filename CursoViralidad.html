@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -316,7 +317,7 @@ footer{border-top:0.5px solid var(--line);padding:2.5rem 2rem;text-align:center}
         <label>Trigger psicológico</label>
         <select id="h-trigger" onchange="buildHook()">
           <option value="pattern">Interrupción de patrón</option>
-          <option value="loop">Loop abierto</option>
+          <option value="loop">Loop cognitivo abierto</option>
           <option value="social">Moneda social</option>
           <option value="arousal">Arousal emocional</option>
           <option value="utility">Utilidad práctica</option>
@@ -402,268 +403,32 @@ const ELEMENTS = [
   {num:"28",cat:"Algorítmico",name:"Seed audience quality",desc:"Los primeros 300-500 espectadores definen si el algoritmo amplifica el video al siguiente nivel. Publicar cuando los seguidores más activos están en línea mejora la calidad de esa audiencia semilla y el comportamiento que el algoritmo observa.",ex:"Analizar qué franja horaria concentra el 20% más activo de la audiencia y publicar consistentemente en esa ventana."}
 ];
 
-const TT_SIGNALS=[
-  {name:"Retención completa",pct:32},
-  {name:"Rewatch rate",pct:25},
-  {name:"Saves",pct:18},
-  {name:"Shares",pct:15},
-  {name:"Comentarios",pct:7},
-  {name:"Likes",pct:3}
-];
-const IG_SIGNALS=[
-  {name:"Sends (DMs)",pct:30},
-  {name:"Saves",pct:25},
-  {name:"Retención completa",pct:22},
-  {name:"Shares externos",pct:12},
-  {name:"Comentarios",pct:7},
-  {name:"Likes",pct:4}
-];
-
-const TIMELINE=[
-  {time:"0–2s",role:"HOOK",desc:"Interrupción de patrón + dato imposible o pregunta sin responder. Sin logos, sin presentaciones. El frame 0 debe funcionar en silencio."},
-  {time:"2–8s",role:"ESCALADA",desc:"Entrega suficiente información para justificar quedarse, pero no suficiente para resolver. Aumenta la tensión del loop cognitivo abierto."},
-  {time:"8–25s",role:"DESARROLLO",desc:"Contexto y credibilidad. Introduce el elemento de prueba concreto: número, imagen, documento. Mantén un ritmo de cortes alto."},
-  {time:"25–50s",role:"CUERPO",desc:"La información de valor real. Densa, rápida, visualmente apoyada con texto on-screen. Este segmento es donde se ganan los saves."},
-  {time:"50–57s",role:"PAYOFF",desc:"Resolución parcial del loop. La respuesta que prometiste en el segundo 0 — pero presentada de forma que abre una nueva pregunta."},
-  {time:"57–60s",role:"CTA",desc:"Una sola acción específica con beneficio inmediato claro. 'Guarda esto' o 'Comenta X para Y'. Nunca dos CTAs en el mismo video."}
-];
-
-const ERRORS=[
-  {title:"Error 1 · Presentarse antes del hook",desc:"Empezar con 'Hola, soy X y hoy les voy a hablar de...' destruye la tasa de retención en los primeros 2 segundos. El ego intro es invisible para el algoritmo y el espectador."},
-  {title:"Error 2 · Resolver el loop demasiado rápido",desc:"Dar la respuesta completa antes del segundo 30 elimina la tensión cognitiva. Sin tensión, no hay razón para quedarse, guardar ni compartir. El payoff prematuro mata el video."},
-  {title:"Error 3 · CTA genérico",desc:"'Sígueme para más contenido' tiene una tasa de conversión cercana a cero. El CTA debe ser específico, utilitario y con beneficio inmediato: 'Guarda esto antes de ir a tu primera subasta.'"},
-  {title:"Error 4 · Producción excesiva",desc:"Los videos hiper-producidos parecen anuncios pagados. El cerebro los filtra automáticamente como publicidad. La autenticidad visual genera más confianza y retención que la producción cinematográfica."},
-  {title:"Error 5 · Ausencia de prueba concreta",desc:"Las afirmaciones sin evidencia verificable — números, documentos, imágenes del inmueble — generan escepticismo que bloquea la distribución. Un solo elemento de prueba multiplica la credibilidad percibida."}
-];
-
-const HOOKS={
-  "pattern-myth":"No necesitas $200,000 para comprar una foreclosure. El número real es $12,000 — y los bancos lo saben perfectamente.",
-  "pattern-story":"Compramos esta casa de $380,000 por $91,000. El dueño anterior dejó algo adentro que no esperábamos encontrar.",
-  "pattern-explainer":"El proceso de subasta foreclosure tiene 6 pasos. El 94% de compradores falla exactamente en el paso 3 — y nadie se los dice antes.",
-  "pattern-controversy":"¿Es ético comprar la casa de una familia que fue embargada? Mi respuesta honesta después de 47 deals cerrados.",
-  "loop-myth":"Hay una razón específica por la que los bancos nunca anuncian las foreclosures al precio real — y tiene todo que ver con cómo registran las pérdidas internamente.",
-  "loop-story":"Fuimos a la subasta con $95,000. Lo que pasó en los últimos 30 segundos del remate cambió nuestra estrategia de inversión para siempre.",
-  "loop-explainer":"Existe una lista de foreclosures disponible semanas antes de que lleguen al mercado público. Así es exactamente como accedes a ella.",
-  "loop-controversy":"Este contrato que firmamos en una foreclosure tenía una cláusula que casi nos cuesta $40,000. Nadie — ni el abogado — nos advirtió.",
-  "social-myth":"La información que los inversionistas experimentados conocen sobre foreclosures — y que ningún agente inmobiliario va a explicarte nunca.",
-  "social-story":"Compramos esta propiedad en subasta y encontramos algo que el banco claramente no revisó. Esta es la historia completa del deal.",
-  "social-explainer":"Este es el proceso exacto que usan los inversionistas institucionales para identificar foreclosures semanas antes que el mercado general.",
-  "social-controversy":"La verdad incómoda sobre comprar foreclosures que nadie en este nicho quiere decir en voz alta — y por qué importa.",
-  "arousal-myth":"Los bancos lo han estado haciendo por décadas: vender propiedades a precio de descuento a compradores con información que el mercado no tiene.",
-  "arousal-story":"Esta familia perdió su casa en 48 horas. Nosotros la compramos 3 semanas después. Aquí está lo que aprendí sobre mí mismo en ese deal.",
-  "arousal-explainer":"El sistema de subastas foreclosure está diseñado para que la mayoría pierda. Esto es exactamente cómo no ser parte de esa mayoría.",
-  "arousal-controversy":"¿Se puede construir riqueza comprando foreclosures sin explotar a las familias que las perdieron? Respuesta directa, sin filtros.",
-  "utility-myth":"Guarda este video. Si alguna vez vas a comprar en subasta, estos son los 4 errores que te costarán la propiedad — todos evitables.",
-  "utility-story":"Paso a paso: así fue cómo encontramos, hicimos due diligence y cerramos esta foreclosure completa en 23 días.",
-  "utility-explainer":"El cheat sheet de subasta foreclosure que ojalá hubiera tenido en mi primer remate. Guárdalo antes de continuar.",
-  "utility-controversy":"Antes de decidir si las foreclosures son éticas, necesitas entender este mecanismo financiero. Cambia todo el análisis moral.",
-  "forbidden-myth":"Lo que los bancos no quieren que sepas sobre cómo fijan el precio de reserva en las subastas foreclosure — y cómo usarlo a tu favor.",
-  "forbidden-story":"Accedimos a una lista de foreclosures 6 semanas antes de que fueran al mercado público. Así funciona ese acceso y cómo conseguirlo.",
-  "forbidden-explainer":"Hay una base de datos gubernamental de foreclosures completamente pública — pero que nadie te enseña a usar. Aquí está exactamente cómo.",
-  "forbidden-controversy":"El conflicto de interés que existe entre tu agente inmobiliario y las foreclosures — y la razón precisa por la que nunca te lo van a mencionar."
-};
-
-const HOOK_RULES=[
-  {num:"01",title:"Máximo 12 palabras",desc:"El hook verbal debe caber en una oración corta. La densidad de impacto decrece exponencialmente con cada palabra adicional. Brevedad no es limitación — es fuerza."},
-  {num:"02",title:"Número concreto o dato imposible",desc:"Los números detienen el scroll. '¿Compramos esta casa a $91K?' funciona. 'Compramos una casa barata' no activa ningún mecanismo neurológico de atención."},
-  {num:"03",title:"Hook visual ≠ hook verbal",desc:"Lo que se VE en el primer frame debe crear curiosidad sin audio. Si el video funciona en silencio, el hook visual es sólido. Si necesita el audio para entenderse, hay un problema."},
-  {num:"04",title:"Viola una expectativa",desc:"Empieza con la conclusión inesperada, no con el problema. El cerebro responde al contraste y la contradicción, no a la confirmación de lo que ya cree."}
-];
-
-const MODULES=[
-  {num:"Módulo 01",title:"Fundamentos de la Viralidad",lessons:[
-    {t:"Qué es viralidad",d:"Definición técnica vs. percepción popular: por qué la mayoría entiende el concepto mal."},
-    {t:"La cadena conductual",d:"Del scroll-stop al share: los 7 pasos que sigue el espectador antes de distribuir contenido."},
-    {t:"Emociones de alto arousal",d:"Por qué la ira y el asombro distribuyen y la satisfacción y la calma no. El rol de la activación emocional."},
-    {t:"El error de los likes",d:"Por qué optimizar para likes en lugar de saves y shares destruye el alcance algorítmico."}
-  ]},
-  {num:"Módulo 02",title:"Los 28 Elementos de Viralidad",lessons:[
-    {t:"Elementos neurológicos",d:"Dopamina, atención y codificación de memoria: los mecanismos biológicos detrás del scroll-stop."},
-    {t:"Elementos psicológicos",d:"Tensión cognitiva, identidad y reciprocidad: los estados mentales que generan distribución."},
-    {t:"Elementos sociológicos",d:"Estatus, tribu y contagio social: por qué la gente comparte lo que dice sobre ellos, no sobre el creador."},
-    {t:"Elementos conductuales",d:"Urgencia, utilidad y CTA: los triggers de acción inmediata que mueven del consumo al comportamiento."},
-    {t:"Elementos formales",d:"Ritmo, densidad, audio y frame 0: las variables de producción que el algoritmo sí puede leer."},
-    {t:"Elementos algorítmicos",d:"Las señales que cada plataforma premia y su peso relativo: retención, saves, shares, rewatches."},
-    {t:"Elementos distributivos",d:"Stitch bait, series y sincronización temporal: cómo diseñar contenido que se amplifica solo."}
-  ]},
-  {num:"Módulo 03",title:"El Algoritmo por Plataforma",lessons:[
-    {t:"TikTok: el test de 500 views",d:"Cómo funciona el For You Page, qué mide en los primeros minutos y qué señales disparan la distribución masiva."},
-    {t:"Instagram Reels: Explore",d:"Cómo el algoritmo de Instagram difiere de TikTok y por qué el mismo video performa diferente en cada uno."},
-    {t:"Diferencias críticas",d:"La jerarquía de señales en cada plataforma y cómo adaptar contenido sin hacer cross-post directo."},
-    {t:"Señales ponderadas",d:"Qué cuenta más en cada plataforma, qué puedes controlar y qué está fuera de tu alcance."},
-    {t:"El error del watermark",d:"Por qué publicar el mismo video de TikTok en Reels penaliza el alcance y cómo evitarlo."}
-  ]},
-  {num:"Módulo 04",title:"Anatomía y Producción del Video Viral",lessons:[
-    {t:"La estructura temporal",d:"Los 6 segmentos funcionales de un video viral y el rol algorítmico y psicológico de cada uno."},
-    {t:"Ingeniería del hook",d:"Frame 0, audio y texto simultáneo: cómo construir un hook que funcione en las 3 dimensiones a la vez."},
-    {t:"Resolución diferida",d:"Cuándo y cómo dar el payoff para maximizar retención, sin traicionar la promesa del hook."},
-    {t:"Elementos de prueba",d:"Qué muestra credibilidad y qué la destruye: números, documentos, imágenes y la jerarquía de evidencia."},
-    {t:"Los 5 errores estructurales",d:"Las causas de muerte más comunes de videos con buen contenido pero estructura deficiente."},
-    {t:"Scripting para foreclosures",d:"Adaptar el framework universal al nicho específico de real estate y foreclosure."}
-  ]},
-  {num:"Módulo 05",title:"Testing y Optimización",lessons:[
-    {t:"Framework de prueba de hooks",d:"30 días, 30 variaciones: cómo testear hooks sistemáticamente antes de producir el video completo."},
-    {t:"Métricas del dashboard",d:"Qué mirar, qué ignorar y cómo interpretar los datos de retención y engagement de cada plataforma."},
-    {t:"A/B testing de CTAs",d:"Guardar vs. comentar vs. seguir: cuál convierte más en cada formato y audiencia."},
-    {t:"Cuándo escalar con paid",d:"El momento correcto para amplificar con paid media, el presupuesto mínimo y cómo medir el ROI."},
-    {t:"Capitalizar un pico viral",d:"Cómo leer un momento de viralidad y qué publicar en las 72 horas siguientes para capturar la ola."}
-  ]},
-  {num:"Módulo 06",title:"Estrategia 8 Meses · 3 Videos Virales",lessons:[
-    {t:"Los 3 arquetipos de video",d:"Myth Buster, Story Drop y System Explainer: por qué cada uno ataca un mecanismo distributivo diferente."},
-    {t:"Calendario de contenido",d:"Frecuencia óptima, timing de publicación y variedad de formato para construir autoridad de cuenta."},
-    {t:"Autoridad antes de viralidad",d:"Por qué los primeros 60 días de posting consistente son la condición previa de cualquier video viral."},
-    {t:"Del view al lead",d:"El embudo post-viralidad: cómo convertir espectadores en contactos calificados de foreclosure."},
-    {t:"ROI real del contenido viral",d:"Medir el impacto en transacciones inmobiliarias reales, no solo en métricas de plataforma."}
-  ]}
-];
-
-const CHECKLIST=[
-  {t:"El hook viola una predicción o crea un loop abierto en los primeros 2 segundos"},
-  {t:"No hay presentación personal ni logo antes del hook"},
-  {t:"Existe al menos un elemento de prueba concreto: número, documento o imagen real"},
-  {t:"El payoff principal llega después del segundo 45"},
-  {t:"El CTA es específico y tiene un beneficio inmediato y claro"},
-  {t:"El primer frame funciona como gancho visual sin audio"},
-  {t:"El video tiene subtítulos o texto on-screen en los momentos clave"},
-  {t:"La tasa de retención estimada es mayor al 60% (pruébalo con alguien antes de subir)"},
-  {t:"El contenido genera al menos una emoción de alto arousal: asombro, urgencia o sorpresa"},
-  {t:"El tema tiene potencial de debate o generar comentarios sin volverse tóxico"},
-  {t:"El video fue programado en la franja horaria de mayor actividad de la audiencia"},
-  {t:"El video no tiene watermark de TikTok si va a subirse a Reels"},
-  {t:"La miniatura/cover frame muestra el elemento de mayor impacto visual"},
-  {t:"El caption incluye una pregunta o statement que invite activamente a comentar"},
-  {t:"El video tiene entre 45 y 90 segundos (rango óptimo para retención completa)"},
-  {t:"Hay un teaser implícito al final que haga querer ver la continuación"},
-  {t:"El video aporta suficiente valor para ser guardado, independientemente del follow"},
-  {t:"Los primeros 3 comentarios de respuesta están preparados para sembrar conversación"}
-];
+const TT_SIGNALS=[{name:"Retención completa",pct:32},{name:"Rewatch rate",pct:25},{name:"Saves",pct:18},{name:"Shares",pct:15},{name:"Comentarios",pct:7},{name:"Likes",pct:3}];
+const IG_SIGNALS=[{name:"Sends (DMs)",pct:30},{name:"Saves",pct:25},{name:"Retención completa",pct:22},{name:"Shares externos",pct:12},{name:"Comentarios",pct:7},{name:"Likes",pct:4}];
+const TIMELINE=[{time:"0–2s",role:"HOOK",desc:"Interrupción de patrón + dato imposible o pregunta sin responder. Sin logos, sin presentaciones. El frame 0 debe funcionar en silencio."},{time:"2–8s",role:"ESCALADA",desc:"Entrega suficiente información para justificar quedarse, pero no suficiente para resolver. Aumenta la tensión del loop cognitivo abierto."},{time:"8–25s",role:"DESARROLLO",desc:"Contexto y credibilidad. Introduce el elemento de prueba concreto: número, imagen, documento. Mantén un ritmo de cortes alto."},{time:"25–50s",role:"CUERPO",desc:"La información de valor real. Densa, rápida, visualmente apoyada con texto on-screen. Este segmento es donde se ganan los saves."},{time:"50–57s",role:"PAYOFF",desc:"Resolución parcial del loop. La respuesta que prometiste en el segundo 0 — pero presentada de forma que abre una nueva pregunta."},{time:"57–60s",role:"CTA",desc:"Una sola acción específica con beneficio inmediato claro. 'Guarda esto' o 'Comenta X para Y'. Nunca dos CTAs en el mismo video."}];
+const ERRORS=[{title:"Error 1 · Presentarse antes del hook",desc:"Empezar con 'Hola, soy X y hoy les voy a hablar de...' destruye la tasa de retención en los primeros 2 segundos. El ego intro es invisible para el algoritmo y el espectador."},{title:"Error 2 · Resolver el loop demasiado rápido",desc:"Dar la respuesta completa antes del segundo 30 elimina la tensión cognitiva. Sin tensión, no hay razón para quedarse, guardar ni compartir. El payoff prematuro mata el video."},{title:"Error 3 · CTA genérico",desc:"'Sígueme para más contenido' tiene una tasa de conversión cercana a cero. El CTA debe ser específico, utilitario y con beneficio inmediato: 'Guarda esto antes de ir a tu primera subasta.'"},{title:"Error 4 · Producción excesiva",desc:"Los videos hiper-producidos parecen anuncios pagados. El cerebro los filtra automáticamente como publicidad. La autenticidad visual genera más confianza y retención que la producción cinematográfica."},{title:"Error 5 · Ausencia de prueba concreta",desc:"Las afirmaciones sin evidencia verificable — números, documentos, imágenes del inmueble — generan escepticismo que bloquea la distribución. Un solo elemento de prueba multiplica la credibilidad percibida."}];
+const HOOKS={"pattern-myth":"No necesitas $200,000 para comprar una foreclosure. El número real es $12,000 — y los bancos lo saben perfectamente.","pattern-story":"Compramos esta casa de $380,000 por $91,000. El dueño anterior dejó algo adentro que no esperábamos encontrar.","pattern-explainer":"El proceso de subasta foreclosure tiene 6 pasos. El 94% de compradores falla exactamente en el paso 3 — y nadie se los dice antes.","pattern-controversy":"¿Es ético comprar la casa de una familia que fue embargada? Mi respuesta honesta después de 47 deals cerrados.","loop-myth":"Hay una razón específica por la que los bancos nunca anuncian las foreclosures al precio real — y tiene todo que ver con cómo registran las pérdidas internamente.","loop-story":"Fuimos a la subasta con $95,000. Lo que pasó en los últimos 30 segundos del remate cambió nuestra estrategia de inversión para siempre.","loop-explainer":"Existe una lista de foreclosures disponible semanas antes de que lleguen al mercado público. Así es exactamente como accedes a ella.","loop-controversy":"Este contrato que firmamos en una foreclosure tenía una cláusula que casi nos cuesta $40,000. Nadie — ni el abogado — nos advirtió.","social-myth":"La información que los inversionistas experimentados conocen sobre foreclosures — y que ningún agente inmobiliario va a explicarte nunca.","social-story":"Compramos esta propiedad en subasta y encontramos algo que el banco claramente no revisó. Esta es la historia completa del deal.","social-explainer":"Este es el proceso exacto que usan los inversionistas institucionales para identificar foreclosures semanas antes que el mercado general.","social-controversy":"La verdad incómoda sobre comprar foreclosures que nadie en este nicho quiere decir en voz alta — y por qué importa.","arousal-myth":"Los bancos lo han estado haciendo por décadas: vender propiedades a precio de descuento a compradores con información que el mercado no tiene.","arousal-story":"Esta familia perdió su casa en 48 horas. Nosotros la compramos 3 semanas después. Aquí está lo que aprendí sobre mí mismo en ese deal.","arousal-explainer":"El sistema de subastas foreclosure está diseñado para que la mayoría pierda. Esto es exactamente cómo no ser parte de esa mayoría.","arousal-controversy":"¿Se puede construir riqueza comprando foreclosures sin explotar a las familias que las perdieron? Respuesta directa, sin filtros.","utility-myth":"Guarda este video. Si alguna vez vas a comprar en subasta, estos son los 4 errores que te costarán la propiedad — todos evitables.","utility-story":"Paso a paso: así fue cómo encontramos, hicimos due diligence y cerramos esta foreclosure completa en 23 días.","utility-explainer":"El cheat sheet de subasta foreclosure que ojalá hubiera tenido en mi primer remate. Guárdalo antes de continuar.","utility-controversy":"Antes de decidir si las foreclosures son éticas, necesitas entender este mecanismo financiero. Cambia todo el análisis moral.","forbidden-myth":"Lo que los bancos no quieren que sepas sobre cómo fijan el precio de reserva en las subastas foreclosure — y cómo usarlo a tu favor.","forbidden-story":"Accedimos a una lista de foreclosures 6 semanas antes de que fueran al mercado público. Así funciona ese acceso y cómo conseguirlo.","forbidden-explainer":"Hay una base de datos gubernamental de foreclosures completamente pública — pero que nadie te enseña a usar. Aquí está exactamente cómo.","forbidden-controversy":"El conflicto de interés que existe entre tu agente inmobiliario y las foreclosures — y la razón precisa por la que nunca te lo van a mencionar."};
+const HOOK_RULES=[{num:"01",title:"Máximo 12 palabras",desc:"El hook verbal debe caber en una oración corta. La densidad de impacto decrece exponencialmente con cada palabra adicional. Brevedad no es limitación — es fuerza."},{num:"02",title:"Número concreto o dato imposible",desc:"Los números detienen el scroll. '¿Compramos esta casa a $91K?' funciona. 'Compramos una casa barata' no activa ningún mecanismo neurológico de atención."},{num:"03",title:"Hook visual ≠ hook verbal",desc:"Lo que se VE en el primer frame debe crear curiosidad sin audio. Si el video funciona en silencio, el hook visual es sólido. Si necesita el audio para entenderse, hay un problema."},{num:"04",title:"Viola una expectativa",desc:"Empieza con la conclusión inesperada, no con el problema. El cerebro responde al contraste y la contradicción, no a la confirmación de lo que ya cree."}];
+const MODULES=[{num:"Módulo 01",title:"Fundamentos de la Viralidad",lessons:[{t:"Qué es viralidad",d:"Definición técnica vs. percepción popular: por qué la mayoría entiende el concepto mal."},{t:"La cadena conductual",d:"Del scroll-stop al share: los 7 pasos que sigue el espectador antes de distribuir contenido."},{t:"Emociones de alto arousal",d:"Por qué la ira y el asombro distribuyen y la satisfacción y la calma no. El rol de la activación emocional."},{t:"El error de los likes",d:"Por qué optimizar para likes en lugar de saves y shares destruye el alcance algorítmico."}]},{num:"Módulo 02",title:"Los 28 Elementos de Viralidad",lessons:[{t:"Elementos neurológicos",d:"Dopamina, atención y codificación de memoria: los mecanismos biológicos detrás del scroll-stop."},{t:"Elementos psicológicos",d:"Tensión cognitiva, identidad y reciprocidad: los estados mentales que generan distribución."},{t:"Elementos sociológicos",d:"Estatus, tribu y contagio social: por qué la gente comparte lo que dice sobre ellos, no sobre el creador."},{t:"Elementos conductuales",d:"Urgencia, utilidad y CTA: los triggers de acción inmediata que mueven del consumo al comportamiento."},{t:"Elementos formales",d:"Ritmo, densidad, audio y frame 0: las variables de producción que el algoritmo sí puede leer."},{t:"Elementos algorítmicos",d:"Las señales que cada plataforma premia y su peso relativo: retención, saves, shares, rewatches."},{t:"Elementos distributivos",d:"Stitch bait, series y sincronización temporal: cómo diseñar contenido que se amplifica solo."}]},{num:"Módulo 03",title:"El Algoritmo por Plataforma",lessons:[{t:"TikTok: el test de 500 views",d:"Cómo funciona el For You Page, qué mide en los primeros minutos y qué señales disparan la distribución masiva."},{t:"Instagram Reels: Explore",d:"Cómo el algoritmo de Instagram difiere de TikTok y por qué el mismo video performa diferente en cada uno."},{t:"Diferencias críticas",d:"La jerarquía de señales en cada plataforma y cómo adaptar contenido sin hacer cross-post directo."},{t:"Señales ponderadas",d:"Qué cuenta más en cada plataforma, qué puedes controlar y qué está fuera de tu alcance."},{t:"El error del watermark",d:"Por qué publicar el mismo video de TikTok en Reels penaliza el alcance y cómo evitarlo."}]},{num:"Módulo 04",title:"Anatomía y Producción del Video Viral",lessons:[{t:"La estructura temporal",d:"Los 6 segmentos funcionales de un video viral y el rol algorítmico y psicológico de cada uno."},{t:"Ingeniería del hook",d:"Frame 0, audio y texto simultáneo: cómo construir un hook que funcione en las 3 dimensiones a la vez."},{t:"Resolución diferida",d:"Cuándo y cómo dar el payoff para maximizar retención, sin traicionar la promesa del hook."},{t:"Elementos de prueba",d:"Qué muestra credibilidad y qué la destruye: números, documentos, imágenes y la jerarquía de evidencia."},{t:"Los 5 errores estructurales",d:"Las causas de muerte más comunes de videos con buen contenido pero estructura deficiente."},{t:"Scripting para foreclosures",d:"Adaptar el framework universal al nicho específico de real estate y foreclosure."}]},{num:"Módulo 05",title:"Testing y Optimización",lessons:[{t:"Framework de prueba de hooks",d:"30 días, 30 variaciones: cómo testear hooks sistemáticamente antes de producir el video completo."},{t:"Métricas del dashboard",d:"Qué mirar, qué ignorar y cómo interpretar los datos de retención y engagement de cada plataforma."},{t:"A/B testing de CTAs",d:"Guardar vs. comentar vs. seguir: cuál convierte más en cada formato y audiencia."},{t:"Cuándo escalar con paid",d:"El momento correcto para amplificar con paid media, el presupuesto mínimo y cómo medir el ROI."},{t:"Capitalizar un pico viral",d:"Cómo leer un momento de viralidad y qué publicar en las 72 horas siguientes para capturar la ola."}]},{num:"Módulo 06",title:"Estrategia 8 Meses · 3 Videos Virales",lessons:[{t:"Los 3 arquetipos de video",d:"Myth Buster, Story Drop y System Explainer: por qué cada uno ataca un mecanismo distributivo diferente."},{t:"Calendario de contenido",d:"Frecuencia óptima, timing de publicación y variedad de formato para construir autoridad de cuenta."},{t:"Autoridad antes de viralidad",d:"Por qué los primeros 60 días de posting consistente son la condición previa de cualquier video viral."},{t:"Del view al lead",d:"El embudo post-viralidad: cómo convertir espectadores en contactos calificados de foreclosure."},{t:"ROI real del contenido viral",d:"Medir el impacto en transacciones inmobiliarias reales, no solo en métricas de plataforma."}]}];
+const CHECKLIST=[{t:"El hook viola una predicción o crea un loop abierto en los primeros 2 segundos"},{t:"No hay presentación personal ni logo antes del hook"},{t:"Existe al menos un elemento de prueba concreto: número, documento o imagen real"},{t:"El payoff principal llega después del segundo 45"},{t:"El CTA es específico y tiene un beneficio inmediato y claro"},{t:"El primer frame funciona como gancho visual sin audio"},{t:"El video tiene subtítulos o texto on-screen en los momentos clave"},{t:"La tasa de retención estimada es mayor al 60% (pruébalo con alguien antes de subir)"},{t:"El contenido genera al menos una emoción de alto arousal: asombro, urgencia o sorpresa"},{t:"El tema tiene potencial de debate o generar comentarios sin volverse tóxico"},{t:"El video fue programado en la franja horaria de mayor actividad de la audiencia"},{t:"El video no tiene watermark de TikTok si va a subirse a Reels"},{t:"La miniatura/cover frame muestra el elemento de mayor impacto visual"},{t:"El caption incluye una pregunta o statement que invite activamente a comentar"},{t:"El video tiene entre 45 y 90 segundos (rango óptimo para retención completa)"},{t:"Hay un teaser implícito al final que haga querer ver la continuación"},{t:"El video aporta suficiente valor para ser guardado, independientemente del follow"},{t:"Los primeros 3 comentarios de respuesta están preparados para sembrar conversación"}];
 
 let activeEl=null;
 let checks=new Array(CHECKLIST.length).fill(false);
-let openMod=null;
 
-function renderElements(){
-  const g=document.getElementById('el-grid');
-  ELEMENTS.forEach((el,i)=>{
-    const d=document.createElement('div');
-    d.className='el-card';
-    d.id='ec-'+i;
-    d.innerHTML=`<div class="el-num">${el.num}</div><div class="el-name">${el.name}</div><div class="el-badge">${el.cat}</div>`;
-    d.onclick=()=>selectEl(i);
-    g.appendChild(d);
-  });
-}
+function renderElements(){ const g=document.getElementById('el-grid'); ELEMENTS.forEach((el,i)=>{ const d=document.createElement('div'); d.className='el-card'; d.id='ec-'+i; d.innerHTML=`<div class="el-num">${el.num}</div><div class="el-name">${el.name}</div><div class="el-badge">${el.cat}</div>`; d.onclick=()=>selectEl(i); g.appendChild(d); }); }
+function selectEl(i){ if(activeEl!==null) document.getElementById('ec-'+activeEl)?.classList.remove('active'); activeEl=i; document.getElementById('ec-'+i).classList.add('active'); const el=ELEMENTS[i]; document.getElementById('el-detail').innerHTML=`<div class="detail-header"><span class="detail-num">${el.num}</span><span class="detail-title">${el.name}</span><span class="el-badge" style="margin-left:4px">${el.cat}</span></div><div class="detail-body">${el.desc}</div><div class="detail-example"><strong>Aplicación directa al nicho</strong>${el.ex}</div>`; document.getElementById('el-detail').scrollIntoView({behavior:'smooth',block:'nearest'}); }
+function renderSignals(){ function sig(data,id,cls){ const c=document.getElementById(id); c.innerHTML=''; data.forEach(s=>{ c.innerHTML+=`<div class="signal-row"><span class="signal-name">${s.name}</span><div class="signal-bar-wrap"><div class="signal-bar ${cls}" style="width:0%" data-w="${s.pct}"></div></div><span class="signal-pct">${s.pct}%</span></div>`; }); } sig(TT_SIGNALS,'tt-signals','tt'); sig(IG_SIGNALS,'ig-signals','ig'); setTimeout(()=>{document.querySelectorAll('.signal-bar').forEach(b=>{b.style.width=b.dataset.w+'%'})},100); }
+function renderTimeline(){ const tl=document.getElementById('tl'); tl.innerHTML=''; TIMELINE.forEach(t=>{ tl.innerHTML+=`<div class="tl-row"><div class="tl-time"><div class="tl-time-txt">${t.time}</div></div><div class="tl-body"><div class="tl-role">${t.role}</div><div class="tl-desc">${t.desc}</div></div></div>`; }); }
+function renderErrors(){ const g=document.getElementById('errors-grid'); g.innerHTML=''; ERRORS.forEach(e=>{ g.innerHTML+=`<div class="error-card"><div class="error-title">${e.title}</div><div class="error-desc">${e.desc}</div></div>`; }); }
+function buildHook(){ const t=document.getElementById('h-trigger').value; const f=document.getElementById('h-format').value; const hook=HOOKS[t+'-'+f]||'Combinación en desarrollo. Prueba otra combinación de trigger y formato.'; document.getElementById('hook-out').innerHTML=hook.replace(/\$[\d,]+/g,m=>`<span class="num">${m}</span>`); }
+function renderHookRules(){ const g=document.getElementById('hook-rules'); g.innerHTML=''; HOOK_RULES.forEach(r=>{ g.innerHTML+=`<div class="hook-rule"><div class="hook-rule-num">Regla ${r.num}</div><div class="hook-rule-title">${r.title}</div><div class="hook-rule-desc">${r.desc}</div></div>`; }); }
+function renderCurso(){ const c=document.getElementById('curso-modules'); c.innerHTML=''; MODULES.forEach((m,i)=>{ const block=document.createElement('div'); block.className='module-block'; block.innerHTML=`<div class="module-header" onclick="toggleMod(${i})"><div><div class="module-num">${m.num}</div><div class="module-title">${m.title}</div></div><div class="module-toggle" id="mt-${i}">+</div></div><div class="module-body" id="mb-${i}">${m.lessons.map(l=>`<div class="lesson"><div class="lesson-dot"></div><div class="lesson-text"><strong>${l.t}.</strong> ${l.d}</div></div>`).join('')}</div>`; c.appendChild(block); }); }
+function toggleMod(i){ const body=document.getElementById('mb-'+i); const toggle=document.getElementById('mt-'+i); const isOpen=body.classList.contains('open'); document.querySelectorAll('.module-body').forEach(b=>b.classList.remove('open')); document.querySelectorAll('[id^="mt-"]').forEach(t=>{t.classList.remove('open');t.textContent='+';}); if(!isOpen){body.classList.add('open');toggle.classList.add('open');toggle.textContent='+';} }
+function renderChecklist(){ const cl=document.getElementById('cl'); cl.innerHTML=''; CHECKLIST.forEach((item,i)=>{ const row=document.createElement('div'); row.className='check-row'; row.innerHTML=`<div class="check-box" id="cb-${i}" onclick="toggleCheck(${i})"></div><div class="check-text"><strong>${String(i+1).padStart(2,'0')}.</strong> ${item.t}</div>`; cl.appendChild(row); }); updateScore(); }
+function toggleCheck(i){ checks[i]=!checks[i]; const box=document.getElementById('cb-'+i); if(box){ box.classList.toggle('checked',checks[i]); box.textContent=checks[i]?'✓':''; } updateScore(); }
+function updateScore(){ const total=checks.filter(Boolean).length; document.getElementById('score-num').innerHTML=`${total} <span>/ ${CHECKLIST.length}</span>`; document.getElementById('score-bar').style.width=`${(total/CHECKLIST.length)*100}%`; const notes=['Completa todos los puntos antes de publicar.','Buen comienzo — sigue marcando.','Vas bien — más de la mitad.','Casi listo — revisa los puntos faltantes.','Listo para publicar. Ejecuta.']; const idx=total===0?0:total<5?1:total<10?2:total<17?3:4; document.getElementById('score-note').textContent=notes[idx]; }
 
-function selectEl(i){
-  if(activeEl!==null) document.getElementById('ec-'+activeEl)?.classList.remove('active');
-  activeEl=i;
-  document.getElementById('ec-'+i).classList.add('active');
-  const el=ELEMENTS[i];
-  document.getElementById('el-detail').innerHTML=`
-    <div class="detail-header"><span class="detail-num">${el.num}</span><span class="detail-title">${el.name}</span><span class="el-badge" style="margin-left:4px">${el.cat}</span></div>
-    <div class="detail-body">${el.desc}</div>
-    <div class="detail-example"><strong>Aplicación directa al nicho</strong>${el.ex}</div>
-  `;
-  document.getElementById('el-detail').scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-
-function renderSignals(){
-  function sig(data,id,cls){
-    const c=document.getElementById(id);
-    data.forEach(s=>{
-      c.innerHTML+=`<div class="signal-row"><span class="signal-name">${s.name}</span><div class="signal-bar-wrap"><div class="signal-bar ${cls}" style="width:0%" data-w="${s.pct}"></div></div><span class="signal-pct">${s.pct}%</span></div>`;
-    });
-  }
-  sig(TT_SIGNALS,'tt-signals','tt');
-  sig(IG_SIGNALS,'ig-signals','ig');
-  setTimeout(()=>{document.querySelectorAll('.signal-bar').forEach(b=>{b.style.width=b.dataset.w+'%'})},400);
-}
-
-function renderTimeline(){
-  const tl=document.getElementById('tl');
-  TIMELINE.forEach(t=>{
-    tl.innerHTML+=`<div class="tl-row"><div class="tl-time"><div class="tl-time-txt">${t.time}</div></div><div class="tl-body"><div class="tl-role">${t.role}</div><div class="tl-desc">${t.desc}</div></div></div>`;
-  });
-}
-
-function renderErrors(){
-  const g=document.getElementById('errors-grid');
-  ERRORS.forEach(e=>{
-    g.innerHTML+=`<div class="error-card"><div class="error-title">${e.title}</div><div class="error-desc">${e.desc}</div></div>`;
-  });
-}
-
-function buildHook(){
-  const t=document.getElementById('h-trigger').value;
-  const f=document.getElementById('h-format').value;
-  const hook=HOOKS[t+'-'+f]||'Combinación en desarrollo. Prueba otra combinación de trigger y formato.';
-  document.getElementById('hook-out').innerHTML=hook.replace(/\$[\d,]+/g,m=>`<span class="num">${m}</span>`);
-}
-
-function renderHookRules(){
-  const g=document.getElementById('hook-rules');
-  HOOK_RULES.forEach(r=>{
-    g.innerHTML+=`<div class="hook-rule"><div class="hook-rule-num">Regla ${r.num}</div><div class="hook-rule-title">${r.title}</div><div class="hook-rule-desc">${r.desc}</div></div>`;
-  });
-}
-
-function renderCurso(){
-  const c=document.getElementById('curso-modules');
-  MODULES.forEach((m,i)=>{
-    const block=document.createElement('div');
-    block.className='module-block';
-    block.innerHTML=`
-      <div class="module-header" onclick="toggleMod(${i})">
-        <div><div class="module-num">${m.num}</div><div class="module-title">${m.title}</div></div>
-        <div class="module-toggle" id="mt-${i}">+</div>
-      </div>
-      <div class="module-body" id="mb-${i}">
-        ${m.lessons.map(l=>`<div class="lesson"><div class="lesson-dot"></div><div class="lesson-text"><strong>${l.t}.</strong> ${l.d}</div></div>`).join('')}
-      </div>`;
-    c.appendChild(block);
-  });
-}
-
-function toggleMod(i){
-  const body=document.getElementById('mb-'+i);
-  const toggle=document.getElementById('mt-'+i);
-  const isOpen=body.classList.contains('open');
-  document.querySelectorAll('.module-body').forEach(b=>b.classList.remove('open'));
-  document.querySelectorAll('[id^="mt-"]').forEach(t=>{t.classList.remove('open');t.textContent='+'});
-  if(!isOpen){body.classList.add('open');toggle.classList.add('open');toggle.textContent='+';}
-}
-
-function renderChecklist(){
-  const cl=document.getElementById('cl');
-  CHECKLIST.forEach((item,i)=>{
-    const row=document.createElement('div');
-    row.className='check-row';
-    row.innerHTML=`<div class="check-box" id="cb-${i}" onclick="toggleCheck(${i})"></div><div class="check-text"><strong>${String(i+1).padStart(2,'0')}.</strong> ${item.t}</div>`;
-    cl.appendChild(row);
-  });
-}
-
-function toggleCheck(i){
-  checks[i]=!checks[i];
-  const box=document.getElementById('cb-'+i);
-  box.classList.toggle('checked',checks[i]);
-  box.textContent=checks[i]?'✓':'';
-  const total=checks.filter(Boolean).length;
-  document.getElementById('score-num').innerHTML=`${total} <span>/ ${CHECKLIST.length}</span>`;
-  document.getElementById('score-bar').style.width=`${(total/CHECKLIST.length)*100}%`;
-  const notes=['Completa todos los puntos antes de publicar.','Buen comienzo — sigue marcando.','Vas bien — más de la mitad.','Casi listo — revisa los puntos faltantes.','Listo para publicar. Ejecuta.'];
-  const idx=total===0?0:total<5?1:total<10?2:total<17?3:4;
-  document.getElementById('score-note').textContent=notes[idx];
-}
-
-renderElements();
-renderSignals();
-renderTimeline();
-renderErrors();
-buildHook();
-renderHookRules();
-renderCurso();
-renderChecklist();
+renderElements(); renderSignals(); renderTimeline(); renderErrors(); renderHookRules(); renderCurso(); renderChecklist(); buildHook(); selectEl(0);
 </script>
 </body>
 </html>
