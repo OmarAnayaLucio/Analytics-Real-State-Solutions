@@ -548,7 +548,7 @@ function renderElements(){
     const d=document.createElement('div');
     d.className='el-card';
     d.id='ec-'+i;
-    d.innerHTML=⁠ <div class="el-num">${el.num}</div><div class="el-name">${el.name}</div><div class="el-badge">${el.cat}</div> ⁠;
+    d.innerHTML=`<div class="el-num">${el.num}</div><div class="el-name">${el.name}</div><div class="el-badge">${el.cat}</div>`;
     d.onclick=()=>selectEl(i);
     g.appendChild(d);
   });
@@ -571,7 +571,7 @@ function renderSignals(){
   function sig(data,id,cls){
     const c=document.getElementById(id);
     data.forEach(s=>{
-      c.innerHTML+=⁠ <div class="signal-row"><span class="signal-name">${s.name}</span><div class="signal-bar-wrap"><div class="signal-bar ${cls}" style="width:0%" data-w="${s.pct}"></div></div><span class="signal-pct">${s.pct}%</span></div> ⁠;
+      c.innerHTML+=`<div class="signal-row"><span class="signal-name">${s.name}</span><div class="signal-bar-wrap"><div class="signal-bar ${cls}" style="width:0%" data-w="${s.pct}"></div></div><span class="signal-pct">${s.pct}%</span></div>`;
     });
   }
   sig(TT_SIGNALS,'tt-signals','tt');
@@ -582,14 +582,14 @@ function renderSignals(){
 function renderTimeline(){
   const tl=document.getElementById('tl');
   TIMELINE.forEach(t=>{
-    tl.innerHTML+=⁠ <div class="tl-row"><div class="tl-time"><div class="tl-time-txt">${t.time}</div></div><div class="tl-body"><div class="tl-role">${t.role}</div><div class="tl-desc">${t.desc}</div></div></div> ⁠;
+    tl.innerHTML+=`<div class="tl-row"><div class="tl-time"><div class="tl-time-txt">${t.time}</div></div><div class="tl-body"><div class="tl-role">${t.role}</div><div class="tl-desc">${t.desc}</div></div></div>`;
   });
 }
 
 function renderErrors(){
   const g=document.getElementById('errors-grid');
   ERRORS.forEach(e=>{
-    g.innerHTML+=⁠ <div class="error-card"><div class="error-title">${e.title}</div><div class="error-desc">${e.desc}</div></div> ⁠;
+    g.innerHTML+=`<div class="error-card"><div class="error-title">${e.title}</div><div class="error-desc">${e.desc}</div></div>`;
   });
 }
 
@@ -597,13 +597,13 @@ function buildHook(){
   const t=document.getElementById('h-trigger').value;
   const f=document.getElementById('h-format').value;
   const hook=HOOKS[t+'-'+f]||'Combinación en desarrollo. Prueba otra combinación de trigger y formato.';
-  document.getElementById('hook-out').innerHTML=hook.replace(/\$[\d,]+/g,m=>⁠ <span class="num">${m}</span> ⁠);
+  document.getElementById('hook-out').innerHTML=hook.replace(/\$[\d,]+/g,m=>`<span class="num">${m}</span>`);
 }
 
 function renderHookRules(){
   const g=document.getElementById('hook-rules');
   HOOK_RULES.forEach(r=>{
-    g.innerHTML+=⁠ <div class="hook-rule"><div class="hook-rule-num">Regla ${r.num}</div><div class="hook-rule-title">${r.title}</div><div class="hook-rule-desc">${r.desc}</div></div> ⁠;
+    g.innerHTML+=`<div class="hook-rule"><div class="hook-rule-num">Regla ${r.num}</div><div class="hook-rule-title">${r.title}</div><div class="hook-rule-desc">${r.desc}</div></div>`;
   });
 }
 
@@ -618,7 +618,7 @@ function renderCurso(){
         <div class="module-toggle" id="mt-${i}">+</div>
       </div>
       <div class="module-body" id="mb-${i}">
-        ${m.lessons.map(l=>⁠ <div class="lesson"><div class="lesson-dot"></div><div class="lesson-text"><strong>${l.t}.</strong> ${l.d}</div></div> ⁠).join('')}
+        ${m.lessons.map(l=>`<div class="lesson"><div class="lesson-dot"></div><div class="lesson-text"><strong>${l.t}.</strong> ${l.d}</div></div>`).join('')}
       </div>`;
     c.appendChild(block);
   });
@@ -638,7 +638,7 @@ function renderChecklist(){
   CHECKLIST.forEach((item,i)=>{
     const row=document.createElement('div');
     row.className='check-row';
-    row.innerHTML=⁠ <div class="check-box" id="cb-${i}" onclick="toggleCheck(${i})"></div><div class="check-text"><strong>${String(i+1).padStart(2,'0')}.</strong> ${item.t}</div> ⁠;
+    row.innerHTML=`<div class="check-box" id="cb-${i}" onclick="toggleCheck(${i})"></div><div class="check-text"><strong>${String(i+1).padStart(2,'0')}.</strong> ${item.t}</div>`;
     cl.appendChild(row);
   });
 }
@@ -649,8 +649,8 @@ function toggleCheck(i){
   box.classList.toggle('checked',checks[i]);
   box.textContent=checks[i]?'✓':'';
   const total=checks.filter(Boolean).length;
-  document.getElementById('score-num').innerHTML=⁠ ${total} <span>/ ${CHECKLIST.length}</span> ⁠;
-  document.getElementById('score-bar').style.width=⁠ ${(total/CHECKLIST.length)*100}% ⁠;
+  document.getElementById('score-num').innerHTML=`${total} <span>/ ${CHECKLIST.length}</span>`;
+  document.getElementById('score-bar').style.width=`${(total/CHECKLIST.length)*100}%`;
   const notes=['Completa todos los puntos antes de publicar.','Buen comienzo — sigue marcando.','Vas bien — más de la mitad.','Casi listo — revisa los puntos faltantes.','Listo para publicar. Ejecuta.'];
   const idx=total===0?0:total<5?1:total<10?2:total<17?3:4;
   document.getElementById('score-note').textContent=notes[idx];
