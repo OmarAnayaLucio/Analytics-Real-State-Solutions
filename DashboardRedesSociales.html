@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
-/* ========== ESTILOS (sin cambios) ========== */
+/* ========== ESTILOS BASE ========== */
 :root{
   --bg:#EBEBEE;--white:#FFFFFF;--s1:#F7F7F9;
   --border:#DFDFE1;--border2:#C8C8CC;
@@ -246,6 +246,13 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
 .config-group { display: flex; align-items: center; gap: 10px; background: #f5f5f5; padding: 5px 15px; border-radius: 30px; }
 .config-group label { font-size: 9px; font-weight: 800; letter-spacing: 1px; }
 .config-group input { padding: 5px 10px; border-radius: 20px; border: 1px solid #ccc; width: 120px; font-size: 10px; }
+
+/* Ajuste extra para que los canvas de ranking de usuarios no tengan scroll vertical */
+#fb-topPromotores, #fb-topDetractores, #ig-topLikers {
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+}
 </style>
 </head>
 <body>
@@ -378,7 +385,6 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
       <div class="filter-group"><span class="flbl">Alcance</span><input type="number" id="ig-reachMin" placeholder="Mín" style="width:80px"><span>—</span><input type="number" id="ig-reachMax" placeholder="Máx" style="width:80px"></div>
       <button class="apply-btn" onclick="applyFilters('ig')">Aplicar filtros</button>
       <button class="apply-btn" style="background:#555;" onclick="resetFilters('ig')">Resetear</button>
-      <!-- Configurador de columna de likes -->
       <div class="config-group">
         <label>❤️ Columna de Likes (usuarios):</label>
         <input type="text" id="ig-col-likes" placeholder="Ej: Usuarios OK" style="width:120px">
@@ -407,7 +413,7 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
       <div class="card"><div class="ct">Distribución de Me gusta</div><div class="cs">Acumulado por tipo de publicación</div><canvas id="ig-likesBar"></canvas></div>
     </div>
 
-    <!-- NUEVA SECCIÓN: Ranking de usuarios que dan like -->
+    <!-- Ranking de usuarios que dan like -->
     <div class="sec">Ranking de usuarios que dan like</div>
     <div class="row-full">
       <div class="card">
@@ -539,7 +545,7 @@ function parseFecha(str) {
   return isNaN(d.getTime()) ? '2024-01-01' : d.toISOString().split('T')[0];
 }
 
-// Mapeo para Facebook
+// Mapeo Facebook
 function remapFBData(rawRows) {
   if (!rawRows || !rawRows.length) return [];
   let sample = rawRows[0];
@@ -594,13 +600,12 @@ function remapFBData(rawRows) {
   }).filter(x=>x);
 }
 
-// Mapeo para Instagram (incluye columna de likes)
+// Mapeo Instagram (con columna de likes)
 function remapIGData(rawRows) {
   if (!rawRows || !rawRows.length) return [];
   let sample = rawRows[0];
   let likesCol = customIgLikesCol;
   if (!likesCol || !sample.hasOwnProperty(likesCol)) {
-    // IMPORTANTE: Agregamos 'Usuarios OK' a la búsqueda
     let autoLikes = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK']);
     if (autoLikes) likesCol = autoLikes;
     else likesCol = '';
@@ -643,7 +648,7 @@ function remapIGData(rawRows) {
   }).filter(x=>x);
 }
 
-// Carga desde Sheets
+// Carga de datos
 function loadFromSheets(net) {
   let url = document.getElementById(net+'Url').value;
   let msg = document.getElementById('syncMsg');
@@ -672,7 +677,6 @@ function loadFromSheets(net) {
         rawIGData = res.data;
         DB_IG = remapIGData(rawIGData);
         let sample = rawIGData[0];
-        // Incluir 'Usuarios OK' en detección automática inicial
         let detectedLikes = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK']);
         document.getElementById('ig-col-likes').value = customIgLikesCol || detectedLikes || '';
       }
@@ -734,7 +738,6 @@ function autoDetectIgLikesColumn() {
     return;
   }
   let sample = rawIGData[0];
-  // Incluir 'Usuarios OK' en la detección manual también
   let likesKey = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK']);
   if (likesKey) {
     document.getElementById('ig-col-likes').value = likesKey;
@@ -817,7 +820,7 @@ function render(net) {
     drawTopUsers();
   } else {
     drawIgLikes();
-    drawTopLikers();  // Ranking de likers
+    drawTopLikers();
   }
 }
 
@@ -838,7 +841,6 @@ function drawKPIs(net) {
   }
 }
 
-// Ranking de usuarios promotores/detractores (Facebook)
 function drawTopUsers() {
   let data = FL_FB;
   if (!data.length) return;
@@ -864,7 +866,6 @@ function drawTopUsers() {
   drawHorizontalBarChart('fb-topDetractores', topNotOk.map(v=>v[0]), topNotOk.map(v=>v[1]), '#E1306C');
 }
 
-// NUEVO: Ranking de usuarios que dan like (Instagram)
 function drawTopLikers() {
   let data = FL_IG;
   if (!data.length) return;
@@ -888,25 +889,75 @@ function drawTopLikers() {
   document.getElementById('ig-uniqueLikers').innerText = uniqueLikers.toLocaleString();
 }
 
+// Función mejorada para mostrar todos los nombres (altura dinámica + tamaño de fuente)
 function drawHorizontalBarChart(canvasId, labels, data, color) {
   let canvas = document.getElementById(canvasId);
   if (!canvas) return;
+  
+  // Altura dinámica: 42px por cada barra
+  let barHeight = 42;
+  let minHeight = 280;
+  let newHeight = Math.max(minHeight, labels.length * barHeight + 40);
+  canvas.style.height = newHeight + 'px';
+  canvas.height = newHeight;
+  
   let ctx = canvas.getContext('2d');
   let storage = canvasId.includes('fb') ? CH_FB : CH_IG;
   if (storage[canvasId]) storage[canvasId].destroy();
+  
   if (labels.length === 0) {
-    ctx.font="12px Montserrat"; ctx.fillStyle="#888"; ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillText("No hay datos de usuarios", 10, 30);
+    ctx.font = "12px Montserrat";
+    ctx.fillStyle = "#888";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillText("No hay datos de usuarios", 10, 30);
     return;
   }
+  
   storage[canvasId] = new Chart(ctx, {
     type: 'bar',
-    data: { labels: labels, datasets: [{ label: 'Número de interacciones', data: data, backgroundColor: color, borderWidth: 0 }] },
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Número de interacciones',
+        data: data,
+        backgroundColor: color,
+        borderWidth: 0,
+        barPercentage: 0.8,
+        categoryPercentage: 0.9
+      }]
+    },
     options: {
       indexAxis: 'y',
       responsive: true,
-      maintainAspectRatio: true,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => `${ctx.raw} veces` } } },
-      scales: { x: { beginAtZero: true, title: { display: true, text: 'Veces que aparece' } } }
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => `${ctx.raw} veces`
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          title: { display: true, text: 'Veces que aparece', font: { size: 10 } },
+          ticks: { font: { size: 10 } }
+        },
+        y: {
+          ticks: {
+            font: { size: 11, weight: '500' },
+            autoSkip: false,
+            stepSize: 1,
+            maxRotation: 0,
+            minRotation: 0
+          },
+          grid: { display: false }
+        }
+      },
+      layout: {
+        padding: { left: 5, right: 5, top: 10, bottom: 10 }
+      }
     }
   });
 }
@@ -958,7 +1009,7 @@ function drawIgLikes() {
   }
 }
 
-// ========== Funciones auxiliares de gráficos ==========
+// Resto de funciones de gráficos (hourly, daily, etc.) igual que antes
 function drawHourlyImpact(net, data) {
   let hourMap = new Array(24).fill(0);
   let valid=0;
@@ -1030,7 +1081,7 @@ function renderTbl(net) {
   let start = (pag.curr-1)*pag.size;
   let slice = sorted.slice(start, start+pag.size);
   sub.innerText = `${data.length} publicaciones encontradas`;
-  body.innerHTML = slice.map(p=>{ let eng = p.alcance ? (((p.reacciones+p.comentarios+(p.compartidos||0)+(p.guardados||0))/p.alcance)*100).toFixed(1) : 0; let pcls = p.tipo.toLowerCase().includes('reel')?'p-reel-'+net:(p.tipo.toLowerCase().includes('vid')?'p-vid-'+net:'p-foto-'+net); let rows = `<tr><td>${p.f}</td><td title="${p.titulo}">${p.titulo}</td><td><span class="pill ${pcls}">${p.tipo}</span></td><td class="ehi-${net}">${fmt(p.alcance)}</td>`; if(net==='fb') rows+=`<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.compartidos)}</td>`; else rows+=`<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.guardados)}</td><td>${fmt(p.seguimientos)}</td>`; rows+=`<td><b>${eng}%</b></td></tr>`; return rows; }).join('');
+  body.innerHTML = slice.map(p=>{ let eng = p.alcance ? (((p.reacciones+p.comentarios+(p.compartidos||0)+(p.guardados||0))/p.alcance)*100).toFixed(1) : 0; let pcls = p.tipo.toLowerCase().includes('reel')?'p-reel-'+net:(p.tipo.toLowerCase().includes('vid')?'p-vid-'+net:'p-foto-'+net); let rows = `<tr><td>${p.f}<tr><td title="${p.titulo}">${p.titulo}</td><td><span class="pill ${pcls}">${p.tipo}</span></td><td class="ehi-${net}">${fmt(p.alcance)}</td>`; if(net==='fb') rows+=`<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.compartidos)}</td>`; else rows+=`<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.guardados)}</td><td>${fmt(p.seguimientos)}</td>`; rows+=`<td><b>${eng}%</b></td></tr>`; return rows; }).join('');
   renderPagi(net, data.length);
 }
 function renderPagi(net, total) {
