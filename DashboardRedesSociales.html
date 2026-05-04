@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
-/* ========== ESTILOS (igual que antes, sin treemap) ========== */
+/* ========== ESTILOS (sin cambios) ========== */
 :root{
   --bg:#EBEBEE;--white:#FFFFFF;--s1:#F7F7F9;
   --border:#DFDFE1;--border2:#C8C8CC;
@@ -245,7 +245,7 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
 .hidden{display:none!important}
 .config-group { display: flex; align-items: center; gap: 10px; background: #f5f5f5; padding: 5px 15px; border-radius: 30px; }
 .config-group label { font-size: 9px; font-weight: 800; letter-spacing: 1px; }
-.config-group input { padding: 5px 10px; border-radius: 20px; border: 1px solid #ccc; width: 100px; font-size: 10px; }
+.config-group input { padding: 5px 10px; border-radius: 20px; border: 1px solid #ccc; width: 120px; font-size: 10px; }
 </style>
 </head>
 <body>
@@ -325,7 +325,6 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
       <div class="card"><div class="ct">Evolución temporal OK vs Not OK</div><div class="cs">Número de usuarios por fecha (excluye NA)</div><canvas id="fb-okLine"></canvas></div>
     </div>
 
-    <!-- SECCIÓN RANKING DE USUARIOS (SIN TREEMAP) -->
     <div class="sec">Ranking de usuarios · Mayor interacción</div>
     <div class="top-users">
       <div class="card">
@@ -360,7 +359,6 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
 </div>
 
 <div id="panelIG" class="hidden">
-  <!-- Instagram se mantiene intacto (mismo código que antes) -->
   <div class="stat-banner ig-banner">
     <div class="sb-item"><div class="sb-n" id="ig-bnP">—</div><div class="sb-l">Publicaciones</div></div>
     <div class="sb-item"><div class="sb-n"><span id="ig-bnR">—</span></div><div class="sb-l">Alcance total</div></div>
@@ -380,6 +378,13 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
       <div class="filter-group"><span class="flbl">Alcance</span><input type="number" id="ig-reachMin" placeholder="Mín" style="width:80px"><span>—</span><input type="number" id="ig-reachMax" placeholder="Máx" style="width:80px"></div>
       <button class="apply-btn" onclick="applyFilters('ig')">Aplicar filtros</button>
       <button class="apply-btn" style="background:#555;" onclick="resetFilters('ig')">Resetear</button>
+      <!-- Configurador de columna de likes -->
+      <div class="config-group">
+        <label>❤️ Columna de Likes (usuarios):</label>
+        <input type="text" id="ig-col-likes" placeholder="Ej: Usuarios OK" style="width:120px">
+        <button class="apply-btn" style="background:#333; padding:4px 12px;" onclick="applyIgLikesColumn()">Aplicar</button>
+        <button class="apply-btn" style="background:#666; padding:4px 12px;" onclick="autoDetectIgLikesColumn()">Detectar auto</button>
+      </div>
     </div>
     <div class="sec">Métricas clave</div>
     <div class="kgrid">
@@ -401,6 +406,27 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
       <div class="card"><div class="ct">Tendencia de Me gusta</div><div class="cs">Evolución de likes por fecha de publicación</div><canvas id="ig-likesLine"></canvas></div>
       <div class="card"><div class="ct">Distribución de Me gusta</div><div class="cs">Acumulado por tipo de publicación</div><canvas id="ig-likesBar"></canvas></div>
     </div>
+
+    <!-- NUEVA SECCIÓN: Ranking de usuarios que dan like -->
+    <div class="sec">Ranking de usuarios que dan like</div>
+    <div class="row-full">
+      <div class="card">
+        <div class="ct">🏆 Top 10 Usuarios con más likes otorgados</div>
+        <div class="cs">Usuarios que más veces aparecen en la columna de likes (excluye NA) - ordenados de mayor a menor</div>
+        <canvas id="ig-topLikers" style="height:300px;"></canvas>
+      </div>
+      <div class="card">
+        <div class="ct">📊 Resumen de actividad</div>
+        <div class="cs">Total de interacciones de likes y usuarios únicos</div>
+        <div style="margin-top:20px; text-align:center;">
+          <div style="font-size:32px; font-weight:800; color:#E1306C;" id="ig-totalLikesCount">—</div>
+          <div style="font-size:10px; color:#888;">Total de likes otorgados (eventos)</div>
+          <div style="margin-top:20px; font-size:32px; font-weight:800; color:#833AB4;" id="ig-uniqueLikers">—</div>
+          <div style="font-size:10px; color:#888;">Usuarios únicos que dieron like</div>
+        </div>
+      </div>
+    </div>
+
     <div class="sec">Evolución temporal · Top publicaciones</div>
     <div class="row2">
       <div class="card tall"><div class="ct">Alcance en el tiempo</div><div class="cs">Evolución por fecha</div><canvas id="ig-cTL"></canvas></div>
@@ -433,6 +459,8 @@ let PAG_FB={curr:1,size:10}, PAG_IG={curr:1,size:10};
 let CH_FB={}, CH_IG={};
 let rawCSVData = null;
 let customOkCol = '', customNotOkCol = '';
+let customIgLikesCol = '';
+let rawIGData = null;
 
 // ==================== FUNCIONES AUXILIARES ====================
 function findKey(obj, keywords) {
@@ -448,7 +476,6 @@ function findKey(obj, keywords) {
   return null;
 }
 
-// Función para limpiar nombres inválidos (NA, N/A, vacíos)
 function isValidUserName(name) {
   if (!name || typeof name !== 'string') return false;
   let clean = name.trim();
@@ -512,6 +539,7 @@ function parseFecha(str) {
   return isNaN(d.getTime()) ? '2024-01-01' : d.toISOString().split('T')[0];
 }
 
+// Mapeo para Facebook
 function remapFBData(rawRows) {
   if (!rawRows || !rawRows.length) return [];
   let sample = rawRows[0];
@@ -528,9 +556,8 @@ function remapFBData(rawRows) {
     else notOkCol = '';
   }
   if (rawCSVData === rawRows) {
-    console.log("Columnas detectadas:", Object.keys(sample));
-    console.log("Usando columna OK:", okCol, "valor ejemplo:", sample[okCol]);
-    console.log("Usando columna Not OK:", notOkCol, "valor ejemplo:", sample[notOkCol]);
+    console.log("Columnas FB detectadas:", Object.keys(sample));
+    console.log("OK col:", okCol, "Not OK col:", notOkCol);
   }
   return rawRows.map(r => {
     const findVal = keys => { let k=findKey(r, keys); return k ? r[k] : null; };
@@ -567,6 +594,56 @@ function remapFBData(rawRows) {
   }).filter(x=>x);
 }
 
+// Mapeo para Instagram (incluye columna de likes)
+function remapIGData(rawRows) {
+  if (!rawRows || !rawRows.length) return [];
+  let sample = rawRows[0];
+  let likesCol = customIgLikesCol;
+  if (!likesCol || !sample.hasOwnProperty(likesCol)) {
+    // IMPORTANTE: Agregamos 'Usuarios OK' a la búsqueda
+    let autoLikes = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK']);
+    if (autoLikes) likesCol = autoLikes;
+    else likesCol = '';
+  }
+  if (rawIGData === rawRows) {
+    console.log("Columnas IG detectadas:", Object.keys(sample));
+    console.log("Columna de likes (usuarios):", likesCol);
+  }
+  return rawRows.map(r => {
+    const findVal = keys => { let k=findKey(r, keys); return k ? r[k] : null; };
+    const num = keys => { let v=findVal(keys); return v ? parseInt(String(v).replace(/,/g,'')) || 0 : 0; };
+    const str = keys => findVal(keys) || '';
+    let titulo = str(['Descripción','Description','Título']);
+    let tipo = str(['Tipo de publicación','Post type','Media type']);
+    let fecha = str(['Hora de publicación','Publish time','Timestamp','Fecha']);
+    let url = r['URL'] || r['Link'] || '';
+    let seguimientos = num(['Seguimiento','Follows','Seguimientos']);
+    let comentarios = num(['Comentarios','Comments']);
+    let guardados = num(['Voces que se guardó','Veces que se guardó','Saves','Guardados']);
+    let likesCount = num(['Me gusta','Likes','Reacciones']);
+    let alcance = num(['Alcance','Reach']);
+    let vistas = num(['Visualizaciones','Impressions','Views']);
+    if(!titulo && !fecha) return null;
+    let horaKey = findKey(r, ['HORA','Hour','hora']);
+    let diaKey = findKey(r, ['Día','Dia','dia','DIA','day']);
+    let horaRaw = horaKey ? r[horaKey] : null;
+    let diaRaw = diaKey ? r[diaKey] : null;
+    let rawLikers = likesCol ? r[likesCol] : '';
+    let likersList = getUsersListFromText(rawLikers);
+    let likersCount = likersList.length > 0 ? likersList.length : (rawLikers && !isNaN(rawLikers) ? parseInt(rawLikers) : 0);
+    return {
+      f: parseFecha(fecha), titulo, tipo, vistas, alcance,
+      reacciones: likesCount, comentarios: comentarios, compartidos:0,
+      guardados: guardados, seguimientos: seguimientos, url,
+      hora: parseHour(horaRaw),
+      diaSemana: diaRaw ? String(diaRaw).trim() : null,
+      likersList: likersList,
+      likersCount: likersCount
+    };
+  }).filter(x=>x);
+}
+
+// Carga desde Sheets
 function loadFromSheets(net) {
   let url = document.getElementById(net+'Url').value;
   let msg = document.getElementById('syncMsg');
@@ -592,7 +669,12 @@ function loadFromSheets(net) {
         document.getElementById('fb-col-ok').value = customOkCol || detectedOk || '';
         document.getElementById('fb-col-notok').value = customNotOkCol || detectedNotOk || '';
       } else {
-        DB_IG = res.data.map(r=>mapRowIG(r)).filter(x=>x);
+        rawIGData = res.data;
+        DB_IG = remapIGData(rawIGData);
+        let sample = rawIGData[0];
+        // Incluir 'Usuarios OK' en detección automática inicial
+        let detectedLikes = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK']);
+        document.getElementById('ig-col-likes').value = customIgLikesCol || detectedLikes || '';
       }
       resetFilters(net);
       msg.innerText = '✔ '+net.toUpperCase()+' sincronizado';
@@ -603,34 +685,6 @@ function loadFromSheets(net) {
       msg.innerText = 'Error de carga: verifica la URL y CORS';
     }
   });
-}
-
-function mapRowIG(r) {
-  const findVal = keys => { let k=findKey(r, keys); return k ? r[k] : null; };
-  const num = keys => { let v=findVal(keys); return v ? parseInt(String(v).replace(/,/g,'')) || 0 : 0; };
-  const str = keys => findVal(keys) || '';
-  let titulo = str(['Descripción','Description','Título']);
-  let tipo = str(['Tipo de publicación','Post type','Media type']);
-  let fecha = str(['Hora de publicación','Publish time','Timestamp','Fecha']);
-  let url = r['URL'] || r['Link'] || '';
-  let seguimientos = num(['Seguimiento','Follows','Seguimientos']);
-  let comentarios = num(['Comentarios','Comments']);
-  let guardados = num(['Voces que se guardó','Veces que se guardó','Saves','Guardados']);
-  let likes = num(['Me gusta','Likes','Reacciones']);
-  let alcance = num(['Alcance','Reach']);
-  let vistas = num(['Visualizaciones','Impressions','Views']);
-  if(!titulo && !fecha) return null;
-  let horaKey = findKey(r, ['HORA','Hour','hora']);
-  let diaKey = findKey(r, ['Día','Dia','dia','DIA','day']);
-  let horaRaw = horaKey ? r[horaKey] : null;
-  let diaRaw = diaKey ? r[diaKey] : null;
-  return {
-    f: parseFecha(fecha), titulo, tipo, vistas, alcance,
-    reacciones: likes, comentarios: comentarios, compartidos:0,
-    guardados: guardados, seguimientos: seguimientos, url,
-    hora: parseHour(horaRaw),
-    diaSemana: diaRaw ? String(diaRaw).trim() : null
-  };
 }
 
 function applyColumnMapping() {
@@ -661,6 +715,36 @@ function autoDetectColumns() {
   DB_FB = remapFBData(rawCSVData);
   resetFilters('fb');
   alert(`Detectado: OK = ${okKey || 'no encontrado'}, Not OK = ${notOkKey || 'no encontrado'}`);
+}
+
+function applyIgLikesColumn() {
+  let newCol = document.getElementById('ig-col-likes').value.trim();
+  customIgLikesCol = newCol;
+  if (rawIGData) {
+    DB_IG = remapIGData(rawIGData);
+    resetFilters('ig');
+  } else {
+    alert('Primero carga un CSV de Instagram usando el botón Sync Instagram.');
+  }
+}
+
+function autoDetectIgLikesColumn() {
+  if (!rawIGData || !rawIGData.length) {
+    alert('Carga primero el CSV de Instagram.');
+    return;
+  }
+  let sample = rawIGData[0];
+  // Incluir 'Usuarios OK' en la detección manual también
+  let likesKey = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK']);
+  if (likesKey) {
+    document.getElementById('ig-col-likes').value = likesKey;
+    customIgLikesCol = likesKey;
+    DB_IG = remapIGData(rawIGData);
+    resetFilters('ig');
+    alert(`Columna de likes detectada: ${likesKey}`);
+  } else {
+    alert('No se pudo detectar automáticamente una columna de likes. Escríbela manualmente (ej: Usuarios OK).');
+  }
 }
 
 // ==================== FILTROS ====================
@@ -730,9 +814,10 @@ function render(net) {
   updateDateRange(net);
   if(net === 'fb') {
     drawFbOkNotOk();
-    drawTopUsers();   // ranking de usuarios (sin treemap)
+    drawTopUsers();
   } else {
     drawIgLikes();
+    drawTopLikers();  // Ranking de likers
   }
 }
 
@@ -753,7 +838,7 @@ function drawKPIs(net) {
   }
 }
 
-// Ranking de usuarios (promotores y detractores) - excluye NA y ordena descendente
+// Ranking de usuarios promotores/detractores (Facebook)
 function drawTopUsers() {
   let data = FL_FB;
   if (!data.length) return;
@@ -773,23 +858,47 @@ function drawTopUsers() {
       }
     }
   }
-  // Ordenar de mayor a menor y tomar top 10
   let topOk = Array.from(okCount.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
   let topNotOk = Array.from(notOkCount.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
   drawHorizontalBarChart('fb-topPromotores', topOk.map(v=>v[0]), topOk.map(v=>v[1]), '#52BEC0');
   drawHorizontalBarChart('fb-topDetractores', topNotOk.map(v=>v[0]), topNotOk.map(v=>v[1]), '#E1306C');
 }
 
+// NUEVO: Ranking de usuarios que dan like (Instagram)
+function drawTopLikers() {
+  let data = FL_IG;
+  if (!data.length) return;
+  let likerCount = new Map();
+  let totalLikesEvents = 0;
+  for (let pub of data) {
+    if (pub.likersList && pub.likersList.length) {
+      for (let user of pub.likersList) {
+        if (!isValidUserName(user)) continue;
+        likerCount.set(user, (likerCount.get(user)||0) + 1);
+        totalLikesEvents++;
+      }
+    } else if (pub.likersCount > 0 && (!pub.likersList || pub.likersList.length === 0)) {
+      totalLikesEvents += pub.likersCount;
+    }
+  }
+  let uniqueLikers = likerCount.size;
+  let topLikers = Array.from(likerCount.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  drawHorizontalBarChart('ig-topLikers', topLikers.map(v=>v[0]), topLikers.map(v=>v[1]), '#E1306C');
+  document.getElementById('ig-totalLikesCount').innerText = totalLikesEvents.toLocaleString();
+  document.getElementById('ig-uniqueLikers').innerText = uniqueLikers.toLocaleString();
+}
+
 function drawHorizontalBarChart(canvasId, labels, data, color) {
   let canvas = document.getElementById(canvasId);
   if (!canvas) return;
   let ctx = canvas.getContext('2d');
-  if (CH_FB[canvasId]) CH_FB[canvasId].destroy();
+  let storage = canvasId.includes('fb') ? CH_FB : CH_IG;
+  if (storage[canvasId]) storage[canvasId].destroy();
   if (labels.length === 0) {
     ctx.font="12px Montserrat"; ctx.fillStyle="#888"; ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillText("No hay datos de usuarios", 10, 30);
     return;
   }
-  CH_FB[canvasId] = new Chart(ctx, {
+  storage[canvasId] = new Chart(ctx, {
     type: 'bar',
     data: { labels: labels, datasets: [{ label: 'Número de interacciones', data: data, backgroundColor: color, borderWidth: 0 }] },
     options: {
@@ -849,7 +958,7 @@ function drawIgLikes() {
   }
 }
 
-// ========== Funciones auxiliares de gráficos (iguales) ==========
+// ========== Funciones auxiliares de gráficos ==========
 function drawHourlyImpact(net, data) {
   let hourMap = new Array(24).fill(0);
   let valid=0;
@@ -921,7 +1030,7 @@ function renderTbl(net) {
   let start = (pag.curr-1)*pag.size;
   let slice = sorted.slice(start, start+pag.size);
   sub.innerText = `${data.length} publicaciones encontradas`;
-  body.innerHTML = slice.map(p=>{ let eng = p.alcance ? (((p.reacciones+p.comentarios+(p.compartidos||0)+(p.guardados||0))/p.alcance)*100).toFixed(1) : 0; let pcls = p.tipo.toLowerCase().includes('reel')?'p-reel-'+net:(p.tipo.toLowerCase().includes('vid')?'p-vid-'+net:'p-foto-'+net); let rows = `<tr><td>${p.f}</td><td title="${p.titulo}">${p.titulo}</td><td><span class="pill ${pcls}">${p.tipo}</span></td><td class="ehi-${net}">${fmt(p.alcance)}</td><td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td>`; if(net==='fb') rows+=`<td>${fmt(p.compartidos)}</td>`; else rows+=`<td>${fmt(p.guardados)}</td><td>${fmt(p.seguimientos)}</td>`; rows+=`<td><b>${eng}%</b></td></tr>`; return rows; }).join('');
+  body.innerHTML = slice.map(p=>{ let eng = p.alcance ? (((p.reacciones+p.comentarios+(p.compartidos||0)+(p.guardados||0))/p.alcance)*100).toFixed(1) : 0; let pcls = p.tipo.toLowerCase().includes('reel')?'p-reel-'+net:(p.tipo.toLowerCase().includes('vid')?'p-vid-'+net:'p-foto-'+net); let rows = `<tr><td>${p.f}</td><td title="${p.titulo}">${p.titulo}</td><td><span class="pill ${pcls}">${p.tipo}</span></td><td class="ehi-${net}">${fmt(p.alcance)}</td>`; if(net==='fb') rows+=`<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.compartidos)}</td>`; else rows+=`<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.guardados)}</td><td>${fmt(p.seguimientos)}</td>`; rows+=`<td><b>${eng}%</b></td></tr>`; return rows; }).join('');
   renderPagi(net, data.length);
 }
 function renderPagi(net, total) {
