@@ -190,6 +190,11 @@ header{
 @media(max-width:640px){.row3,.row-full,.top-users{grid-template-columns:1fr}}
 canvas{max-height:220px!important}
 .tall canvas{max-height:280px!important}
+#fb-cTL, #ig-cTL {
+  min-height: 350px;
+  height: auto;
+  max-height: none;
+}
 .ti{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
 .ti:last-child{border-bottom:none}
 .tnum{font-family:var(--serif);font-size:24px;font-weight:700;font-style:italic;color:var(--border2);min-width:28px;padding-top:2px;line-height:1}
@@ -215,11 +220,13 @@ canvas{max-height:220px!important}
 .search{padding:8px 14px;border-radius:4px;background:var(--bg);border:1.5px solid var(--border2);color:var(--dark);font-family:var(--head);font-size:12px;width:220px;outline:none;transition:border-color .2s}
 .search.fb:focus{border-color:var(--fb)}
 .search.ig:focus{border-color:var(--ig1)}
-.tbl{width:100%;border-collapse:collapse}
+.tbl{width:100%;border-collapse:collapse;table-layout:auto}
 .tbl thead tr{border-bottom:2px solid var(--border)}
 .tbl th{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 12px 10px;white-space:nowrap;cursor:pointer;user-select:none;transition:color .15s}
 .tbl th.fb:hover{color:var(--fb)}.tbl th.ig:hover{color:var(--ig1)}
 .tbl td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:var(--dark2);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+/* Mejora para la columna de descripción: que pueda tener un poco más de ancho y wrap opcional */
+.tbl td:nth-child(2) { white-space: normal; word-break: break-word; max-width: 280px; min-width: 180px; }
 .tbl tr:last-child td{border-bottom:none}
 .tbl tbody tr:hover td{background:var(--s1);color:var(--dark)}
 .tscroll{overflow-x:auto}
@@ -246,8 +253,6 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
 .config-group { display: flex; align-items: center; gap: 10px; background: #f5f5f5; padding: 5px 15px; border-radius: 30px; }
 .config-group label { font-size: 9px; font-weight: 800; letter-spacing: 1px; }
 .config-group input { padding: 5px 10px; border-radius: 20px; border: 1px solid #ccc; width: 120px; font-size: 10px; }
-
-/* Ajuste extra para que los canvas de ranking de usuarios no tengan scroll vertical */
 #fb-topPromotores, #fb-topDetractores, #ig-topLikers {
   width: 100%;
   height: auto;
@@ -346,11 +351,19 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
       </div>
     </div>
 
-    <div class="sec">Evolución temporal · Top publicaciones</div>
-    <div class="row2">
-      <div class="card tall"><div class="ct">Alcance en el tiempo</div><div class="cs">Evolución por fecha de publicación</div><canvas id="fb-cTL"></canvas></div>
-      <div class="card"><div class="ct">Top 5 publicaciones</div><div class="cs">Por mayor alcance</div><div id="fb-topL"></div></div>
+    <div class="sec">Evolución temporal · Alcance en el tiempo</div>
+    <div class="card" style="margin-bottom: 14px;">
+      <div class="ct">Alcance en el tiempo</div>
+      <div class="cs">Evolución por fecha de publicación</div>
+      <canvas id="fb-cTL"></canvas>
     </div>
+    <div class="sec">Top publicaciones</div>
+    <div class="card">
+      <div class="ct">Top 5 publicaciones</div>
+      <div class="cs">Por mayor alcance</div>
+      <div id="fb-topL"></div>
+    </div>
+
     <div class="sec">Análisis de mejor momento</div>
     <div class="row-full">
       <div class="card"><div class="ct">Impacto por hora del día</div><div class="cs">Alcance agregado según hora</div><canvas id="fb-cHour"></canvas></div>
@@ -433,11 +446,19 @@ footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px
       </div>
     </div>
 
-    <div class="sec">Evolución temporal · Top publicaciones</div>
-    <div class="row2">
-      <div class="card tall"><div class="ct">Alcance en el tiempo</div><div class="cs">Evolución por fecha</div><canvas id="ig-cTL"></canvas></div>
-      <div class="card"><div class="ct">Top 5 publicaciones</div><div class="cs">Por mayor alcance</div><div id="ig-topL"></div></div>
+    <div class="sec">Evolución temporal · Alcance en el tiempo</div>
+    <div class="card" style="margin-bottom: 14px;">
+      <div class="ct">Alcance en el tiempo</div>
+      <div class="cs">Evolución por fecha</div>
+      <canvas id="ig-cTL"></canvas>
     </div>
+    <div class="sec">Top publicaciones</div>
+    <div class="card">
+      <div class="ct">Top 5 publicaciones</div>
+      <div class="cs">Por mayor alcance</div>
+      <div id="ig-topL"></div>
+    </div>
+
     <div class="sec">Análisis de mejor momento</div>
     <div class="row-full">
       <div class="card"><canvas id="ig-cHour"></canvas></div>
@@ -545,7 +566,7 @@ function parseFecha(str) {
   return isNaN(d.getTime()) ? '2024-01-01' : d.toISOString().split('T')[0];
 }
 
-// Mapeo Facebook
+// Mapeo Facebook (sin cambios)
 function remapFBData(rawRows) {
   if (!rawRows || !rawRows.length) return [];
   let sample = rawRows[0];
@@ -600,13 +621,13 @@ function remapFBData(rawRows) {
   }).filter(x=>x);
 }
 
-// Mapeo Instagram (con columna de likes)
+// Mapeo Instagram MEJORADO: más flexible y robusto
 function remapIGData(rawRows) {
   if (!rawRows || !rawRows.length) return [];
   let sample = rawRows[0];
   let likesCol = customIgLikesCol;
   if (!likesCol || !sample.hasOwnProperty(likesCol)) {
-    let autoLikes = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK']);
+    let autoLikes = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK', 'Usuarios que dieron like', 'LikersList']);
     if (autoLikes) likesCol = autoLikes;
     else likesCol = '';
   }
@@ -616,21 +637,35 @@ function remapIGData(rawRows) {
   }
   return rawRows.map(r => {
     const findVal = keys => { let k=findKey(r, keys); return k ? r[k] : null; };
-    const num = keys => { let v=findVal(keys); return v ? parseInt(String(v).replace(/,/g,'')) || 0 : 0; };
-    const str = keys => findVal(keys) || '';
-    let titulo = str(['Descripción','Description','Título']);
-    let tipo = str(['Tipo de publicación','Post type','Media type']);
-    let fecha = str(['Hora de publicación','Publish time','Timestamp','Fecha']);
-    let url = r['URL'] || r['Link'] || '';
-    let seguimientos = num(['Seguimiento','Follows','Seguimientos']);
-    let comentarios = num(['Comentarios','Comments']);
-    let guardados = num(['Voces que se guardó','Veces que se guardó','Saves','Guardados']);
-    let likesCount = num(['Me gusta','Likes','Reacciones']);
-    let alcance = num(['Alcance','Reach']);
-    let vistas = num(['Visualizaciones','Impressions','Views']);
+    // Función numérica más robusta
+    const num = keys => { 
+      let v = findVal(keys);
+      if (v === undefined || v === null) return 0;
+      if (typeof v === 'number') return v;
+      let str = String(v).replace(/,/g, '').trim();
+      if (str === '') return 0;
+      let parsed = parseInt(str);
+      return isNaN(parsed) ? 0 : parsed;
+    };
+    const str = keys => { let v = findVal(keys); return (v !== undefined && v !== null) ? String(v) : ''; };
+    let titulo = str(['Descripción','Description','Título', 'Post content', 'Caption']);
+    let tipoRaw = str(['Tipo de publicación','Post type','Media type', 'Type']).toLowerCase();
+    let tipo = '';
+    if (tipoRaw.includes('reel') || tipoRaw === 'reels') tipo = 'Reels';
+    else if (tipoRaw.includes('image') || tipoRaw === 'imagen' || tipoRaw === 'foto') tipo = 'Imágenes';
+    else if (tipoRaw.includes('carousel') || tipoRaw === 'carrusel') tipo = 'Carruseles';
+    else tipo = 'Otro';
+    let fecha = str(['Hora de publicación','Publish time','Timestamp','Fecha', 'Date']);
+    let url = r['URL'] || r['Link'] || r['Permalink'] || '';
+    let seguimientos = num(['Seguimiento','Follows','Seguimientos', 'Follows from post']);
+    let comentarios = num(['Comentarios','Comments', 'Comment count']);
+    let guardados = num(['Veces que se guardó','Saves','Guardados', 'Saved', 'Bookmarks']);
+    let likesCount = num(['Me gusta','Likes','Reacciones', 'Like count']);
+    let alcance = num(['Alcance','Reach', 'Impressions', 'Alcance total']);
+    let vistas = num(['Visualizaciones','Impressions','Views', 'Video views']);
     if(!titulo && !fecha) return null;
-    let horaKey = findKey(r, ['HORA','Hour','hora']);
-    let diaKey = findKey(r, ['Día','Dia','dia','DIA','day']);
+    let horaKey = findKey(r, ['HORA','Hour','hora', 'Hour of day']);
+    let diaKey = findKey(r, ['Día','Dia','dia','DIA','day','Day of week']);
     let horaRaw = horaKey ? r[horaKey] : null;
     let diaRaw = diaKey ? r[diaKey] : null;
     let rawLikers = likesCol ? r[likesCol] : '';
@@ -648,7 +683,7 @@ function remapIGData(rawRows) {
   }).filter(x=>x);
 }
 
-// Carga de datos
+// Carga de datos (sin cambios)
 function loadFromSheets(net) {
   let url = document.getElementById(net+'Url').value;
   let msg = document.getElementById('syncMsg');
@@ -889,22 +924,17 @@ function drawTopLikers() {
   document.getElementById('ig-uniqueLikers').innerText = uniqueLikers.toLocaleString();
 }
 
-// Función mejorada para mostrar todos los nombres (altura dinámica + tamaño de fuente)
 function drawHorizontalBarChart(canvasId, labels, data, color) {
   let canvas = document.getElementById(canvasId);
   if (!canvas) return;
-  
-  // Altura dinámica: 42px por cada barra
   let barHeight = 42;
   let minHeight = 280;
   let newHeight = Math.max(minHeight, labels.length * barHeight + 40);
   canvas.style.height = newHeight + 'px';
   canvas.height = newHeight;
-  
   let ctx = canvas.getContext('2d');
   let storage = canvasId.includes('fb') ? CH_FB : CH_IG;
   if (storage[canvasId]) storage[canvasId].destroy();
-  
   if (labels.length === 0) {
     ctx.font = "12px Montserrat";
     ctx.fillStyle = "#888";
@@ -912,7 +942,6 @@ function drawHorizontalBarChart(canvasId, labels, data, color) {
     ctx.fillText("No hay datos de usuarios", 10, 30);
     return;
   }
-  
   storage[canvasId] = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -1009,7 +1038,6 @@ function drawIgLikes() {
   }
 }
 
-// Resto de funciones de gráficos (hourly, daily, etc.) igual que antes
 function drawHourlyImpact(net, data) {
   let hourMap = new Array(24).fill(0);
   let valid=0;
@@ -1076,12 +1104,26 @@ function renderTbl(net) {
   let pag = net==='fb' ? PAG_FB : PAG_IG;
   let body = document.getElementById(net+'-tBody');
   let sub = document.getElementById(net+'-tsub');
-  let fmt = v=>v.toLocaleString();
+  let fmt = (v) => (v !== undefined && v !== null && !isNaN(v)) ? v.toLocaleString() : '—';
   let sorted = [...data].sort((a,b)=>{ let va=a[sort.k], vb=b[sort.k]; if(sort.k==='fecha'){ va=new Date(a.f); vb=new Date(b.f); } return va>vb?sort.d:(va<vb?-sort.d:0); });
   let start = (pag.curr-1)*pag.size;
   let slice = sorted.slice(start, start+pag.size);
   sub.innerText = `${data.length} publicaciones encontradas`;
-  body.innerHTML = slice.map(p=>{ let eng = p.alcance ? (((p.reacciones+p.comentarios+(p.compartidos||0)+(p.guardados||0))/p.alcance)*100).toFixed(1) : 0; let pcls = p.tipo.toLowerCase().includes('reel')?'p-reel-'+net:(p.tipo.toLowerCase().includes('vid')?'p-vid-'+net:'p-foto-'+net); let rows = `<tr><td>${p.f}<tr><td title="${p.titulo}">${p.titulo}</td><td><span class="pill ${pcls}">${p.tipo}</span></td><td class="ehi-${net}">${fmt(p.alcance)}</td>`; if(net==='fb') rows+=`<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.compartidos)}</td>`; else rows+=`<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.guardados)}</td><td>${fmt(p.seguimientos)}</td>`; rows+=`<td><b>${eng}%</b></td></tr>`; return rows; }).join('');
+  body.innerHTML = slice.map(p=>{ 
+    let eng = (p.alcance && p.alcance > 0) ? (((p.reacciones + p.comentarios + (p.guardados||0) + (p.seguimientos||0)) / p.alcance) * 100).toFixed(1) : 0;
+    let pcls = '';
+    if (p.tipo && p.tipo.toLowerCase().includes('reel')) pcls = 'p-reel-'+net;
+    else if (p.tipo && p.tipo.toLowerCase().includes('vid')) pcls = 'p-vid-'+net;
+    else pcls = 'p-foto-'+net;
+    let row = `<tr><td>${p.f || '—'}</td><td title="${p.titulo || ''}">${p.titulo || '—'}</td><td><span class="pill ${pcls}">${p.tipo || '—'}</span></td><td>${fmt(p.alcance)}</td>`;
+    if(net==='fb') {
+      row += `<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.compartidos)}</td>`;
+    } else {
+      row += `<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.guardados)}</td><td>${fmt(p.seguimientos)}</td>`;
+    }
+    row += `<td><b>${eng}%</b></td></tr>`;
+    return row;
+  }).join('');
   renderPagi(net, data.length);
 }
 function renderPagi(net, total) {
