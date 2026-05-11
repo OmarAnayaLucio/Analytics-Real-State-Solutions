@@ -3,494 +3,166 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Social Media Analytics · Altaltium</title>
+<title>Social Media Analytics · Altaltium · Data Precision</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
-/* ========== ESTILOS BASE ========== */
-:root{
-  --bg:#EBEBEE;--white:#FFFFFF;--s1:#F7F7F9;
-  --border:#DFDFE1;--border2:#C8C8CC;
-  --black:#000;--dark:#111;--dark2:#3B3B3B;
-  --teal:#52BEC0;--teal-d:#3aa3a5;
-  --fb:#1877F2;--fb-d:#0d5fcf;
-  --ig1:#E1306C;--ig2:#833AB4;--ig3:#F77737;
-  --muted:#888899;
-  --head:'Montserrat',sans-serif;
-  --serif:'Playfair Display',serif;
-}
+:root{--bg:#EBEBEE;--white:#FFFFFF;--s1:#F7F7F9;--border:#DFDFE1;--border2:#C8C8CC;--black:#000;--dark:#111;--dark2:#3B3B3B;--teal:#52BEC0;--teal-d:#3aa3a5;--fb:#1877F2;--fb-d:#0d5fcf;--ig1:#E1306C;--ig2:#833AB4;--ig3:#F77737;--muted:#888899;--head:'Montserrat',sans-serif;--serif:'Playfair Display',serif;}
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--dark);font-family:var(--head);font-size:13px;min-height:100vh;overflow-x:hidden}
+body{background:var(--bg);color:var(--dark);font-family:var(--head);font-size:13px;min-height:100vh}
 .wrap{max-width:1400px;margin:0 auto;padding:0 36px 72px}
-header{
-  background:var(--black);margin-left:-36px;margin-right:-36px;
-  padding:22px 36px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
-}
+header{background:var(--black);margin-left:-36px;margin-right:-36px;padding:22px 36px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:14px}
-.logo-box{width:40px;height:40px;border:1.5px solid var(--teal);border-radius:3px;display:flex;align-items:center;justify-content:center;background:rgba(82,190,192,.08);flex-shrink:0}
+.logo-box{width:40px;height:40px;border:1.5px solid var(--teal);border-radius:3px;display:flex;align-items:center;justify-content:center;background:rgba(82,190,192,.08)}
 .brand h1{font-size:16px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:#fff}
 .brand h1 em{color:var(--teal);font-style:normal}
 .brand p{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#555;margin-top:2px}
-.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .hbadge{font-size:10px;font-weight:600;color:#777;border:1px solid #333;padding:6px 14px;border-radius:3px}
-.hbadge.live{color:var(--teal);border-color:rgba(82,190,192,.4);background:rgba(82,190,192,.06);font-weight:700;letter-spacing:1px;text-transform:uppercase}
-.sync-bar{
-  background:#0d0d0d;margin-left:-36px;margin-right:-36px;
-  padding:12px 36px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-  border-bottom:1px solid #1a1a1a;
-}
-.sync-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#555;white-space:nowrap}
-.sync-input{
-  flex:1;min-width:260px;max-width:480px;
-  padding:7px 14px;border-radius:3px;border:1px solid #333;
-  background:#1a1a1a;color:#aaa;font-family:var(--head);font-size:11px;outline:none;
-  transition:border-color .2s;
-}
+.hbadge.live{color:var(--teal);border-color:rgba(82,190,192,.4);background:rgba(82,190,192,.06);font-weight:700}
+.sync-bar{background:#0d0d0d;margin-left:-36px;margin-right:-36px;padding:12px 36px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #1a1a1a}
+.sync-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#555}
+.sync-input{flex:1;min-width:260px;max-width:480px;padding:7px 14px;border-radius:3px;border:1px solid #333;background:#1a1a1a;color:#aaa;font-size:11px;outline:none}
 .sync-input:focus{border-color:var(--teal)}
-.sync-input::placeholder{color:#444}
-.sync-btn{
-  padding:7px 18px;border-radius:3px;border:none;cursor:pointer;
-  font-family:var(--head);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  transition:all .2s;white-space:nowrap;
-}
+.sync-btn{padding:7px 18px;border-radius:3px;border:none;cursor:pointer;font-weight:700;font-size:10px;letter-spacing:1px;text-transform:uppercase}
 .sync-btn.fb{background:var(--fb);color:#fff}
 .sync-btn.fb:hover{background:var(--fb-d)}
 .sync-btn.ig{background:linear-gradient(135deg,var(--ig1),var(--ig2));color:#fff}
-.sync-btn.ig:hover{opacity:.9}
-.sync-status{font-size:10px;color:#555;font-style:italic}
-.tab-nav{
-  display:flex;align-items:stretch;gap:0;
-  margin-left:-36px;margin-right:-36px;
-  border-bottom:3px solid var(--border2);
-  background:var(--white);
-}
-.tab-btn{
-  display:flex;align-items:center;gap:10px;
-  padding:18px 32px;cursor:pointer;
-  font-family:var(--head);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--muted);border:none;background:transparent;
-  border-bottom:3px solid transparent;margin-bottom:-3px;
-  transition:all .2s;
-}
-.tab-btn:hover{color:var(--dark)}
+.sync-status{font-size:10px;color:#555}
+.tab-nav{display:flex;margin-left:-36px;margin-right:-36px;border-bottom:3px solid var(--border2);background:var(--white)}
+.tab-btn{display:flex;align-items:center;gap:10px;padding:18px 32px;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border:none;background:transparent;border-bottom:3px solid transparent;margin-bottom:-3px}
 .tab-btn.active-fb{color:var(--fb);border-bottom-color:var(--fb);background:rgba(24,119,242,.03)}
 .tab-btn.active-ig{color:var(--ig1);border-bottom-color:var(--ig1);background:rgba(225,48,108,.03)}
-.tab-icon{width:22px;height:22px;flex-shrink:0}
-.stat-banner{
-  background:var(--black);margin-left:-36px;margin-right:-36px;
-  padding:28px 36px;
-  display:grid;grid-template-columns:repeat(4,1fr);
-  border-top:3px solid var(--teal);margin-bottom:36px;
-}
-.stat-banner.fb-banner{border-top-color:var(--fb)}
+.stat-banner{background:var(--black);margin-left:-36px;margin-right:-36px;padding:28px 36px;display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:36px}
+.stat-banner.fb-banner{border-top:3px solid var(--fb)}
 .stat-banner.ig-banner{border-top:3px solid transparent;border-image:linear-gradient(90deg,var(--ig1),var(--ig2),var(--ig3)) 1}
-.sb-item{padding:0 24px;border-right:1px solid #1a1a1a;text-align:center}
+.sb-item{padding:0 24px;border-right:1px solid #1a1a1a}
 .sb-item:first-child{padding-left:0;text-align:left}
 .sb-item:last-child{border-right:none}
-.sb-n{font-family:var(--head);font-size:36px;font-weight:900;color:#fff;letter-spacing:-2px;line-height:1;margin-bottom:5px}
+.sb-n{font-size:36px;font-weight:900;color:#fff;letter-spacing:-2px;line-height:1;margin-bottom:5px}
 .sb-n span{color:var(--teal)}
 .stat-banner.fb-banner .sb-n span{color:#6fa8fc}
 .stat-banner.ig-banner .sb-n span{color:#f77fb0}
 .sb-l{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#555}
-@media(max-width:768px){.stat-banner{grid-template-columns:repeat(2,1fr)}.sb-item{border-right:none;padding:16px 0}}
 .sec{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:12px}
 .sec::after{content:'';flex:1;height:1px;background:var(--border2)}
-.fbar{
-  display:flex;
-  gap:16px;
-  margin-bottom:32px;
-  flex-wrap:wrap;
-  align-items:center;
-  background:var(--white);
-  padding:12px 20px;
-  border-radius:8px;
-  border:1px solid var(--border);
-}
-.filter-group{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  background:var(--s1);
-  padding:5px 12px;
-  border-radius:30px;
-}
-.flbl{
-  font-size:9px;
-  font-weight:800;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  color:var(--muted);
-}
-.ftag{
-  padding:6px 14px;
-  border-radius:30px;
-  border:1px solid var(--border2);
-  background:var(--white);
-  color:var(--muted);
-  cursor:pointer;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  transition:all .2s;
-}
-.ftag:hover{border-color:var(--teal);color:var(--teal-d)}
+.fbar{display:flex;gap:16px;margin-bottom:32px;flex-wrap:wrap;background:var(--white);padding:12px 20px;border-radius:8px;border:1px solid var(--border);align-items:center}
+.filter-group{display:flex;align-items:center;gap:8px;background:var(--s1);padding:5px 12px;border-radius:30px}
+.flbl{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--muted)}
+.ftag{padding:6px 14px;border-radius:30px;border:1px solid var(--border2);background:var(--white);color:var(--muted);cursor:pointer;font-size:10px;font-weight:700}
 .ftag.on-fb{background:var(--fb);border-color:var(--fb);color:#fff}
 .ftag.on-ig{background:var(--ig1);border-color:var(--ig1);color:#fff}
 .ftag.on-all{background:var(--black);border-color:var(--black);color:#fff}
-.filter-group input, .filter-group select{
-  background:var(--white);
-  border:1px solid var(--border2);
-  padding:6px 10px;
-  border-radius:30px;
-  font-size:11px;
-  font-family:var(--head);
-  outline:none;
-}
-.filter-group input:focus{border-color:var(--teal)}
-.apply-btn{
-  background:var(--teal);
-  border:none;
-  padding:6px 20px;
-  border-radius:30px;
-  color:white;
-  font-weight:800;
-  font-size:10px;
-  letter-spacing:1px;
-  cursor:pointer;
-  transition:background .2s;
-}
+.apply-btn{background:var(--teal);border:none;padding:6px 20px;border-radius:30px;color:white;font-weight:800;font-size:10px;cursor:pointer}
 .apply-btn:hover{background:var(--teal-d)}
 .kgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:32px}
-@media(max-width:1100px){.kgrid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:640px){.kgrid{grid-template-columns:repeat(2,1fr)}}
-.kpi{background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:22px 18px;transition:box-shadow .2s,transform .2s;animation:up .5s ease both}
-.kpi:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);transform:translateY(-1px)}
+@media(max-width:1000px){.kgrid{grid-template-columns:repeat(3,1fr)}}
+.kpi{background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:22px 18px}
 .kpi-fb:nth-child(1),.kpi-fb:nth-child(2){border-top:3px solid var(--fb)}
-.kpi-fb:nth-child(3),.kpi-fb:nth-child(4){border-top:3px solid var(--teal)}
-.kpi-fb:nth-child(5),.kpi-fb:nth-child(6){border-top:3px solid var(--dark2)}
 .kpi-ig:nth-child(1),.kpi-ig:nth-child(2){border-top:3px solid var(--ig1)}
-.kpi-ig:nth-child(3),.kpi-ig:nth-child(4){border-top:3px solid var(--ig2)}
-.kpi-ig:nth-child(5),.kpi-ig:nth-child(6){border-top:3px solid var(--ig3)}
-.kl{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-.kv{font-family:var(--head);font-size:30px;font-weight:900;color:var(--dark);letter-spacing:-2px;line-height:1;margin-bottom:7px}
-.ks{font-size:11px;color:var(--muted)}
-.card{background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:26px;animation:up .5s ease both;transition:box-shadow .2s}
-.card:hover{box-shadow:0 4px 18px rgba(0,0,0,.06)}
-.ct{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--dark);margin-bottom:3px}
+.kl{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--muted);margin-bottom:12px}
+.kv{font-size:30px;font-weight:900;color:var(--dark);letter-spacing:-2px;line-height:1;margin-bottom:7px}
+.card{background:var(--white);border:1.5px solid var(--border);border-radius:6px;padding:26px;margin-bottom:14px}
+.ct{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--dark);margin-bottom:3px}
 .cs{font-size:11px;color:var(--muted);margin-bottom:20px}
-.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
-.row2{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
-.row-full{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.top-users{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-@media(max-width:1100px){.row3{grid-template-columns:1fr 1fr}}
-@media(max-width:900px){.row2{grid-template-columns:1fr}}
-@media(max-width:640px){.row3,.row-full,.top-users{grid-template-columns:1fr}}
-canvas{max-height:220px!important}
-.tall canvas{max-height:280px!important}
-#fb-cTL, #ig-cTL {
-  min-height: 350px;
-  height: auto;
-  max-height: none;
-}
-.ti{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
-.ti:last-child{border-bottom:none}
-.tnum{font-family:var(--serif);font-size:24px;font-weight:700;font-style:italic;color:var(--border2);min-width:28px;padding-top:2px;line-height:1}
-.ti:nth-child(1) .tnum{color:var(--teal)}.ti:nth-child(2) .tnum{color:var(--dark2)}.ti:nth-child(3) .tnum{color:#bbb}
-.tnum.fb1{color:var(--fb)!important}.tnum.ig1{color:var(--ig1)!important}
-.tinfo{flex:1;min-width:0}
-.tttl{font-size:12px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
-.tmeta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:7px}
-.badge{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:2px;background:var(--s1);color:var(--muted);border:1px solid var(--border)}
-.badge.r-fb{color:var(--teal-d);border-color:rgba(82,190,192,.4);background:rgba(82,190,192,.08)}
-.badge.v-fb{color:var(--teal-d);border-color:rgba(82,190,192,.3);background:rgba(82,190,192,.05)}
-.badge.f-fb{color:var(--dark2);border-color:rgba(59,59,59,.25);background:rgba(59,59,59,.06)}
-.badge.r-ig{color:var(--ig1);border-color:rgba(225,48,108,.3);background:rgba(225,48,108,.06)}
-.badge.i-ig{color:var(--ig2);border-color:rgba(131,58,180,.3);background:rgba(131,58,180,.06)}
-.badge.c-ig{color:var(--ig3);border-color:rgba(247,119,55,.3);background:rgba(247,119,55,.06)}
-.tbar{display:flex;align-items:center;gap:10px}
-.ttrack{flex:1;height:3px;background:var(--border);border-radius:2px}
-.tfill-fb{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--teal-d))}
-.tfill-ig{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--ig1),var(--ig2))}
-.treach{font-size:13px;font-family:var(--head);font-weight:800;white-space:nowrap}
-.treach.fb{color:var(--teal-d)}.treach.ig{color:var(--ig1)}
-.thead-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap}
-.search{padding:8px 14px;border-radius:4px;background:var(--bg);border:1.5px solid var(--border2);color:var(--dark);font-family:var(--head);font-size:12px;width:220px;outline:none;transition:border-color .2s}
-.search.fb:focus{border-color:var(--fb)}
-.search.ig:focus{border-color:var(--ig1)}
-.tbl{width:100%;border-collapse:collapse;table-layout:auto}
-.tbl thead tr{border-bottom:2px solid var(--border)}
-.tbl th{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 12px 10px;white-space:nowrap;cursor:pointer;user-select:none;transition:color .15s}
-.tbl th.fb:hover{color:var(--fb)}.tbl th.ig:hover{color:var(--ig1)}
-.tbl td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:var(--dark2);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
-/* Mejora para la columna de descripción: que pueda tener un poco más de ancho y wrap opcional */
-.tbl td:nth-child(2) { white-space: normal; word-break: break-word; max-width: 280px; min-width: 180px; }
-.tbl tr:last-child td{border-bottom:none}
-.tbl tbody tr:hover td{background:var(--s1);color:var(--dark)}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.row-full{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.row3,.row-full{grid-template-columns:1fr}}
+canvas{max-height:220px; width:100%}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--muted);text-align:left;padding:0 12px 10px;cursor:pointer}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:var(--dark2);white-space:nowrap}
+.tbl td:nth-child(2){white-space:normal;word-break:break-word;max-width:280px}
 .tscroll{overflow-x:auto}
-.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
-.p-reel-fb{background:rgba(82,190,192,.12);color:var(--teal-d);border:1px solid rgba(82,190,192,.3)}
-.p-vid-fb{background:rgba(58,163,165,.09);color:var(--teal-d);border:1px solid rgba(82,190,192,.2)}
-.p-foto-fb{background:rgba(59,59,59,.08);color:var(--dark2);border:1px solid rgba(59,59,59,.2)}
-.p-reel-ig{background:rgba(225,48,108,.08);color:var(--ig1);border:1px solid rgba(225,48,108,.25)}
-.p-img-ig{background:rgba(131,58,180,.07);color:var(--ig2);border:1px solid rgba(131,58,180,.2)}
-.p-car-ig{background:rgba(247,119,55,.08);color:var(--ig3);border:1px solid rgba(247,119,55,.25)}
-.pagi{display:flex;gap:6px;align-items:center;margin-top:16px;justify-content:flex-end}
-.pbtn{padding:5px 11px;border-radius:3px;border:1.5px solid var(--border2);background:var(--white);color:var(--muted);cursor:pointer;font-family:var(--head);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;transition:all .15s}
-.pbtn.on-fb{background:var(--fb);border-color:var(--fb);color:#fff}
-.pbtn.on-ig{background:var(--ig1);border-color:var(--ig1);color:#fff}
-.pbtn:hover{border-color:var(--teal)}
-.pbtn:disabled{opacity:.3;cursor:not-allowed}
-footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px 36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:48px}
-.fl{font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:#444}
-.fl span{color:var(--teal)}
-.fr{font-size:10px;color:#444}
-.content{padding-top:32px}
-@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:800}
+.p-reel-fb{background:rgba(82,190,192,.12);color:var(--teal-d)}
+.p-reel-ig{background:rgba(225,48,108,.12);color:var(--ig1)}
+.p-img-ig{background:rgba(131,58,180,.1);color:var(--ig2)}
+.pagi{display:flex;gap:6px;margin-top:16px;justify-content:flex-end}
+.pbtn{padding:5px 11px;border-radius:3px;border:1.5px solid var(--border2);background:var(--white);cursor:pointer;font-size:10px;font-weight:700}
 .hidden{display:none!important}
-.config-group { display: flex; align-items: center; gap: 10px; background: #f5f5f5; padding: 5px 15px; border-radius: 30px; }
-.config-group label { font-size: 9px; font-weight: 800; letter-spacing: 1px; }
-.config-group input { padding: 5px 10px; border-radius: 20px; border: 1px solid #ccc; width: 120px; font-size: 10px; }
-#fb-topPromotores, #fb-topDetractores, #ig-topLikers {
-  width: 100%;
-  height: auto;
-  min-height: 300px;
-}
+.config-group{display:flex;align-items:center;gap:10px;background:#f5f5f5;padding:5px 15px;border-radius:30px}
+.config-group input{padding:5px 10px;border-radius:20px;border:1px solid #ccc;width:110px;font-size:10px}
+footer{background:var(--black);margin-left:-36px;margin-right:-36px;padding:20px 36px;display:flex;justify-content:space-between;margin-top:48px}
 </style>
 </head>
 <body>
 <div class="wrap">
-
-<header>
-  <div class="logo">
-    <div class="logo-box"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="14" width="4" height="7" fill="#52BEC0" opacity=".4"/><rect x="10" y="9" width="4" height="12" fill="#52BEC0" opacity=".75"/><rect x="17" y="3" width="4" height="18" fill="#52BEC0"/></svg></div>
-    <div class="brand"><h1>Social <em>Analytics</em></h1><p>Altaltium · Business Intelligence</p></div>
-  </div>
-  <div class="header-right"><span class="hbadge" id="dateRangeFB"></span><span class="hbadge live" id="syncStatus">● Datos integrados</span></div>
-</header>
+<header><div class="logo"><div class="logo-box"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="14" width="4" height="7" fill="#52BEC0"/><rect x="10" y="9" width="4" height="12" fill="#52BEC0"/><rect x="17" y="3" width="4" height="18" fill="#52BEC0"/></svg></div><div class="brand"><h1>Social <em>Analytics</em></h1><p>Altaltium · Data Precision</p></div></div><div class="header-right"><span class="hbadge" id="dateRangeFB"></span><span class="hbadge live" id="syncStatus">● Listo</span></div></header>
 
 <div class="sync-bar">
-  <span class="sync-label">🔗 Sheets sync</span>
-  <input class="sync-input" id="fbUrl" placeholder="URL de Google Sheets CSV — Facebook">
-  <button class="sync-btn fb" onclick="loadFromSheets('fb')">↻ Sync Facebook</button>
-  <input class="sync-input" id="igUrl" placeholder="URL de Google Sheets CSV — Instagram">
-  <button class="sync-btn ig" onclick="loadFromSheets('ig')">↻ Sync Instagram</button>
+  <span class="sync-label">📥 CSV Sync</span>
+  <input class="sync-input" id="fbUrl" placeholder="URL CSV Facebook (Google Sheets export)">
+  <button class="sync-btn fb" onclick="loadFromSheets('fb')">Sync Facebook</button>
+  <input class="sync-input" id="igUrl" placeholder="URL CSV Instagram (Google Sheets export)">
+  <button class="sync-btn ig" onclick="loadFromSheets('ig')">Sync Instagram</button>
   <span class="sync-status" id="syncMsg"></span>
-  <label style="display:flex; align-items:center; gap:6px; margin-left:auto;"><input type="checkbox" id="useProxy"> <span style="font-size:10px; color:#aaa;">Proxy CORS (si no carga)</span></label>
+  <label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="useProxy"> <span style="font-size:10px;color:#aaa;">Proxy CORS</span></label>
 </div>
 
 <div class="tab-nav">
-  <button class="tab-btn active-fb" id="tabFB" onclick="switchTab('fb')"><svg class="tab-icon" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</button>
-  <button class="tab-btn" id="tabIG" onclick="switchTab('ig')"><svg class="tab-icon" viewBox="0 0 24 24"><defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#F77737"/><stop offset="50%" stop-color="#E1306C"/><stop offset="100%" stop-color="#833AB4"/></linearGradient></defs><path fill="url(#ig-grad)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> Instagram</button>
+  <button class="tab-btn active-fb" id="tabFB" onclick="switchTab('fb')"><svg width="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</button>
+  <button class="tab-btn" id="tabIG" onclick="switchTab('ig')"><svg width="18" viewBox="0 0 24 24"><linearGradient id="igG" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#F77737"/><stop offset="50%" stop-color="#E1306C"/><stop offset="100%" stop-color="#833AB4"/></linearGradient><path fill="url(#igG)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/></svg> Instagram</button>
 </div>
 
 <div id="panelFB">
-  <div class="stat-banner fb-banner">
-    <div class="sb-item"><div class="sb-n" id="fb-bnP">—</div><div class="sb-l">Publicaciones</div></div>
-    <div class="sb-item"><div class="sb-n"><span id="fb-bnR">—</span></div><div class="sb-l">Alcance total</div></div>
-    <div class="sb-item"><div class="sb-n"><span id="fb-bnV">—</span></div><div class="sb-l">Visualizaciones</div></div>
-    <div class="sb-item"><div class="sb-n"><span id="fb-bnE">—</span></div><div class="sb-l">Interacciones</div></div>
-  </div>
+  <div class="stat-banner fb-banner"><div class="sb-item"><div class="sb-n" id="fb-bnP">—</div><div class="sb-l">Publicaciones</div></div><div class="sb-item"><div class="sb-n"><span id="fb-bnR">—</span></div><div class="sb-l">Alcance total</div></div><div class="sb-item"><div class="sb-n"><span id="fb-bnV">—</span></div><div class="sb-l">Visualizaciones</div></div><div class="sb-item"><div class="sb-n"><span id="fb-bnE">—</span></div><div class="sb-l">Interacciones</div></div></div>
   <div class="content">
-    <div class="sec">Filtros personalizados</div>
-    <div class="fbar">
-      <div class="filter-group"><span class="flbl">Tipo</span>
-        <button class="ftag on-all" data-t="Todos" onclick="setTypeFilter('fb','Todos',this)">Todos</button>
-        <button class="ftag" data-t="Reels" onclick="setTypeFilter('fb','Reels',this)">Reels</button>
-        <button class="ftag" data-t="Videos" onclick="setTypeFilter('fb','Videos',this)">Videos</button>
-        <button class="ftag" data-t="Fotos" onclick="setTypeFilter('fb','Fotos',this)">Fotos</button>
-      </div>
-      <div class="filter-group"><span class="flbl">Rango fechas</span><input type="date" id="fb-dateFrom"><span>—</span><input type="date" id="fb-dateTo"></div>
-      <div class="filter-group"><span class="flbl">Alcance</span><input type="number" id="fb-reachMin" placeholder="Mín" style="width:80px"><span>—</span><input type="number" id="fb-reachMax" placeholder="Máx" style="width:80px"></div>
-      <button class="apply-btn" onclick="applyFilters('fb')">Aplicar filtros</button>
-      <button class="apply-btn" style="background:#555;" onclick="resetFilters('fb')">Resetear</button>
-      <div class="config-group">
-        <label>📌 Columna OK (texto):</label>
-        <input type="text" id="fb-col-ok" placeholder="Ej: EZ" style="width:80px">
-        <label>🚫 Columna Not OK (texto):</label>
-        <input type="text" id="fb-col-notok" placeholder="Ej: FA" style="width:80px">
-        <button class="apply-btn" style="background:#333; padding:4px 12px;" onclick="applyColumnMapping()">Aplicar nombres</button>
-        <button class="apply-btn" style="background:#666; padding:4px 12px;" onclick="autoDetectColumns()">Detectar auto</button>
-      </div>
-    </div>
-    <div class="sec">Métricas clave</div>
-    <div class="kgrid" id="fb-kgrid">
-      <div class="kpi kpi-fb"><div class="kl">Publicaciones</div><div class="kv" id="fb-kP">—</div><div class="ks" id="fb-kPs"></div></div>
-      <div class="kpi kpi-fb"><div class="kl">Alcance total</div><div class="kv" id="fb-kR">—</div><div class="ks" id="fb-kRs"></div></div>
-      <div class="kpi kpi-fb"><div class="kl">Visualizaciones</div><div class="kv" id="fb-kV">—</div><div class="ks" id="fb-kVs"></div></div>
-      <div class="kpi kpi-fb"><div class="kl">Reacciones</div><div class="kv" id="fb-kRx">—</div><div class="ks" id="fb-kRxs"></div></div>
-      <div class="kpi kpi-fb"><div class="kl">Comentarios</div><div class="kv" id="fb-kC">—</div><div class="ks" id="fb-kCs"></div></div>
-      <div class="kpi kpi-fb"><div class="kl">Compartidos</div><div class="kv" id="fb-kS">—</div><div class="ks" id="fb-kSs"></div></div>
-    </div>
-    <div class="sec">Rendimiento por formato</div>
-    <div class="row3">
-      <div class="card"><div class="ct">Alcance por formato</div><div class="cs">Suma por tipo de publicación</div><canvas id="fb-cT"></canvas></div>
-      <div class="card"><div class="ct">Engagement desglosado</div><div class="cs">Reacciones, comentarios y compartidos</div><canvas id="fb-cE"></canvas></div>
-      <div class="card"><div class="ct">Mix de interacciones</div><div class="cs">Proporción por tipo de acción</div><canvas id="fb-cD"></canvas></div>
-    </div>
-
-    <div class="sec">Análisis de sentimiento · Usuarios promotores vs detractores</div>
+    <div class="sec">Filtros avanzados</div>
+    <div class="fbar"><div class="filter-group"><span class="flbl">Tipo</span><button class="ftag on-all" data-t="Todos" onclick="setTypeFilter('fb','Todos',this)">Todos</button><button class="ftag" data-t="Reels" onclick="setTypeFilter('fb','Reels',this)">Reels</button><button class="ftag" data-t="Videos" onclick="setTypeFilter('fb','Videos',this)">Videos</button><button class="ftag" data-t="Fotos" onclick="setTypeFilter('fb','Fotos',this)">Fotos</button></div><div class="filter-group"><span class="flbl">Fecha</span><input type="date" id="fb-dateFrom"><span>—</span><input type="date" id="fb-dateTo"></div><div class="filter-group"><span class="flbl">Alcance min/max</span><input type="number" id="fb-reachMin" placeholder="Mín" style="width:80px"><span>—</span><input type="number" id="fb-reachMax" placeholder="Máx" style="width:80px"></div><button class="apply-btn" onclick="applyFilters('fb')">Aplicar</button><button class="apply-btn" style="background:#555;" onclick="resetFilters('fb')">Resetear</button><div class="config-group"><label>📌 OK col:</label><input type="text" id="fb-col-ok" placeholder="Ej: EZ" style="width:70px"><label>🚫 Not OK:</label><input type="text" id="fb-col-notok" placeholder="FA" style="width:70px"><button class="apply-btn" style="background:#333;" onclick="applyColumnMapping()">Aplicar</button><button class="apply-btn" style="background:#666;" onclick="autoDetectColumns()">Auto</button></div></div>
+    <div class="kgrid" id="fb-kgrid"><div class="kpi kpi-fb"><div class="kl">Publicaciones</div><div class="kv" id="fb-kP">—</div></div><div class="kpi kpi-fb"><div class="kl">Alcance total</div><div class="kv" id="fb-kR">—</div></div><div class="kpi kpi-fb"><div class="kl">Visualizaciones</div><div class="kv" id="fb-kV">—</div></div><div class="kpi kpi-fb"><div class="kl">Reacciones</div><div class="kv" id="fb-kRx">—</div></div><div class="kpi kpi-fb"><div class="kl">Comentarios</div><div class="kv" id="fb-kC">—</div></div><div class="kpi kpi-fb"><div class="kl">Compartidos</div><div class="kv" id="fb-kS">—</div></div></div>
+    <div class="row3"><div class="card"><div class="ct">Alcance por formato</div><canvas id="fb-cT"></canvas></div><div class="card"><div class="ct">Engagement</div><canvas id="fb-cE"></canvas></div><div class="card"><div class="ct">Mix de interacciones</div><canvas id="fb-cD"></canvas></div></div>
+    <div class="row-full"><div class="card"><div class="ct">Proporción OK / Not OK</div><canvas id="fb-okDonut"></canvas></div><div class="card"><div class="ct">Evolución OK vs Not OK</div><canvas id="fb-okLine"></canvas></div></div>
+    <div class="row-full"><div class="card"><div class="ct">🏆 Top 10 Usuarios Promotores</div><canvas id="fb-topPromotores" style="height:300px;"></canvas></div><div class="card"><div class="ct">⚠️ Top 10 Usuarios Detractores</div><canvas id="fb-topDetractores" style="height:300px;"></canvas></div></div>
+    <!-- Resumen de actividad para Facebook (evita NaN) -->
     <div class="row-full">
-      <div class="card"><div class="ct">Proporción OK / Not OK</div><div class="cs">Basado en conteo de nombres en columnas OK y Not OK (excluye NA)</div><canvas id="fb-okDonut"></canvas></div>
-      <div class="card"><div class="ct">Evolución temporal OK vs Not OK</div><div class="cs">Número de usuarios por fecha (excluye NA)</div><canvas id="fb-okLine"></canvas></div>
-    </div>
-
-    <div class="sec">Ranking de usuarios · Mayor interacción</div>
-    <div class="top-users">
       <div class="card">
-        <div class="ct">🏆 Top 10 Usuarios Promotores (más OK)</div>
-        <div class="cs">Usuarios que más veces aparecen en la columna OK (positivos) - ordenados de mayor a menor</div>
-        <canvas id="fb-topPromotores" style="height:300px;"></canvas>
-      </div>
-      <div class="card">
-        <div class="ct">⚠️ Top 10 Usuarios Detractores (más Not OK)</div>
-        <div class="cs">Usuarios que más veces aparecen en la columna Not OK (negativos) - ordenados de mayor a menor</div>
-        <canvas id="fb-topDetractores" style="height:300px;"></canvas>
+        <div class="ct">📊 Resumen de actividad · Facebook</div>
+        <div class="cs">Total de interacciones y usuarios únicos (OK/Not OK)</div>
+        <div style="display:flex; justify-content:space-around; text-align:center; margin-top:20px;">
+          <div><div style="font-size:32px; font-weight:800; color:#1877F2;" id="fb-totalInteractions">—</div><div style="font-size:10px;">Total reacciones + comentarios + compartidos</div></div>
+          <div><div style="font-size:32px; font-weight:800; color:#52BEC0;" id="fb-uniquePromoters">—</div><div style="font-size:10px;">Usuarios promotores únicos (OK)</div></div>
+          <div><div style="font-size:32px; font-weight:800; color:#E1306C;" id="fb-uniqueDetractors">—</div><div style="font-size:10px;">Usuarios detractores únicos (Not OK)</div></div>
+        </div>
       </div>
     </div>
-
-    <div class="sec">Evolución temporal · Alcance en el tiempo</div>
-    <div class="card" style="margin-bottom: 14px;">
-      <div class="ct">Alcance en el tiempo</div>
-      <div class="cs">Evolución por fecha de publicación</div>
-      <canvas id="fb-cTL"></canvas>
-    </div>
-    <div class="sec">Top publicaciones</div>
-    <div class="card">
-      <div class="ct">Top 5 publicaciones</div>
-      <div class="cs">Por mayor alcance</div>
-      <div id="fb-topL"></div>
-    </div>
-
-    <div class="sec">Análisis de mejor momento</div>
-    <div class="row-full">
-      <div class="card"><div class="ct">Impacto por hora del día</div><div class="cs">Alcance agregado según hora</div><canvas id="fb-cHour"></canvas></div>
-      <div class="card"><div class="ct">Impacto por día de la semana</div><div class="cs">Alcance agregado por día</div><canvas id="fb-cDay"></canvas></div>
-    </div>
-    <div class="sec">Detalle completo</div>
-    <div class="card">
-      <div class="thead-row"><div><div class="ct">Todas las publicaciones</div><div class="cs" id="fb-tsub"></div></div><input class="search fb" id="fb-sIn" placeholder="Buscar por título…" oninput="filterTableText('fb')"></div>
-      <div class="tscroll"><table class="tbl"><thead><tr><th class="fb" onclick="sortBy('fb','fecha')">Fecha</th><th class="fb" onclick="sortBy('fb','titulo')">Título</th><th class="fb" onclick="sortBy('fb','tipo')">Tipo</th><th class="fb" onclick="sortBy('fb','alcance')">Alcance</th><th class="fb" onclick="sortBy('fb','vistas')">Vistas</th><th class="fb" onclick="sortBy('fb','reacciones')">Reacciones</th><th class="fb" onclick="sortBy('fb','comentarios')">Comentarios</th><th class="fb" onclick="sortBy('fb','compartidos')">Compartidos</th><th class="fb" onclick="sortBy('fb','engRate')">Eng.%</th></tr></thead><tbody id="fb-tBody"></tbody></table></div>
-      <div class="pagi" id="fb-pagi"></div>
-    </div>
+    <div class="card"><div class="ct">Evolución temporal · Alcance</div><canvas id="fb-cTL"></canvas></div>
+    <div class="card"><div class="ct">Top 5 publicaciones (mayor alcance)</div><div id="fb-topL"></div></div>
+    <div class="row-full"><div class="card"><div class="ct">📊 Impacto por hora del día</div><canvas id="fb-cHour"></canvas></div><div class="card"><div class="ct">📅 Alcance por día de la semana</div><canvas id="fb-cDay"></canvas></div></div>
+    <div class="card"><div class="thead-row" style="display:flex; justify-content:space-between;"><div><div class="ct">📋 Detalle completo de publicaciones</div><div class="cs" id="fb-tsub"></div></div><input class="search" id="fb-sIn" placeholder="Buscar en descripción..." style="padding:6px 12px;border:1px solid var(--border2);border-radius:30px;" oninput="filterTableText('fb')"></div><div class="tscroll"><table class="tbl"><thead><tr><th onclick="sortBy('fb','fecha')">FECHA</th><th onclick="sortBy('fb','titulo')">DESCRIPCIÓN / TEXTO</th><th onclick="sortBy('fb','tipo')">TIPO</th><th onclick="sortBy('fb','alcance')">ALCANCE</th><th onclick="sortBy('fb','vistas')">VISUALIZACIONES</th><th onclick="sortBy('fb','reacciones')">REACCIONES</th><th onclick="sortBy('fb','comentarios')">COMENTARIOS</th><th onclick="sortBy('fb','compartidos')">COMPARTIDOS</th><th onclick="sortBy('fb','engRate')">ENG.%</th></tr></thead><tbody id="fb-tBody"></tbody></table></div><div class="pagi" id="fb-pagi"></div></div>
   </div>
 </div>
 
 <div id="panelIG" class="hidden">
-  <div class="stat-banner ig-banner">
-    <div class="sb-item"><div class="sb-n" id="ig-bnP">—</div><div class="sb-l">Publicaciones</div></div>
-    <div class="sb-item"><div class="sb-n"><span id="ig-bnR">—</span></div><div class="sb-l">Alcance total</div></div>
-    <div class="sb-item"><div class="sb-n"><span id="ig-bnV">—</span></div><div class="sb-l">Visualizaciones</div></div>
-    <div class="sb-item"><div class="sb-n"><span id="ig-bnE">—</span></div><div class="sb-l">Me gusta + Guardados</div></div>
-  </div>
+  <div class="stat-banner ig-banner"><div class="sb-item"><div class="sb-n" id="ig-bnP">—</div><div class="sb-l">Publicaciones</div></div><div class="sb-item"><div class="sb-n"><span id="ig-bnR">—</span></div><div class="sb-l">Alcance total</div></div><div class="sb-item"><div class="sb-n"><span id="ig-bnV">—</span></div><div class="sb-l">Visualizaciones</div></div><div class="sb-item"><div class="sb-n"><span id="ig-bnE">—</span></div><div class="sb-l">Likes+Guardados</div></div></div>
   <div class="content">
     <div class="sec">Filtros personalizados</div>
-    <div class="fbar">
-      <div class="filter-group"><span class="flbl">Tipo</span>
-        <button class="ftag on-all" data-t="Todos" onclick="setTypeFilter('ig','Todos',this)">Todos</button>
-        <button class="ftag" data-t="Reels" onclick="setTypeFilter('ig','Reels',this)">Reels</button>
-        <button class="ftag" data-t="Imágenes" onclick="setTypeFilter('ig','Imágenes',this)">Imágenes</button>
-        <button class="ftag" data-t="Carruseles" onclick="setTypeFilter('ig','Carruseles',this)">Carruseles</button>
-      </div>
-      <div class="filter-group"><span class="flbl">Rango fechas</span><input type="date" id="ig-dateFrom"><span>—</span><input type="date" id="ig-dateTo"></div>
-      <div class="filter-group"><span class="flbl">Alcance</span><input type="number" id="ig-reachMin" placeholder="Mín" style="width:80px"><span>—</span><input type="number" id="ig-reachMax" placeholder="Máx" style="width:80px"></div>
-      <button class="apply-btn" onclick="applyFilters('ig')">Aplicar filtros</button>
-      <button class="apply-btn" style="background:#555;" onclick="resetFilters('ig')">Resetear</button>
-      <div class="config-group">
-        <label>❤️ Columna de Likes (usuarios):</label>
-        <input type="text" id="ig-col-likes" placeholder="Ej: Usuarios OK" style="width:120px">
-        <button class="apply-btn" style="background:#333; padding:4px 12px;" onclick="applyIgLikesColumn()">Aplicar</button>
-        <button class="apply-btn" style="background:#666; padding:4px 12px;" onclick="autoDetectIgLikesColumn()">Detectar auto</button>
-      </div>
-    </div>
-    <div class="sec">Métricas clave</div>
-    <div class="kgrid">
-      <div class="kpi kpi-ig"><div class="kl">Publicaciones</div><div class="kv" id="ig-kP">—</div><div class="ks" id="ig-kPs"></div></div>
-      <div class="kpi kpi-ig"><div class="kl">Alcance total</div><div class="kv" id="ig-kR">—</div><div class="ks" id="ig-kRs"></div></div>
-      <div class="kpi kpi-ig"><div class="kl">Visualizaciones</div><div class="kv" id="ig-kV">—</div><div class="ks" id="ig-kVs"></div></div>
-      <div class="kpi kpi-ig"><div class="kl">Me gusta</div><div class="kv" id="ig-kL">—</div><div class="ks" id="ig-kLs"></div></div>
-      <div class="kpi kpi-ig"><div class="kl">Guardados</div><div class="kv" id="ig-kG">—</div><div class="ks" id="ig-kGs"></div></div>
-      <div class="kpi kpi-ig"><div class="kl">Seguimientos</div><div class="kv" id="ig-kSeg">—</div><div class="ks" id="ig-kSegs"></div></div>
-    </div>
-    <div class="sec">Rendimiento por formato</div>
-    <div class="row3">
-      <div class="card"><div class="ct">Alcance por formato</div><div class="cs">Reels, Imágenes y Carruseles</div><canvas id="ig-cT"></canvas></div>
-      <div class="card"><div class="ct">Engagement desglosado</div><div class="cs">Me gusta, comentarios y guardados</div><canvas id="ig-cE"></canvas></div>
-      <div class="card"><div class="ct">Mix de interacciones</div><div class="cs">Proporción por tipo de acción</div><canvas id="ig-cD"></canvas></div>
-    </div>
-    <div class="sec">Evolución de "Me gusta" (Likes) en el tiempo</div>
-    <div class="row-full">
-      <div class="card"><div class="ct">Tendencia de Me gusta</div><div class="cs">Evolución de likes por fecha de publicación</div><canvas id="ig-likesLine"></canvas></div>
-      <div class="card"><div class="ct">Distribución de Me gusta</div><div class="cs">Acumulado por tipo de publicación</div><canvas id="ig-likesBar"></canvas></div>
-    </div>
-
-    <!-- Ranking de usuarios que dan like -->
-    <div class="sec">Ranking de usuarios que dan like</div>
-    <div class="row-full">
-      <div class="card">
-        <div class="ct">🏆 Top 10 Usuarios con más likes otorgados</div>
-        <div class="cs">Usuarios que más veces aparecen en la columna de likes (excluye NA) - ordenados de mayor a menor</div>
-        <canvas id="ig-topLikers" style="height:300px;"></canvas>
-      </div>
-      <div class="card">
-        <div class="ct">📊 Resumen de actividad</div>
-        <div class="cs">Total de interacciones de likes y usuarios únicos</div>
-        <div style="margin-top:20px; text-align:center;">
-          <div style="font-size:32px; font-weight:800; color:#E1306C;" id="ig-totalLikesCount">—</div>
-          <div style="font-size:10px; color:#888;">Total de likes otorgados (eventos)</div>
-          <div style="margin-top:20px; font-size:32px; font-weight:800; color:#833AB4;" id="ig-uniqueLikers">—</div>
-          <div style="font-size:10px; color:#888;">Usuarios únicos que dieron like</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sec">Evolución temporal · Alcance en el tiempo</div>
-    <div class="card" style="margin-bottom: 14px;">
-      <div class="ct">Alcance en el tiempo</div>
-      <div class="cs">Evolución por fecha</div>
-      <canvas id="ig-cTL"></canvas>
-    </div>
-    <div class="sec">Top publicaciones</div>
-    <div class="card">
-      <div class="ct">Top 5 publicaciones</div>
-      <div class="cs">Por mayor alcance</div>
-      <div id="ig-topL"></div>
-    </div>
-
-    <div class="sec">Análisis de mejor momento</div>
-    <div class="row-full">
-      <div class="card"><canvas id="ig-cHour"></canvas></div>
-      <div class="card"><canvas id="ig-cDay"></canvas></div>
-    </div>
-    <div class="sec">Detalle completo</div>
-    <div class="card">
-      <div class="thead-row"><div><div class="ct">Todas las publicaciones</div><div class="cs" id="ig-tsub"></div></div><input class="search ig" id="ig-sIn" placeholder="Buscar por descripción…" oninput="filterTableText('ig')"></div>
-      <div class="tscroll"><table class="tbl"><thead><tr><th class="ig" onclick="sortBy('ig','fecha')">Fecha</th><th class="ig" onclick="sortBy('ig','titulo')">Descripción</th><th class="ig" onclick="sortBy('ig','tipo')">Tipo</th><th class="ig" onclick="sortBy('ig','alcance')">Alcance</th><th class="ig" onclick="sortBy('ig','vistas')">Vistas</th><th class="ig" onclick="sortBy('ig','reacciones')">Me gusta</th><th class="ig" onclick="sortBy('ig','comentarios')">Comentarios</th><th class="ig" onclick="sortBy('ig','guardados')">Guardados</th><th class="ig" onclick="sortBy('ig','seguimientos')">Seguimientos</th><th class="ig" onclick="sortBy('ig','engRate')">Eng.%</th></tr></thead><tbody id="ig-tBody"></tbody></table></div>
-      <div class="pagi" id="ig-pagi"></div>
-    </div>
+    <div class="fbar"><div class="filter-group"><span class="flbl">Tipo</span><button class="ftag on-all" onclick="setTypeFilter('ig','Todos',this)">Todos</button><button class="ftag" onclick="setTypeFilter('ig','Reels',this)">Reels</button><button class="ftag" onclick="setTypeFilter('ig','Imágenes',this)">Imágenes</button><button class="ftag" onclick="setTypeFilter('ig','Carruseles',this)">Carruseles</button></div><div class="filter-group"><span class="flbl">Fecha</span><input type="date" id="ig-dateFrom"><span>—</span><input type="date" id="ig-dateTo"></div><div class="filter-group"><span class="flbl">Alcance</span><input type="number" id="ig-reachMin" placeholder="Mín" style="width:80px"><input type="number" id="ig-reachMax" placeholder="Máx" style="width:80px"></div><button class="apply-btn" onclick="applyFilters('ig')">Aplicar</button><button class="apply-btn" style="background:#555;" onclick="resetFilters('ig')">Resetear</button><div class="config-group"><label>❤️ Col. Likes (usuarios):</label><input type="text" id="ig-col-likes" placeholder="Ej: 'Likers list'" style="width:120px"><button class="apply-btn" onclick="applyIgLikesColumn()">Aplicar</button><button class="apply-btn" onclick="autoDetectIgLikesColumn()">Auto</button></div></div>
+    <div class="kgrid"><div class="kpi kpi-ig"><div class="kl">Publicaciones</div><div class="kv" id="ig-kP">—</div></div><div class="kpi kpi-ig"><div class="kl">Alcance total</div><div class="kv" id="ig-kR">—</div></div><div class="kpi kpi-ig"><div class="kl">Visualizaciones</div><div class="kv" id="ig-kV">—</div></div><div class="kpi kpi-ig"><div class="kl">Me gusta</div><div class="kv" id="ig-kL">—</div></div><div class="kpi kpi-ig"><div class="kl">Guardados</div><div class="kv" id="ig-kG">—</div></div><div class="kpi kpi-ig"><div class="kl">Seguimientos</div><div class="kv" id="ig-kSeg">—</div></div></div>
+    <div class="row3"><div class="card"><div class="ct">Alcance por formato</div><canvas id="ig-cT"></canvas></div><div class="card"><div class="ct">Engagement IG</div><canvas id="ig-cE"></canvas></div><div class="card"><div class="ct">Mix interacciones</div><canvas id="ig-cD"></canvas></div></div>
+    <div class="row-full"><div class="card"><div class="ct">Tendencia de Me gusta</div><canvas id="ig-likesLine"></canvas></div><div class="card"><div class="ct">Me gusta por tipo</div><canvas id="ig-likesBar"></canvas></div></div>
+    <div class="row-full"><div class="card"><div class="ct">🏆 Top 10 usuarios que más dan like</div><canvas id="ig-topLikers" style="height:300px;"></canvas></div><div class="card"><div class="ct">📊 Resumen de actividad</div><div style="margin-top:20px;text-align:center;"><div style="font-size:32px;font-weight:800;color:#E1306C;" id="ig-totalLikesCount">—</div><div style="font-size:10px;">Total de likes (eventos)</div><div style="margin-top:20px;font-size:32px;font-weight:800;color:#833AB4;" id="ig-uniqueLikers">—</div><div style="font-size:10px;">Usuarios únicos que dieron like</div></div></div></div>
+    <div class="card"><div class="ct">Evolución alcance en el tiempo</div><canvas id="ig-cTL"></canvas></div>
+    <div class="card"><div class="ct">Top 5 publicaciones (mayor alcance)</div><div id="ig-topL"></div></div>
+    <div class="row-full"><div class="card"><div class="ct">⏰ Impacto por hora del día</div><canvas id="ig-cHour"></canvas></div><div class="card"><div class="ct">📅 Alcance por día de la semana</div><canvas id="ig-cDay"></canvas></div></div>
+    <div class="card"><div style="display:flex; justify-content:space-between;"><div><div class="ct">📋 Detalle completo Instagram</div><div class="cs" id="ig-tsub"></div></div><input class="search" id="ig-sIn" placeholder="Buscar en descripción..." style="padding:6px 12px;border-radius:30px;" oninput="filterTableText('ig')"></div><div class="tscroll"><table class="tbl"><thead><tr><th onclick="sortBy('ig','fecha')">FECHA</th><th onclick="sortBy('ig','titulo')">DESCRIPCIÓN</th><th onclick="sortBy('ig','tipo')">TIPO</th><th onclick="sortBy('ig','alcance')">ALCANCE</th><th onclick="sortBy('ig','vistas')">VISUALIZACIONES</th><th onclick="sortBy('ig','reacciones')">ME GUSTA</th><th onclick="sortBy('ig','comentarios')">COMENTARIOS</th><th onclick="sortBy('ig','guardados')">GUARDADOS</th><th onclick="sortBy('ig','seguimientos')">SEGUIMIENTOS</th><th onclick="sortBy('ig','engRate')">ENG.%</th></tr></thead><tbody id="ig-tBody"></tbody></table></div><div class="pagi" id="ig-pagi"></div></div>
   </div>
 </div>
-
-<footer><div class="fl">Social <span>Analytics</span> · Altaltium</div><div class="fr" id="footDate"></div></footer>
+<footer><div class="fl">Altaltium · <span style="color:var(--teal)">Social Analytics</span></div><div class="fr">Dashboard v3 · Mapeo inteligente de columnas</div></footer>
 </div>
 
 <script>
-// ==================== DATOS Y ESTADO GLOBAL ====================
+// ================== MAPEO ROBUSTO CON VISUALIZACIONES Y DÍAS ==================
 let DB_FB=[], DB_IG=[], FL_FB=[], FL_IG=[];
 let FILT_FB={type:'Todos', dateFrom:'', dateTo:'', reachMin:0, reachMax:Infinity, q:''};
 let FILT_IG={type:'Todos', dateFrom:'', dateTo:'', reachMin:0, reachMax:Infinity, q:''};
 let SORT_FB={k:'fecha',d:-1}, SORT_IG={k:'fecha',d:-1};
 let PAG_FB={curr:1,size:10}, PAG_IG={curr:1,size:10};
 let CH_FB={}, CH_IG={};
-let rawCSVData = null;
-let customOkCol = '', customNotOkCol = '';
-let customIgLikesCol = '';
-let rawIGData = null;
+let rawCSV_FB=null, rawCSV_IG=null;
+let customOkCol='', customNotOkCol='', customIgLikesCol='';
 
-// ==================== FUNCIONES AUXILIARES ====================
-function findKey(obj, keywords) {
+function findBestKey(obj, keywords) {
   const keys = Object.keys(obj);
   for(let kw of keywords) {
     let exact = keys.find(k => k.toLowerCase() === kw.toLowerCase());
@@ -503,643 +175,219 @@ function findKey(obj, keywords) {
   return null;
 }
 
-function isValidUserName(name) {
-  if (!name || typeof name !== 'string') return false;
-  let clean = name.trim();
-  if (clean === '') return false;
-  let lower = clean.toLowerCase();
-  if (lower === 'na' || lower === 'n/a') return false;
-  return true;
+function parseNumberSafely(val) {
+  if(val===undefined || val===null) return 0;
+  if(typeof val === 'number') return val;
+  let str = String(val).replace(/,/g, '').trim();
+  let num = parseInt(str);
+  return isNaN(num) ? 0 : num;
 }
 
-function splitUserNames(str) {
-  if (!str || typeof str !== 'string') return [];
-  let separators = /[,;|\n\r]+/;
-  let parts;
-  if (!str.includes(',') && !str.includes(';') && !str.includes('\n')) {
-    parts = [str.trim()];
-  } else {
-    parts = str.split(separators);
-  }
-  return parts.map(p => p.trim()).filter(p => isValidUserName(p));
-}
-
-function countUsersFromText(val) {
-  if (val === undefined || val === null) return 0;
-  if (typeof val === 'number') return val;
-  if (typeof val === 'string') {
-    if (val.trim() === '') return 0;
-    if (/^\d+$/.test(val.trim())) return parseInt(val.trim());
-    let users = splitUserNames(val);
-    return users.length;
-  }
-  return 0;
-}
-
-function getUsersListFromText(val) {
-  if (!val || typeof val !== 'string') return [];
-  if (/^\d+$/.test(val.trim())) return [val.trim()];
-  return splitUserNames(val);
-}
-
-function parseHour(h) {
-  if(h===undefined || h===null) return null;
-  if(typeof h === 'number') return (h>=0 && h<=23) ? h : null;
-  let str = String(h).trim();
-  if(/^\d+$/.test(str)) { let num=parseInt(str); return (num>=0 && num<=23)? num : null; }
-  let match = str.match(/^(\d{1,2}):/);
-  if(match) { let hh=parseInt(match[1]); return (hh>=0 && hh<=23)? hh : null; }
-  match = str.match(/^(\d{1,2})(?::\d{2})?\s*(am|pm)/i);
-  if(match) { let hh=parseInt(match[1]), ap=match[2].toLowerCase(); if(ap==='pm' && hh!==12) hh+=12; if(ap==='am' && hh===12) hh=0; return (hh>=0 && hh<=23)? hh : null; }
-  return null;
-}
-
-function parseFecha(str) {
+function parseFechaFlexible(str) {
   if(!str) return '2024-01-01';
-  let m = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if(m) {
-    let mes=m[1], dia=m[2], anio=m[3];
-    if(parseInt(mes)>12) { mes=m[2]; dia=m[1]; }
-    return `${anio}-${mes.padStart(2,'0')}-${dia.padStart(2,'0')}`;
+  let parts = str.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if(parts) {
+    let d=parts[1], m=parts[2], y=parts[3];
+    if(parseInt(m)>12) { let aux=m; m=d; d=aux; }
+    return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
   }
   let d = new Date(str);
   return isNaN(d.getTime()) ? '2024-01-01' : d.toISOString().split('T')[0];
 }
 
-// Mapeo Facebook (sin cambios)
-function remapFBData(rawRows) {
-  if (!rawRows || !rawRows.length) return [];
-  let sample = rawRows[0];
-  let okCol = customOkCol;
-  let notOkCol = customNotOkCol;
-  if (!okCol || !sample.hasOwnProperty(okCol)) {
-    let okKey = findKey(sample, ['EZ', 'Usuarios OK', 'OK Users', 'Promotores', 'OK']);
-    if (okKey) okCol = okKey;
-    else okCol = '';
+function normalizeDayName(dayRaw) {
+  if(!dayRaw) return null;
+  let d = dayRaw.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const map = {
+    'lunes': 'Lunes', 'monday': 'Lunes',
+    'martes': 'Martes', 'tuesday': 'Martes',
+    'miercoles': 'Miércoles', 'wednesday': 'Miércoles',
+    'jueves': 'Jueves', 'thursday': 'Jueves',
+    'viernes': 'Viernes', 'friday': 'Viernes',
+    'sabado': 'Sábado', 'saturday': 'Sábado',
+    'domingo': 'Domingo', 'sunday': 'Domingo'
+  };
+  for(let [key, val] of Object.entries(map)) {
+    if(d.includes(key)) return val;
   }
-  if (!notOkCol || !sample.hasOwnProperty(notOkCol)) {
-    let notOkKey = findKey(sample, ['FA', 'Usuarios not OK', 'Not OK Users', 'Detractores', 'Not OK']);
-    if (notOkKey) notOkCol = notOkKey;
-    else notOkCol = '';
-  }
-  if (rawCSVData === rawRows) {
-    console.log("Columnas FB detectadas:", Object.keys(sample));
-    console.log("OK col:", okCol, "Not OK col:", notOkCol);
-  }
-  return rawRows.map(r => {
-    const findVal = keys => { let k=findKey(r, keys); return k ? r[k] : null; };
-    const num = keys => { let v=findVal(keys); return v ? parseInt(String(v).replace(/,/g,'')) || 0 : 0; };
-    const str = keys => findVal(keys) || '';
-    let titulo = str(['Título','Title']);
-    let tipo = str(['Tipo de publicación','Post type']);
-    let fecha = str(['Fecha','Hora de publicación','Publish time']);
-    if(!titulo && !fecha) return null;
-    let horaKey = findKey(r, ['HORA','Hour','hora']);
-    let diaKey = findKey(r, ['Día','Dia','dia','DIA','day']);
-    let horaRaw = horaKey ? r[horaKey] : null;
-    let diaRaw = diaKey ? r[diaKey] : null;
-    let rawOk = okCol ? r[okCol] : '';
-    let rawNotOk = notOkCol ? r[notOkCol] : '';
-    let okUsersCount = countUsersFromText(rawOk);
-    let notOkUsersCount = countUsersFromText(rawNotOk);
-    let okUsersList = getUsersListFromText(rawOk);
-    let notOkUsersList = getUsersListFromText(rawNotOk);
-    return {
-      f: parseFecha(fecha), titulo, tipo,
-      vistas: num(['Visualizaciones','Impressions']),
-      alcance: num(['Alcance','Reach']),
-      reacciones: num(['Reacciones','Reactions']),
-      comentarios: num(['Comentarios','Comments']),
-      compartidos: num(['Veces que se compartió','Shares']),
-      hora: parseHour(horaRaw),
-      diaSemana: diaRaw ? String(diaRaw).trim() : null,
-      okUsers: okUsersCount,
-      notOkUsers: notOkUsersCount,
-      okList: okUsersList,
-      notOkList: notOkUsersList
-    };
-  }).filter(x=>x);
+  return null;
 }
 
-// Mapeo Instagram MEJORADO: más flexible y robusto
-function remapIGData(rawRows) {
-  if (!rawRows || !rawRows.length) return [];
-  let sample = rawRows[0];
-  let likesCol = customIgLikesCol;
-  if (!likesCol || !sample.hasOwnProperty(likesCol)) {
-    let autoLikes = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK', 'Usuarios que dieron like', 'LikersList']);
-    if (autoLikes) likesCol = autoLikes;
-    else likesCol = '';
-  }
-  if (rawIGData === rawRows) {
-    console.log("Columnas IG detectadas:", Object.keys(sample));
-    console.log("Columna de likes (usuarios):", likesCol);
-  }
-  return rawRows.map(r => {
-    const findVal = keys => { let k=findKey(r, keys); return k ? r[k] : null; };
-    // Función numérica más robusta
-    const num = keys => { 
-      let v = findVal(keys);
-      if (v === undefined || v === null) return 0;
-      if (typeof v === 'number') return v;
-      let str = String(v).replace(/,/g, '').trim();
-      if (str === '') return 0;
-      let parsed = parseInt(str);
-      return isNaN(parsed) ? 0 : parsed;
-    };
-    const str = keys => { let v = findVal(keys); return (v !== undefined && v !== null) ? String(v) : ''; };
-    let titulo = str(['Descripción','Description','Título', 'Post content', 'Caption']);
-    let tipoRaw = str(['Tipo de publicación','Post type','Media type', 'Type']).toLowerCase();
-    let tipo = '';
-    if (tipoRaw.includes('reel') || tipoRaw === 'reels') tipo = 'Reels';
-    else if (tipoRaw.includes('image') || tipoRaw === 'imagen' || tipoRaw === 'foto') tipo = 'Imágenes';
-    else if (tipoRaw.includes('carousel') || tipoRaw === 'carrusel') tipo = 'Carruseles';
-    else tipo = 'Otro';
-    let fecha = str(['Hora de publicación','Publish time','Timestamp','Fecha', 'Date']);
-    let url = r['URL'] || r['Link'] || r['Permalink'] || '';
-    let seguimientos = num(['Seguimiento','Follows','Seguimientos', 'Follows from post']);
-    let comentarios = num(['Comentarios','Comments', 'Comment count']);
-    let guardados = num(['Veces que se guardó','Saves','Guardados', 'Saved', 'Bookmarks']);
-    let likesCount = num(['Me gusta','Likes','Reacciones', 'Like count']);
-    let alcance = num(['Alcance','Reach', 'Impressions', 'Alcance total']);
-    let vistas = num(['Visualizaciones','Impressions','Views', 'Video views']);
-    if(!titulo && !fecha) return null;
-    let horaKey = findKey(r, ['HORA','Hour','hora', 'Hour of day']);
-    let diaKey = findKey(r, ['Día','Dia','dia','DIA','day','Day of week']);
-    let horaRaw = horaKey ? r[horaKey] : null;
-    let diaRaw = diaKey ? r[diaKey] : null;
-    let rawLikers = likesCol ? r[likesCol] : '';
-    let likersList = getUsersListFromText(rawLikers);
-    let likersCount = likersList.length > 0 ? likersList.length : (rawLikers && !isNaN(rawLikers) ? parseInt(rawLikers) : 0);
+function parseHourSmart(val) {
+  if(val===undefined||val===null) return null;
+  if(typeof val==='number' && val>=0 && val<=23) return val;
+  let s=String(val).trim();
+  let match=s.match(/^(\d{1,2})$/);
+  if(match) { let h=parseInt(match[1]); return (h>=0&&h<=23)?h:null; }
+  match=s.match(/^(\d{1,2}):/);
+  if(match) { let h=parseInt(match[1]); return (h>=0&&h<=23)?h:null; }
+  return null;
+}
+
+function getTypeFromString(tipoRaw) {
+  let t = String(tipoRaw).toLowerCase();
+  if(t.includes('reel')) return 'Reels';
+  if(t.includes('video')) return 'Videos';
+  if(t.includes('foto')||t.includes('image')) return 'Imágenes';
+  if(t.includes('carrusel')||t.includes('carousel')) return 'Carruseles';
+  return 'Otro';
+}
+
+function remapFBData(rows) {
+  if(!rows||!rows.length) return [];
+  let sample=rows[0];
+  let okCol=customOkCol||findBestKey(sample,['EZ','Usuarios OK','OK Users','Promotores','OK']);
+  let notOkCol=customNotOkCol||findBestKey(sample,['FA','Usuarios not OK','Not OK','Detractores','Not OK']);
+  return rows.map(r=>{
+    let getVal=(keys)=>findBestKey(r,keys)?r[findBestKey(r,keys)]:null;
+    let numField=(keys)=>parseNumberSafely(getVal(keys));
+    let strField=(keys)=>getVal(keys)?String(getVal(keys)):'';
+    let fechaRaw=strField(['Fecha','Hora de publicación','Publish time','Date']);
+    let tipoRaw=strField(['Tipo de publicación','Post type','Type']);
+    let titulo=strField(['Título','Title','Descripción','Description','Post content']);
+    let vistasRaw = numField(['Visualizaciones','Impressions','Views','Reproducciones','Vistas']);
     return {
-      f: parseFecha(fecha), titulo, tipo, vistas, alcance,
-      reacciones: likesCount, comentarios: comentarios, compartidos:0,
-      guardados: guardados, seguimientos: seguimientos, url,
-      hora: parseHour(horaRaw),
-      diaSemana: diaRaw ? String(diaRaw).trim() : null,
+      f: parseFechaFlexible(fechaRaw),
+      titulo: titulo||'Sin título',
+      tipo: getTypeFromString(tipoRaw),
+      vistas: vistasRaw,
+      alcance: numField(['Alcance','Reach','Impresiones alcance']),
+      reacciones: numField(['Reacciones','Reactions','Likes','Me gusta']),
+      comentarios: numField(['Comentarios','Comments']),
+      compartidos: numField(['Veces que se compartió','Shares','Compartidos']),
+      hora: parseHourSmart(strField(['HORA','Hour','hora'])),
+      diaSemana: normalizeDayName(strField(['Día','Dia','day','Day'])),
+      okUsers: (()=>{ let raw=okCol?r[okCol]:''; if(!raw) return 0; let parts=String(raw).split(/[,;|\n]/).filter(x=>x.trim()&&!['na','n/a'].includes(x.trim().toLowerCase())); return parts.length; })(),
+      notOkUsers: (()=>{ let raw=notOkCol?r[notOkCol]:''; if(!raw) return 0; let parts=String(raw).split(/[,;|\n]/).filter(x=>x.trim()&&!['na','n/a'].includes(x.trim().toLowerCase())); return parts.length; })(),
+      okList: (()=>{ let raw=okCol?r[okCol]:''; if(!raw) return []; return String(raw).split(/[,;|\n]/).map(s=>s.trim()).filter(s=>s&&!['na','n/a'].includes(s.toLowerCase())); })(),
+      notOkList: (()=>{ let raw=notOkCol?r[notOkCol]:''; if(!raw) return []; return String(raw).split(/[,;|\n]/).map(s=>s.trim()).filter(s=>s&&!['na','n/a'].includes(s.toLowerCase())); })()
+    };
+  }).filter(p=>p.f);
+}
+
+function remapIGData(rows) {
+  if(!rows||!rows.length) return [];
+  let sample=rows[0];
+  let likesCol=customIgLikesCol||findBestKey(sample,['V','Usuarios like','Likes Users','Likers','Likers list','Usuarios OK','Usuarios que dieron like']);
+  return rows.map(r=>{
+    let getVal=(keys)=>findBestKey(r,keys)?r[findBestKey(r,keys)]:null;
+    let numField=(keys)=>parseNumberSafely(getVal(keys));
+    let strField=(keys)=>getVal(keys)?String(getVal(keys)):'';
+    let fechaRaw=strField(['Hora de publicación','Publish time','Timestamp','Fecha','Date']);
+    let tipoRaw=strField(['Tipo de publicación','Post type','Media Type','Type']);
+    let titulo=strField(['Descripción','Description','Título','Caption','Post content']);
+    let urlRaw=strField(['URL','Link','Permalink','Enlace']);
+    let vistasRaw = numField(['Visualizaciones','Impressions','Views','Reproducciones','Vistas']);
+    // Manejo robusto de la columna de likes (puede ser número o lista de usuarios)
+    let likersRaw = likesCol ? r[likesCol] : '';
+    let likersList = [];
+    let likersCount = 0;
+    if (likersRaw && typeof likersRaw === 'string') {
+      let trimmed = likersRaw.trim();
+      if (trimmed.includes(',') || trimmed.includes(';') || trimmed.includes('\n')) {
+        likersList = trimmed.split(/[,;|\n]/).map(s=>s.trim()).filter(s=>s && !['na','n/a'].includes(s.toLowerCase()));
+        likersCount = likersList.length;
+      } else {
+        let numeric = parseNumberSafely(trimmed);
+        if (numeric > 0) {
+          likersCount = numeric;
+          likersList = [];
+        } else if (trimmed && !['na','n/a'].includes(trimmed.toLowerCase())) {
+          likersList = [trimmed];
+          likersCount = 1;
+        }
+      }
+    } else if (typeof likersRaw === 'number') {
+      likersCount = likersRaw;
+    }
+    return {
+      f: parseFechaFlexible(fechaRaw),
+      titulo: titulo||'Sin descripción',
+      tipo: getTypeFromString(tipoRaw),
+      vistas: vistasRaw,
+      alcance: numField(['Alcance','Reach','Impresiones alcance']),
+      reacciones: numField(['Me gusta','Likes','Reacciones']),
+      comentarios: numField(['Comentarios','Comments']),
+      guardados: numField(['Veces que se guardó','Saves','Guardados','Saved']),
+      seguimientos: numField(['Seguimiento','Follows','Seguimientos']),
+      url: urlRaw,
+      hora: parseHourSmart(strField(['HORA','Hour','hora'])),
+      diaSemana: normalizeDayName(strField(['Día','Dia','day','Day'])),
       likersList: likersList,
       likersCount: likersCount
     };
-  }).filter(x=>x);
+  }).filter(p=>p.f);
 }
 
-// Carga de datos (sin cambios)
-function loadFromSheets(net) {
+// ---- Funciones de carga y sincronización ----
+function loadFromSheets(net){
   let url = document.getElementById(net+'Url').value;
   let msg = document.getElementById('syncMsg');
-  if(!url) { alert('Pega una URL de CSV válida'); return; }
+  if(!url){alert('Ingresa URL del CSV');return;}
   let useProxy = document.getElementById('useProxy').checked;
-  if(useProxy) url = 'https://cors-anywhere.herokuapp.com/' + url;
-  msg.innerText = 'Cargando '+net.toUpperCase()+'...';
-  Papa.parse(url, {
-    download: true, header: true, skipEmptyLines: true,
-    complete: function(res) {
-      if(res.errors && res.errors.length) console.warn(res.errors);
-      if(!res.data || res.data.length===0) {
-        msg.innerText = 'Error: CSV vacío o no accesible. Revisa CORS.';
-        return;
-      }
-      console.log(`📁 Datos brutos ${net}:`, res.data.slice(0,2));
-      if (net === 'fb') {
-        rawCSVData = res.data;
-        DB_FB = remapFBData(rawCSVData);
-        let sample = rawCSVData[0];
-        let detectedOk = findKey(sample, ['EZ','Usuarios OK','OK Users','Promotores','OK']);
-        let detectedNotOk = findKey(sample, ['FA','Usuarios not OK','Not OK Users','Detractores','Not OK']);
-        document.getElementById('fb-col-ok').value = customOkCol || detectedOk || '';
-        document.getElementById('fb-col-notok').value = customNotOkCol || detectedNotOk || '';
-      } else {
-        rawIGData = res.data;
-        DB_IG = remapIGData(rawIGData);
-        let sample = rawIGData[0];
-        let detectedLikes = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK']);
-        document.getElementById('ig-col-likes').value = customIgLikesCol || detectedLikes || '';
-      }
-      resetFilters(net);
-      msg.innerText = '✔ '+net.toUpperCase()+' sincronizado';
-      setTimeout(()=>msg.innerText='',3000);
-    },
-    error: function(err) {
-      console.error(err);
-      msg.innerText = 'Error de carga: verifica la URL y CORS';
-    }
-  });
+  if(useProxy) url = 'https://cors-anywhere.herokuapp.com/'+url;
+  msg.innerText = `Cargando ${net.toUpperCase()}...`;
+  Papa.parse(url, {download:true, header:true, skipEmptyLines:true, complete:function(res){
+    if(!res.data||res.data.length===0){msg.innerText='Error CSV vacío';return;}
+    if(net==='fb'){ rawCSV_FB=res.data; DB_FB=remapFBData(rawCSV_FB); let sample=rawCSV_FB[0]; document.getElementById('fb-col-ok').value=customOkCol||findBestKey(sample,['EZ','Usuarios OK'])||''; document.getElementById('fb-col-notok').value=customNotOkCol||findBestKey(sample,['FA','Usuarios not OK'])||''; resetFilters('fb'); }
+    else{ rawCSV_IG=res.data; DB_IG=remapIGData(rawCSV_IG); let sample=rawCSV_IG[0]; document.getElementById('ig-col-likes').value=customIgLikesCol||findBestKey(sample,['V','Usuarios like','Likers'])||''; resetFilters('ig'); }
+    msg.innerText=`✔ ${net.toUpperCase()} sincronizado (${res.data.length} filas)`;
+    setTimeout(()=>msg.innerText='',3000);
+  }, error:()=>{ msg.innerText='Error CORS o URL inválida'; }});
 }
-
-function applyColumnMapping() {
-  let newOk = document.getElementById('fb-col-ok').value.trim();
-  let newNotOk = document.getElementById('fb-col-notok').value.trim();
-  customOkCol = newOk;
-  customNotOkCol = newNotOk;
-  if (rawCSVData) {
-    DB_FB = remapFBData(rawCSVData);
-    resetFilters('fb');
-  } else {
-    alert('Primero carga un CSV de Facebook usando el botón Sync Facebook.');
-  }
+function applyColumnMapping(){ customOkCol=document.getElementById('fb-col-ok').value.trim(); customNotOkCol=document.getElementById('fb-col-notok').value.trim(); if(rawCSV_FB){ DB_FB=remapFBData(rawCSV_FB); resetFilters('fb'); } else alert('Carga CSV Facebook primero'); }
+function autoDetectColumns(){ if(!rawCSV_FB){alert('Carga CSV Facebook');return;} let s=rawCSV_FB[0]; let ok=findBestKey(s,['EZ','Usuarios OK']), notok=findBestKey(s,['FA','Usuarios not OK']); if(ok) document.getElementById('fb-col-ok').value=ok; if(notok) document.getElementById('fb-col-notok').value=notok; customOkCol=ok||''; customNotOkCol=notok||''; DB_FB=remapFBData(rawCSV_FB); resetFilters('fb'); alert(`OK: ${ok||'no'} | Not OK: ${notok||'no'}`); }
+function applyIgLikesColumn(){ customIgLikesCol=document.getElementById('ig-col-likes').value.trim(); if(rawCSV_IG){ DB_IG=remapIGData(rawCSV_IG); resetFilters('ig'); } else alert('Carga CSV Instagram'); }
+function autoDetectIgLikesColumn(){ if(!rawCSV_IG){alert('Carga CSV IG');return;} let s=rawCSV_IG[0]; let likeCol=findBestKey(s,['V','Usuarios like','Likers','Usuarios OK']); if(likeCol){ document.getElementById('ig-col-likes').value=likeCol; customIgLikesCol=likeCol; DB_IG=remapIGData(rawCSV_IG); resetFilters('ig'); alert(`Columna de likes detectada: ${likeCol}`); } else alert('No se detectó columna de likes'); }
+function setTypeFilter(net,type,btn){ let container=btn.parentElement; container.querySelectorAll('.ftag').forEach(b=>b.classList.remove('on-fb','on-ig','on-all')); btn.classList.add(net==='fb'?'on-fb':'on-ig'); if(net==='fb') FILT_FB.type=type; else FILT_IG.type=type; applyFilters(net); }
+function applyFilters(net){ let db=net==='fb'?DB_FB:DB_IG; let f=net==='fb'?FILT_FB:FILT_IG; f.dateFrom=document.getElementById(net+'-dateFrom')?.value||''; f.dateTo=document.getElementById(net+'-dateTo')?.value||''; f.reachMin=parseInt(document.getElementById(net+'-reachMin')?.value)||0; f.reachMax=parseInt(document.getElementById(net+'-reachMax')?.value)||Infinity; let filtered=db.filter(p=>{ if(f.type!=='Todos' && p.tipo!==f.type) return false; if(f.q && !p.titulo.toLowerCase().includes(f.q.toLowerCase())) return false; let fechaObj=new Date(p.f); if(f.dateFrom && fechaObj<new Date(f.dateFrom)) return false; if(f.dateTo && fechaObj>new Date(f.dateTo)) return false; let alc=p.alcance; if(alc<f.reachMin || alc>f.reachMax) return false; return true; }); if(net==='fb'){ FL_FB=filtered; PAG_FB.curr=1; } else { FL_IG=filtered; PAG_IG.curr=1; } render(net); }
+function resetFilters(net){ document.getElementById(net+'-dateFrom').value=''; document.getElementById(net+'-dateTo').value=''; document.getElementById(net+'-reachMin').value=''; document.getElementById(net+'-reachMax').value=''; document.getElementById(net+'-sIn').value=''; if(net==='fb'){ FILT_FB.q=''; FILT_FB.type='Todos'; let btn=document.querySelector('#panelFB .filter-group:first-child .ftag.on-all'); if(btn) setTypeFilter('fb','Todos',btn); else applyFilters('fb'); } else { FILT_IG.q=''; FILT_IG.type='Todos'; let btn=document.querySelector('#panelIG .filter-group:first-child .ftag.on-all'); if(btn) setTypeFilter('ig','Todos',btn); else applyFilters('ig'); } applyFilters(net); }
+function filterTableText(net){ let q=document.getElementById(net+'-sIn').value; if(net==='fb') FILT_FB.q=q; else FILT_IG.q=q; applyFilters(net); }
+function render(net){ drawKPIs(net); drawCharts(net); drawTop(net); renderTable(net); if(net==='fb'){ drawFbOkNotOk(); drawTopUsers(); drawFbActivitySummary(); } else { drawIgLikes(); drawTopLikers(); } }
+// Resumen de actividad para Facebook (evita NaN)
+function drawFbActivitySummary(){
+  let data=FL_FB;
+  if(!data.length){ document.getElementById('fb-totalInteractions').innerText='—'; document.getElementById('fb-uniquePromoters').innerText='—'; document.getElementById('fb-uniqueDetractors').innerText='—'; return; }
+  let totalInter = data.reduce((a,b)=>a+b.reacciones+b.comentarios+b.compartidos,0);
+  let uniqueProm = new Set(); data.forEach(p=>p.okList.forEach(u=>uniqueProm.add(u)));
+  let uniqueDet = new Set(); data.forEach(p=>p.notOkList.forEach(u=>uniqueDet.add(u)));
+  document.getElementById('fb-totalInteractions').innerText=totalInter.toLocaleString();
+  document.getElementById('fb-uniquePromoters').innerText=uniqueProm.size.toLocaleString();
+  document.getElementById('fb-uniqueDetractors').innerText=uniqueDet.size.toLocaleString();
 }
-
-function autoDetectColumns() {
-  if (!rawCSVData || !rawCSVData.length) {
-    alert('Carga primero el CSV de Facebook.');
-    return;
-  }
-  let sample = rawCSVData[0];
-  let okKey = findKey(sample, ['EZ', 'Usuarios OK', 'OK Users', 'Promotores', 'OK']);
-  let notOkKey = findKey(sample, ['FA', 'Usuarios not OK', 'Not OK Users', 'Detractores', 'Not OK']);
-  if (okKey) document.getElementById('fb-col-ok').value = okKey;
-  if (notOkKey) document.getElementById('fb-col-notok').value = notOkKey;
-  customOkCol = okKey || '';
-  customNotOkCol = notOkKey || '';
-  DB_FB = remapFBData(rawCSVData);
-  resetFilters('fb');
-  alert(`Detectado: OK = ${okKey || 'no encontrado'}, Not OK = ${notOkKey || 'no encontrado'}`);
-}
-
-function applyIgLikesColumn() {
-  let newCol = document.getElementById('ig-col-likes').value.trim();
-  customIgLikesCol = newCol;
-  if (rawIGData) {
-    DB_IG = remapIGData(rawIGData);
-    resetFilters('ig');
-  } else {
-    alert('Primero carga un CSV de Instagram usando el botón Sync Instagram.');
-  }
-}
-
-function autoDetectIgLikesColumn() {
-  if (!rawIGData || !rawIGData.length) {
-    alert('Carga primero el CSV de Instagram.');
-    return;
-  }
-  let sample = rawIGData[0];
-  let likesKey = findKey(sample, ['V', 'Usuarios like', 'Likes Users', 'Likers', 'Likers list', 'Usuarios OK']);
-  if (likesKey) {
-    document.getElementById('ig-col-likes').value = likesKey;
-    customIgLikesCol = likesKey;
-    DB_IG = remapIGData(rawIGData);
-    resetFilters('ig');
-    alert(`Columna de likes detectada: ${likesKey}`);
-  } else {
-    alert('No se pudo detectar automáticamente una columna de likes. Escríbela manualmente (ej: Usuarios OK).');
-  }
-}
-
-// ==================== FILTROS ====================
-function setTypeFilter(net, type, btn) {
-  let container = btn.parentElement;
-  container.querySelectorAll('.ftag').forEach(b=>b.classList.remove('on-fb','on-ig','on-all'));
-  btn.classList.add(net==='fb'?'on-fb':'on-ig');
-  if(net==='fb') FILT_FB.type=type; else FILT_IG.type=type;
-  applyFilters(net);
-}
-
-function applyFilters(net) {
-  let db = net==='fb' ? DB_FB : DB_IG;
-  let f = net==='fb' ? FILT_FB : FILT_IG;
-  let dateFrom = document.getElementById(net+'-dateFrom')?.value;
-  let dateTo = document.getElementById(net+'-dateTo')?.value;
-  let reachMin = parseInt(document.getElementById(net+'-reachMin')?.value) || 0;
-  let reachMax = parseInt(document.getElementById(net+'-reachMax')?.value) || Infinity;
-  f.dateFrom = dateFrom; f.dateTo = dateTo; f.reachMin = reachMin; f.reachMax = reachMax;
-  let filtered = db.filter(p => {
-    if(f.type !== 'Todos' && p.tipo !== f.type) return false;
-    if(f.q && !p.titulo.toLowerCase().includes(f.q.toLowerCase())) return false;
-    let fechaObj = new Date(p.f);
-    if(f.dateFrom && fechaObj < new Date(f.dateFrom)) return false;
-    if(f.dateTo && fechaObj > new Date(f.dateTo)) return false;
-    let alc = p.alcance;
-    if(alc < f.reachMin || alc > f.reachMax) return false;
-    return true;
-  });
-  if(net==='fb') { FL_FB=filtered; PAG_FB.curr=1; } else { FL_IG=filtered; PAG_IG.curr=1; }
-  render(net);
-}
-
-function resetFilters(net) {
-  document.getElementById(net+'-dateFrom').value = '';
-  document.getElementById(net+'-dateTo').value = '';
-  document.getElementById(net+'-reachMin').value = '';
-  document.getElementById(net+'-reachMax').value = '';
-  let container = document.querySelector(`#panel${net.toUpperCase()} .filter-group:first-child`);
-  if(container) {
-    let allBtn = container.querySelector('.ftag.on-all');
-    if(allBtn) setTypeFilter(net, 'Todos', allBtn);
-    else {
-      let first = container.querySelector('.ftag');
-      if(first) setTypeFilter(net, 'Todos', first);
-    }
-  } else {
-    if(net==='fb') FILT_FB.type='Todos'; else FILT_IG.type='Todos';
-  }
-  document.getElementById(net+'-sIn').value = '';
-  if(net==='fb') FILT_FB.q=''; else FILT_IG.q='';
-  applyFilters(net);
-}
-
-function filterTableText(net) {
-  let q = document.getElementById(net+'-sIn').value;
-  if(net==='fb') FILT_FB.q=q; else FILT_IG.q=q;
-  applyFilters(net);
-}
-
-// ==================== RENDERIZADO ====================
-function render(net) {
-  drawKPIs(net);
-  drawCharts(net);
-  drawTop(net);
-  renderTbl(net);
-  updateDateRange(net);
-  if(net === 'fb') {
-    drawFbOkNotOk();
-    drawTopUsers();
-  } else {
-    drawIgLikes();
-    drawTopLikers();
-  }
-}
-
-function drawKPIs(net) {
-  let data = net==='fb' ? FL_FB : FL_IG;
-  let n = data.length;
-  let fmt = v=>v.toLocaleString();
-  if(net==='fb') {
-    let alc=data.reduce((a,b)=>a+b.alcance,0), vis=data.reduce((a,b)=>a+b.vistas,0), rx=data.reduce((a,b)=>a+b.reacciones,0), com=data.reduce((a,b)=>a+b.comentarios,0), shr=data.reduce((a,b)=>a+b.compartidos,0), int=rx+com+shr;
-    document.getElementById('fb-bnP').innerText=n; document.getElementById('fb-bnR').innerText=fmt(alc); document.getElementById('fb-bnV').innerText=fmt(vis); document.getElementById('fb-bnE').innerText=fmt(int);
-    document.getElementById('fb-kP').innerText=n; document.getElementById('fb-kR').innerText=fmt(alc); document.getElementById('fb-kV').innerText=fmt(vis); document.getElementById('fb-kRx').innerText=fmt(rx); document.getElementById('fb-kC').innerText=fmt(com); document.getElementById('fb-kS').innerText=fmt(shr);
-    let avg=n?Math.round(alc/n):0; document.getElementById('fb-kPs').innerText='Publicaciones totales'; document.getElementById('fb-kRs').innerText=`Avg: ${fmt(avg)} por post`; document.getElementById('fb-kVs').innerText='Total impresiones'; document.getElementById('fb-kRxs').innerText='Reacciones'; document.getElementById('fb-kCs').innerText='Comentarios'; document.getElementById('fb-kSs').innerText='Compartidos';
-  } else {
-    let alc=data.reduce((a,b)=>a+b.alcance,0), vis=data.reduce((a,b)=>a+b.vistas,0), likes=data.reduce((a,b)=>a+b.reacciones,0), save=data.reduce((a,b)=>a+b.guardados,0), seg=data.reduce((a,b)=>a+b.seguimientos,0);
-    document.getElementById('ig-bnP').innerText=n; document.getElementById('ig-bnR').innerText=fmt(alc); document.getElementById('ig-bnV').innerText=fmt(vis); document.getElementById('ig-bnE').innerText=fmt(likes+save);
-    document.getElementById('ig-kP').innerText=n; document.getElementById('ig-kR').innerText=fmt(alc); document.getElementById('ig-kV').innerText=fmt(vis); document.getElementById('ig-kL').innerText=fmt(likes); document.getElementById('ig-kG').innerText=fmt(save); document.getElementById('ig-kSeg').innerText=fmt(seg);
-    let avg=n?Math.round(alc/n):0; document.getElementById('ig-kPs').innerText='Publicaciones'; document.getElementById('ig-kRs').innerText=`Avg: ${fmt(avg)} por post`; document.getElementById('ig-kVs').innerText='Vistas totales'; document.getElementById('ig-kLs').innerText='Likes'; document.getElementById('ig-kGs').innerText='Guardados'; document.getElementById('ig-kSegs').innerText='Seguimientos';
-  }
-}
-
-function drawTopUsers() {
-  let data = FL_FB;
-  if (!data.length) return;
-  let okCount = new Map();
-  let notOkCount = new Map();
-  for (let pub of data) {
-    if (pub.okList) {
-      for (let user of pub.okList) {
-        if (!isValidUserName(user)) continue;
-        okCount.set(user, (okCount.get(user)||0) + 1);
-      }
-    }
-    if (pub.notOkList) {
-      for (let user of pub.notOkList) {
-        if (!isValidUserName(user)) continue;
-        notOkCount.set(user, (notOkCount.get(user)||0) + 1);
-      }
-    }
-  }
-  let topOk = Array.from(okCount.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  let topNotOk = Array.from(notOkCount.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  drawHorizontalBarChart('fb-topPromotores', topOk.map(v=>v[0]), topOk.map(v=>v[1]), '#52BEC0');
-  drawHorizontalBarChart('fb-topDetractores', topNotOk.map(v=>v[0]), topNotOk.map(v=>v[1]), '#E1306C');
-}
-
-function drawTopLikers() {
-  let data = FL_IG;
-  if (!data.length) return;
-  let likerCount = new Map();
-  let totalLikesEvents = 0;
-  for (let pub of data) {
-    if (pub.likersList && pub.likersList.length) {
-      for (let user of pub.likersList) {
-        if (!isValidUserName(user)) continue;
-        likerCount.set(user, (likerCount.get(user)||0) + 1);
-        totalLikesEvents++;
-      }
-    } else if (pub.likersCount > 0 && (!pub.likersList || pub.likersList.length === 0)) {
-      totalLikesEvents += pub.likersCount;
-    }
-  }
-  let uniqueLikers = likerCount.size;
-  let topLikers = Array.from(likerCount.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  drawHorizontalBarChart('ig-topLikers', topLikers.map(v=>v[0]), topLikers.map(v=>v[1]), '#E1306C');
-  document.getElementById('ig-totalLikesCount').innerText = totalLikesEvents.toLocaleString();
-  document.getElementById('ig-uniqueLikers').innerText = uniqueLikers.toLocaleString();
-}
-
-function drawHorizontalBarChart(canvasId, labels, data, color) {
-  let canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  let barHeight = 42;
-  let minHeight = 280;
-  let newHeight = Math.max(minHeight, labels.length * barHeight + 40);
-  canvas.style.height = newHeight + 'px';
-  canvas.height = newHeight;
-  let ctx = canvas.getContext('2d');
-  let storage = canvasId.includes('fb') ? CH_FB : CH_IG;
-  if (storage[canvasId]) storage[canvasId].destroy();
-  if (labels.length === 0) {
-    ctx.font = "12px Montserrat";
-    ctx.fillStyle = "#888";
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillText("No hay datos de usuarios", 10, 30);
-    return;
-  }
-  storage[canvasId] = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Número de interacciones',
-        data: data,
-        backgroundColor: color,
-        borderWidth: 0,
-        barPercentage: 0.8,
-        categoryPercentage: 0.9
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: (ctx) => `${ctx.raw} veces`
-          }
-        }
-      },
-      scales: {
-        x: {
-          beginAtZero: true,
-          title: { display: true, text: 'Veces que aparece', font: { size: 10 } },
-          ticks: { font: { size: 10 } }
-        },
-        y: {
-          ticks: {
-            font: { size: 11, weight: '500' },
-            autoSkip: false,
-            stepSize: 1,
-            maxRotation: 0,
-            minRotation: 0
-          },
-          grid: { display: false }
-        }
-      },
-      layout: {
-        padding: { left: 5, right: 5, top: 10, bottom: 10 }
-      }
-    }
-  });
-}
-
-function drawFbOkNotOk() {
-  let data = FL_FB;
-  if(!data.length) {
-    ['fb-okDonut','fb-okLine'].forEach(id=>{
-      let ctx = document.getElementById(id)?.getContext('2d');
-      if(ctx) { ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); ctx.font="12px Montserrat"; ctx.fillStyle="#888"; ctx.fillText("Sin datos (configura columnas OK/Not OK)",10,30); }
-    });
-    return;
-  }
-  let totalOk = data.reduce((s,p)=>s+(p.okUsers||0),0);
-  let totalNotOk = data.reduce((s,p)=>s+(p.notOkUsers||0),0);
-  let donutCtx = document.getElementById('fb-okDonut')?.getContext('2d');
-  if(donutCtx) {
-    if(CH_FB['fb-okDonut']) CH_FB['fb-okDonut'].destroy();
-    CH_FB['fb-okDonut'] = new Chart(donutCtx, { type:'doughnut', data:{ labels:['Usuarios OK','Usuarios Not OK'], datasets:[{ data:[totalOk,totalNotOk], backgroundColor:['#52BEC0','#E1306C'] }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' } } } });
-  }
-  let sorted = [...data].sort((a,b)=>new Date(a.f)-new Date(b.f));
-  let dates = sorted.map(p=>p.f);
-  let okSeries = sorted.map(p=>p.okUsers||0);
-  let notOkSeries = sorted.map(p=>p.notOkUsers||0);
-  let lineCtx = document.getElementById('fb-okLine')?.getContext('2d');
-  if(lineCtx) {
-    if(CH_FB['fb-okLine']) CH_FB['fb-okLine'].destroy();
-    CH_FB['fb-okLine'] = new Chart(lineCtx, { type:'line', data:{ labels:dates, datasets:[{ label:'Usuarios OK', data:okSeries, borderColor:'#52BEC0', fill:true, tension:0.2 },{ label:'Usuarios Not OK', data:notOkSeries, borderColor:'#E1306C', fill:true, tension:0.2 }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ beginAtZero:true } } } });
-  }
-}
-
-function drawIgLikes() {
-  let data = FL_IG;
+function drawTopLikers(){
+  let data=FL_IG;
   if(!data.length) return;
-  let sorted = [...data].sort((a,b)=>new Date(a.f)-new Date(b.f));
-  let dates = sorted.map(p=>p.f);
-  let likesSeries = sorted.map(p=>p.reacciones||0);
-  let lineCtx = document.getElementById('ig-likesLine')?.getContext('2d');
-  if(lineCtx) {
-    if(CH_IG['ig-likesLine']) CH_IG['ig-likesLine'].destroy();
-    CH_IG['ig-likesLine'] = new Chart(lineCtx, { type:'line', data:{ labels:dates, datasets:[{ label:'Me gusta', data:likesSeries, borderColor:'#E1306C', fill:true }] }, options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ beginAtZero:true } } } });
-  }
-  let typeMap = {};
-  data.forEach(p=>{ let tipo = p.tipo||'Otro'; typeMap[tipo] = (typeMap[tipo]||0)+(p.reacciones||0); });
-  let barCtx = document.getElementById('ig-likesBar')?.getContext('2d');
-  if(barCtx) {
-    if(CH_IG['ig-likesBar']) CH_IG['ig-likesBar'].destroy();
-    CH_IG['ig-likesBar'] = new Chart(barCtx, { type:'bar', data:{ labels:Object.keys(typeMap), datasets:[{ label:'Me gusta', data:Object.values(typeMap), backgroundColor:'#833AB4' }] }, options:{ responsive:true } });
-  }
-}
-
-function drawHourlyImpact(net, data) {
-  let hourMap = new Array(24).fill(0);
-  let valid=0;
-  data.forEach(p=>{ if(p.hora!==undefined && p.hora!==null && !isNaN(p.hora) && p.hora>=0 && p.hora<=23) { hourMap[p.hora]+=p.alcance; valid++; } });
-  let labels = Array.from({length:24},(_,i)=>`${i}:00`);
-  let canvasId = net==='fb'?'fb-cHour':'ig-cHour';
-  let storage = net==='fb'?CH_FB:CH_IG;
-  if(storage[canvasId]) storage[canvasId].destroy();
-  let ctx = document.getElementById(canvasId)?.getContext('2d');
-  if(!ctx) return;
-  if(valid===0) { ctx.font="12px Montserrat"; ctx.fillStyle="#888"; ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); ctx.fillText("Sin datos de hora (columna 'HORA' numérica)",10,30); return; }
-  storage[canvasId] = new Chart(ctx, { type:'bar', data:{ labels, datasets:[{ label:'Alcance total', data:hourMap, backgroundColor:net==='fb'?'#1877F2':'#E1306C' }] }, options:{ responsive:true, maintainAspectRatio:false } });
-}
-function drawDailyImpact(net, data) {
-  let daysOrder = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-  let dayMap = { 'Lunes':0,'Martes':0,'Miércoles':0,'Jueves':0,'Viernes':0,'Sábado':0,'Domingo':0 };
-  let valid=0;
-  let dayToSpanish = (d)=>{ let map={'monday':'Lunes','tuesday':'Martes','wednesday':'Miércoles','thursday':'Jueves','friday':'Viernes','saturday':'Sábado','sunday':'Domingo'}; return map[d.toLowerCase()] || d; };
-  data.forEach(p=>{ if(p.diaSemana) { let dn = dayToSpanish(p.diaSemana.trim()); dn = dn.charAt(0).toUpperCase()+dn.slice(1).toLowerCase(); if(dayMap.hasOwnProperty(dn)) { dayMap[dn]+=p.alcance; valid++; } } });
-  let values = daysOrder.map(d=>dayMap[d]);
-  let canvasId = net==='fb'?'fb-cDay':'ig-cDay';
-  let storage = net==='fb'?CH_FB:CH_IG;
-  if(storage[canvasId]) storage[canvasId].destroy();
-  let ctx = document.getElementById(canvasId)?.getContext('2d');
-  if(!ctx) return;
-  if(valid===0) { ctx.font="12px Montserrat"; ctx.fillStyle="#888"; ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); ctx.fillText("Sin datos de día (columna 'Día')",10,30); return; }
-  storage[canvasId] = new Chart(ctx, { type:'bar', data:{ labels:daysOrder, datasets:[{ label:'Alcance total', data:values, backgroundColor:net==='fb'?'#52BEC0':'#F77737' }] }, options:{ responsive:true, maintainAspectRatio:false } });
-}
-function drawCharts(net) {
-  let data = net==='fb' ? FL_FB : FL_IG;
-  let charts = net==='fb' ? CH_FB : CH_IG;
-  let colors = net==='fb' ? ['#52BEC0','#3aa3a5','#111'] : ['#E1306C','#833AB4','#F77737'];
-  let types = [...new Set(data.map(p=>p.tipo))];
-  let typeData = types.map(t=>data.filter(p=>p.tipo===t).reduce((a,b)=>a+b.alcance,0));
-  updateChart(charts, net==='fb'?'fb-cT':'ig-cT', 'bar', types, [{ label:'Alcance', data:typeData, backgroundColor:colors[0] }]);
-  let eLabels, eData;
-  if(net==='fb') { eLabels=['Reacciones','Comentarios','Compartidos']; eData=[data.reduce((a,b)=>a+b.reacciones,0), data.reduce((a,b)=>a+b.comentarios,0), data.reduce((a,b)=>a+b.compartidos,0)]; }
-  else { eLabels=['Likes','Comentarios','Guardados']; eData=[data.reduce((a,b)=>a+b.reacciones,0), data.reduce((a,b)=>a+b.comentarios,0), data.reduce((a,b)=>a+b.guardados,0)]; }
-  updateChart(charts, net==='fb'?'fb-cE':'ig-cE', 'bar', eLabels, [{ label:'Total', data:eData, backgroundColor:colors[1] }]);
-  updateChart(charts, net==='fb'?'fb-cD':'ig-cD', 'doughnut', eLabels, [{ data:eData, backgroundColor:colors }]);
-  let sorted = [...data].sort((a,b)=>new Date(a.f)-new Date(b.f));
-  let dates = sorted.map(p=>p.f), reach = sorted.map(p=>p.alcance);
-  updateChart(charts, net==='fb'?'fb-cTL':'ig-cTL', 'line', dates, [{ label:'Alcance', data:reach, borderColor:colors[0], tension:0.3, fill:true, backgroundColor:colors[0]+'11' }]);
-  drawHourlyImpact(net, data);
-  drawDailyImpact(net, data);
-}
-function updateChart(storage, id, type, labels, datasets) {
-  if(storage[id]) storage[id].destroy();
-  let canvas = document.getElementById(id);
-  if(!canvas) return;
-  let ctx = canvas.getContext('2d');
-  storage[id] = new Chart(ctx, { type, data:{ labels, datasets }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:type==='doughnut', position:'bottom', labels:{ boxWidth:10, font:{ size:10 } } } }, scales:type!=='doughnut'?{ y:{ beginAtZero:true, grid:{ color:'#f0f0f0' }, ticks:{ font:{ size:10 } } }, x:{ grid:{ display:false }, ticks:{ font:{ size:10 } } } }:{} } });
-}
-function drawTop(net) {
-  let data = net==='fb' ? FL_FB : FL_IG;
-  let container = document.getElementById(net+'-topL');
-  let top5 = [...data].sort((a,b)=>b.alcance-a.alcance).slice(0,5);
-  let fmt=v=>v.toLocaleString();
-  container.innerHTML = top5.map((p,i)=>{ let perc = (p.alcance/(top5[0].alcance||1))*100; let linkHtml = (net==='ig' && p.url) ? `<a href="${p.url}" target="_blank" style="display:block; font-size:10px; color:var(--ig1); text-decoration:none; margin-bottom:4px;">Ver publicación ↗</a>` : ''; return `<div class="ti"><div class="tnum ${net==='fb'?'fb1':'ig1'}">${i+1}</div><div class="tinfo"><div class="tttl" title="${p.titulo}">${p.titulo}</div>${linkHtml}<div class="tmeta"><span class="badge ${net==='fb'?'r-fb':'r-ig'}">${p.tipo}</span><span class="badge ${net==='fb'?'v-fb':'i-ig'}">${fmt(p.vistas)} vistas</span></div><div class="tbar"><div class="ttrack"><div class="${net==='fb'?'tfill-fb':'tfill-ig'}" style="width:${perc}%"></div></div><div class="treach ${net}">${fmt(p.alcance)}</div></div></div></div>`; }).join('');
-}
-function renderTbl(net) {
-  let data = net==='fb' ? FL_FB : FL_IG;
-  let sort = net==='fb' ? SORT_FB : SORT_IG;
-  let pag = net==='fb' ? PAG_FB : PAG_IG;
-  let body = document.getElementById(net+'-tBody');
-  let sub = document.getElementById(net+'-tsub');
-  let fmt = (v) => (v !== undefined && v !== null && !isNaN(v)) ? v.toLocaleString() : '—';
-  let sorted = [...data].sort((a,b)=>{ let va=a[sort.k], vb=b[sort.k]; if(sort.k==='fecha'){ va=new Date(a.f); vb=new Date(b.f); } return va>vb?sort.d:(va<vb?-sort.d:0); });
-  let start = (pag.curr-1)*pag.size;
-  let slice = sorted.slice(start, start+pag.size);
-  sub.innerText = `${data.length} publicaciones encontradas`;
-  body.innerHTML = slice.map(p=>{ 
-    let eng = (p.alcance && p.alcance > 0) ? (((p.reacciones + p.comentarios + (p.guardados||0) + (p.seguimientos||0)) / p.alcance) * 100).toFixed(1) : 0;
-    let pcls = '';
-    if (p.tipo && p.tipo.toLowerCase().includes('reel')) pcls = 'p-reel-'+net;
-    else if (p.tipo && p.tipo.toLowerCase().includes('vid')) pcls = 'p-vid-'+net;
-    else pcls = 'p-foto-'+net;
-    let row = `<tr><td>${p.f || '—'}</td><td title="${p.titulo || ''}">${p.titulo || '—'}</td><td><span class="pill ${pcls}">${p.tipo || '—'}</span></td><td>${fmt(p.alcance)}</td>`;
-    if(net==='fb') {
-      row += `<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.compartidos)}</td>`;
-    } else {
-      row += `<td>${fmt(p.vistas)}</td><td>${fmt(p.reacciones)}</td><td>${fmt(p.comentarios)}</td><td>${fmt(p.guardados)}</td><td>${fmt(p.seguimientos)}</td>`;
+  let likeMap=new Map();
+  let total=0;
+  data.forEach(p=>{
+    if(p.likersList && p.likersList.length){
+      p.likersList.forEach(u=>{ likeMap.set(u,(likeMap.get(u)||0)+1); total++; });
+    } else if(p.likersCount>0){
+      total += p.likersCount;
+      // No podemos mapear usuarios únicos si solo hay un número
     }
-    row += `<td><b>${eng}%</b></td></tr>`;
-    return row;
-  }).join('');
-  renderPagi(net, data.length);
+  });
+  let top=Array.from(likeMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  drawHorizBar('ig-topLikers',top.map(v=>v[0]),top.map(v=>v[1]),'#E1306C');
+  document.getElementById('ig-totalLikesCount').innerText=total.toLocaleString();
+  document.getElementById('ig-uniqueLikers').innerText=likeMap.size.toLocaleString();
 }
-function renderPagi(net, total) {
-  let pag = net==='fb' ? PAG_FB : PAG_IG;
-  let container = document.getElementById(net+'-pagi');
-  let max = Math.ceil(total/pag.size);
-  let h = `<span style="font-size:10px; color:#888; margin-right:10px">Pág ${pag.curr} de ${max}</span>`;
-  h += `<button class="pbtn" onclick="changeP('${net}',${pag.curr-1})" ${pag.curr===1?'disabled':''}>Anterior</button>`;
-  h += `<button class="pbtn" onclick="changeP('${net}',${pag.curr+1})" ${pag.curr>=max?'disabled':''}>Siguiente</button>`;
-  container.innerHTML = h;
-}
-function changeP(net, p) { if(net==='fb') PAG_FB.curr=p; else PAG_IG.curr=p; renderTbl(net); }
-function sortBy(net, k) { let s=net==='fb'?SORT_FB:SORT_IG; if(s.k===k) s.d*=-1; else { s.k=k; s.d=-1; } renderTbl(net); }
-function switchTab(net) { document.getElementById('panelFB').classList.toggle('hidden', net==='ig'); document.getElementById('panelIG').classList.toggle('hidden', net==='fb'); document.getElementById('tabFB').classList.toggle('active-fb', net==='fb'); document.getElementById('tabIG').classList.toggle('active-ig', net==='ig'); updateDateRange(net); }
-function updateDateRange(net) { let db=net==='fb'?DB_FB:DB_IG; if(!db.length) return; let dates=db.map(p=>new Date(p.f)); let min=new Date(Math.min(...dates)).toLocaleDateString('es-MX',{day:'2-digit',month:'short'}); let max=new Date(Math.max(...dates)).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}); document.getElementById('dateRangeFB').innerText=`${min} — ${max}`; }
-document.getElementById('footDate').innerText = new Date().getFullYear() + ' · Dash v2.0 Live Sync';
+// resto de funciones: drawKPIs, drawCharts, drawHourImpact, drawDayImpact, drawTop, renderTable, etc.
+function drawKPIs(net){ let data=net==='fb'?FL_FB:FL_IG; let n=data.length; let f=v=>v.toLocaleString(); if(net==='fb'){ let alc=data.reduce((a,b)=>a+b.alcance,0), vis=data.reduce((a,b)=>a+b.vistas,0), rx=data.reduce((a,b)=>a+b.reacciones,0), com=data.reduce((a,b)=>a+b.comentarios,0), shr=data.reduce((a,b)=>a+b.compartidos,0); document.getElementById('fb-bnP').innerText=n; document.getElementById('fb-bnR').innerText=f(alc); document.getElementById('fb-bnV').innerText=f(vis); document.getElementById('fb-bnE').innerText=f(rx+com+shr); document.getElementById('fb-kP').innerText=n; document.getElementById('fb-kR').innerText=f(alc); document.getElementById('fb-kV').innerText=f(vis); document.getElementById('fb-kRx').innerText=f(rx); document.getElementById('fb-kC').innerText=f(com); document.getElementById('fb-kS').innerText=f(shr); } else { let alc=data.reduce((a,b)=>a+b.alcance,0), vis=data.reduce((a,b)=>a+b.vistas,0), likes=data.reduce((a,b)=>a+b.reacciones,0), save=data.reduce((a,b)=>a+b.guardados,0), seg=data.reduce((a,b)=>a+b.seguimientos,0); document.getElementById('ig-bnP').innerText=n; document.getElementById('ig-bnR').innerText=f(alc); document.getElementById('ig-bnV').innerText=f(vis); document.getElementById('ig-bnE').innerText=f(likes+save); document.getElementById('ig-kP').innerText=n; document.getElementById('ig-kR').innerText=f(alc); document.getElementById('ig-kV').innerText=f(vis); document.getElementById('ig-kL').innerText=f(likes); document.getElementById('ig-kG').innerText=f(save); document.getElementById('ig-kSeg').innerText=f(seg); } }
+function drawHourImpact(net,data){ let hours=new Array(24).fill(0); data.forEach(p=>{if(p.hora!==null&&p.hora>=0) hours[p.hora]+=p.alcance;}); let ctx=document.getElementById(net==='fb'?'fb-cHour':'ig-cHour')?.getContext('2d'); if(!ctx)return; let id=net==='fb'?'fb-cHour':'ig-cHour'; let storage=net==='fb'?CH_FB:CH_IG; if(storage[id]) storage[id].destroy(); storage[id]=new Chart(ctx,{type:'bar',data:{labels:Array.from({length:24},(_,i)=>`${i}:00`),datasets:[{label:'Alcance',data:hours,backgroundColor:net==='fb'?'#1877F2':'#E1306C'}]},options:{responsive:true}}); }
+function drawDayImpact(net,data){ const daysOrder=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo']; let dayMap={Lunes:0,Martes:0,Miércoles:0,Jueves:0,Viernes:0,Sábado:0,Domingo:0}; data.forEach(p=>{ if(p.diaSemana && dayMap[p.diaSemana]!==undefined) dayMap[p.diaSemana]+=p.alcance; }); let values=daysOrder.map(d=>dayMap[d]); let canvasId=net==='fb'?'fb-cDay':'ig-cDay'; let storage=net==='fb'?CH_FB:CH_IG; if(storage[canvasId]) storage[canvasId].destroy(); let ctx=document.getElementById(canvasId)?.getContext('2d'); if(!ctx)return; if(values.every(v=>v===0)){ ctx.font="12px Montserrat"; ctx.fillStyle="#888"; ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); ctx.fillText("Sin datos: columna 'Día' requerida",10,30); return; } storage[canvasId]=new Chart(ctx,{type:'bar',data:{labels:daysOrder,datasets:[{label:'Alcance total',data:values,backgroundColor:net==='fb'?'#52BEC0':'#F77737'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}}); }
+function drawCharts(net){ let data=net==='fb'?FL_FB:FL_IG; let types=[...new Set(data.map(p=>p.tipo))]; let reachByType=types.map(t=>data.filter(p=>p.tipo===t).reduce((a,b)=>a+b.alcance,0)); updateChart(net==='fb'?CH_FB:CH_IG, net==='fb'?'fb-cT':'ig-cT','bar',types,[{label:'Alcance',data:reachByType,backgroundColor:net==='fb'?'#52BEC0':'#E1306C'}]); let eLabels=net==='fb'?['Reacciones','Comentarios','Compartidos']:['Likes','Comentarios','Guardados']; let eData=net==='fb'?[data.reduce((a,b)=>a+b.reacciones,0),data.reduce((a,b)=>a+b.comentarios,0),data.reduce((a,b)=>a+b.compartidos,0)]:[data.reduce((a,b)=>a+b.reacciones,0),data.reduce((a,b)=>a+b.comentarios,0),data.reduce((a,b)=>a+b.guardados,0)]; updateChart(net==='fb'?CH_FB:CH_IG, net==='fb'?'fb-cE':'ig-cE','bar',eLabels,[{label:'Total',data:eData,backgroundColor:net==='fb'?'#3aa3a5':'#833AB4'}]); updateChart(net==='fb'?CH_FB:CH_IG, net==='fb'?'fb-cD':'ig-cD','doughnut',eLabels,[{data:eData,backgroundColor:net==='fb'?['#52BEC0','#3aa3a5','#111']:['#E1306C','#833AB4','#F77737']}]); let sorted=[...data].sort((a,b)=>new Date(a.f)-new Date(b.f)); updateChart(net==='fb'?CH_FB:CH_IG, net==='fb'?'fb-cTL':'ig-cTL','line',sorted.map(p=>p.f),[ {label:'Alcance',data:sorted.map(p=>p.alcance),borderColor:net==='fb'?'#1877F2':'#E1306C',fill:true}]); drawHourImpact(net,data); drawDayImpact(net,data); }
+function updateChart(storage,id,type,labels,datasets){ if(storage[id]) storage[id].destroy(); let canvas=document.getElementById(id); if(!canvas)return; storage[id]=new Chart(canvas.getContext('2d'),{type,data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:type==='doughnut',position:'bottom'}}}}); }
+function drawTop(net){ let data=net==='fb'?FL_FB:FL_IG; let container=document.getElementById(net+'-topL'); let top5=[...data].sort((a,b)=>b.alcance-a.alcance).slice(0,5); container.innerHTML=top5.map((p,i)=>{ let perc=(p.alcance/(top5[0]?.alcance||1))*100; let link=(net==='ig'&&p.url)?`<a href="${p.url}" target="_blank" style="font-size:10px;color:var(--ig1);">↗ Ver publicación</a>`:''; return `<div style="display:flex; gap:12px; margin-bottom:12px;"><div style="font-weight:800; width:28px;">${i+1}</div><div style="flex:1"><div><strong>${p.titulo.substring(0,70)}</strong> ${link}</div><div style="display:flex; gap:10px; margin:5px 0;"><span class="pill ${net==='fb'?'p-reel-fb':'p-reel-ig'}">${p.tipo}</span><span>📊 ${p.alcance.toLocaleString()}</span></div><div style="background:#eee; height:4px; width:100%; border-radius:2px;"><div style="background:${net==='fb'?'#52BEC0':'#E1306C'}; width:${perc}%; height:4px; border-radius:2px;"></div></div></div></div>`; }).join(''); }
+function renderTable(net){ let data=net==='fb'?FL_FB:FL_IG; let sort=net==='fb'?SORT_FB:SORT_IG; let pag=net==='fb'?PAG_FB:PAG_IG; let sorted=[...data].sort((a,b)=>{ let va=a[sort.k], vb=b[sort.k]; if(sort.k==='fecha'){ va=new Date(a.f); vb=new Date(b.f); } return va>vb?sort.d:(va<vb?-sort.d:0); }); let start=(pag.curr-1)*pag.size; let slice=sorted.slice(start,start+pag.size); document.getElementById(net+'-tsub').innerText=`${data.length} publicaciones encontradas`; let body=document.getElementById(net+'-tBody'); body.innerHTML=slice.map(p=>{ let eng=((p.reacciones+(p.comentarios||0)+(p.guardados||0)+(p.seguimientos||0))/(p.alcance||1))*100; let tituloCell=(net==='ig'&&p.url)?`<a href="${p.url}" target="_blank" style="color:var(--ig1); font-weight:600; text-decoration:none;">${p.titulo.substring(0,80)} ↗</a>`:p.titulo.substring(0,80); let tipoClass=(p.tipo==='Reels'?`pill p-reel-${net}`:(p.tipo==='Imágenes'?`pill p-img-ig`:`pill`)); let vistasMostrar = (p.vistas || 0).toLocaleString(); return `<tr><td>${p.f}</td><td>${tituloCell}</td><td><span class="${tipoClass}">${p.tipo}</span></td><td>${(p.alcance||0).toLocaleString()}</td><td><b>${vistasMostrar}</b></td><td>${(p.reacciones||0).toLocaleString()}</td><td>${(p.comentarios||0).toLocaleString()}</td>${net==='fb'?`<td>${(p.compartidos||0).toLocaleString()}</td>`:`<td>${(p.guardados||0).toLocaleString()}</td><td>${(p.seguimientos||0).toLocaleString()}</td>`}<td><b>${eng.toFixed(1)}%</b></td></tr>`; }).join(''); let totalPages=Math.ceil(data.length/pag.size); document.getElementById(net+'-pagi').innerHTML=`<button class="pbtn" onclick="changeP('${net}',${pag.curr-1})" ${pag.curr===1?'disabled':''}>◀ Anterior</button><span style="margin:0 12px;">Pág ${pag.curr} de ${totalPages||1}</span><button class="pbtn" onclick="changeP('${net}',${pag.curr+1})" ${pag.curr>=totalPages?'disabled':''}>Siguiente ▶</button>`; }
+function changeP(net,p){ if(net==='fb') PAG_FB.curr=p; else PAG_IG.curr=p; renderTable(net); }
+function sortBy(net,k){ let s=net==='fb'?SORT_FB:SORT_IG; if(s.k===k) s.d*=-1; else { s.k=k; s.d=-1; } renderTable(net); }
+function switchTab(net){ document.getElementById('panelFB').classList.toggle('hidden', net==='ig'); document.getElementById('panelIG').classList.toggle('hidden', net==='fb'); document.getElementById('tabFB').classList.toggle('active-fb', net==='fb'); document.getElementById('tabIG').classList.toggle('active-ig', net==='ig'); if(net==='fb' && FL_FB.length) render('fb'); else if(net==='ig' && FL_IG.length) render('ig'); }
+function drawTopUsers(){ let data=FL_FB; if(!data.length)return; let okM=new Map(), notM=new Map(); data.forEach(p=>{ p.okList.forEach(u=>okM.set(u,(okM.get(u)||0)+1)); p.notOkList.forEach(u=>notM.set(u,(notM.get(u)||0)+1)); }); let topOk=Array.from(okM.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10); let topNot=Array.from(notM.entries()).sort((a,b)=>b[1]-a[1]).slice(0,10); drawHorizBar('fb-topPromotores',topOk.map(v=>v[0]),topOk.map(v=>v[1]),'#52BEC0'); drawHorizBar('fb-topDetractores',topNot.map(v=>v[0]),topNot.map(v=>v[1]),'#E1306C'); }
+function drawHorizBar(id,labels,data,col){ let c=document.getElementById(id); if(!c)return; let ctx=c.getContext('2d'); let storage=id.includes('fb')?CH_FB:CH_IG; if(storage[id]) storage[id].destroy(); if(labels.length===0){ ctx.clearRect(0,0,c.width,c.height); ctx.fillText('Sin datos',10,30); return; } c.style.height=Math.max(280,labels.length*38)+'px'; storage[id]=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Frecuencia',data,backgroundColor:col}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}}); }
+function drawFbOkNotOk(){ let data=FL_FB; if(!data.length)return; let totalOk=data.reduce((s,p)=>s+p.okUsers,0), totalNot=data.reduce((s,p)=>s+p.notOkUsers,0); updateChart(CH_FB,'fb-okDonut','doughnut',['OK','Not OK'],[{data:[totalOk,totalNot],backgroundColor:['#52BEC0','#E1306C']}]); let sorted=[...data].sort((a,b)=>new Date(a.f)-new Date(b.f)); updateChart(CH_FB,'fb-okLine','line',sorted.map(p=>p.f),[ {label:'OK',data:sorted.map(p=>p.okUsers),borderColor:'#52BEC0',fill:true},{label:'Not OK',data:sorted.map(p=>p.notOkUsers),borderColor:'#E1306C',fill:true} ]); }
+function drawIgLikes(){ let data=FL_IG; if(!data.length)return; let sorted=[...data].sort((a,b)=>new Date(a.f)-new Date(b.f)); updateChart(CH_IG,'ig-likesLine','line',sorted.map(p=>p.f),[ {label:'Me gusta',data:sorted.map(p=>p.reacciones),borderColor:'#E1306C'} ]); let tipos={}; data.forEach(p=>tipos[p.tipo]=(tipos[p.tipo]||0)+p.reacciones); updateChart(CH_IG,'ig-likesBar','bar',Object.keys(tipos),[ {label:'Likes',data:Object.values(tipos),backgroundColor:'#833AB4'} ]); }
 </script>
 </body>
 </html>
